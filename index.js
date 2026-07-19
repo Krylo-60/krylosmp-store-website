@@ -45,6 +45,7 @@ const btnConfirmRegCode = document.getElementById('btnConfirmRegCode');
 
 // Initialize Store
 document.addEventListener('DOMContentLoaded', () => {
+  generateAndRenderProducts();
   setupEventListeners();
   updatePlayerCounter();
   checkActiveSession();
@@ -72,14 +73,16 @@ function setupEventListeners() {
   cartToggleBtn.addEventListener('click', () => cartSidebar.classList.toggle('open'));
   btnCloseCart.addEventListener('click', () => cartSidebar.classList.remove('open'));
   
-  // Add to cart buttons
-  btnAddToCartList.forEach(btn => {
-    btn.addEventListener('click', () => {
+  // Add to cart buttons (Event Delegation for dynamic products)
+  const productsGrid = document.getElementById('productsGrid');
+  productsGrid.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-add-to-cart');
+    if (btn) {
       const id = btn.getAttribute('data-id');
       const name = btn.getAttribute('data-name');
       const price = parseFloat(btn.getAttribute('data-price'));
       addToCart(id, name, price);
-    });
+    }
   });
 
   // Checkout submit
@@ -92,15 +95,16 @@ function setupEventListeners() {
   btnRequestRegCode.addEventListener('click', handleRequestCode);
   btnConfirmRegCode.addEventListener('click', handleConfirmCode);
 
-  // Interactive mouse move glow effect for premium product cards
-  productCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
+  // Interactive mouse move glow effect for dynamic product cards (Event Delegation)
+  productsGrid.addEventListener('mousemove', (e) => {
+    const card = e.target.closest('.product-card');
+    if (card) {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       card.style.setProperty('--mouse-x', `${x}px`);
       card.style.setProperty('--mouse-y', `${y}px`);
-    });
+    }
   });
 }
 
@@ -154,7 +158,8 @@ function bindUsername() {
 
 // Category Tabs Filter
 function filterCategory(category) {
-  productCards.forEach(card => {
+  const cards = document.querySelectorAll('.product-card');
+  cards.forEach(card => {
     if (category === 'all' || card.classList.contains(category)) {
       card.style.display = 'block';
     } else {
@@ -265,20 +270,40 @@ async function processCheckout() {
           // Deduct balance
           configData.economyData[username].balance = currentBalance - subtotal;
           
-          // Queue commands
+          // Queue commands dynamically based on product categories
           configData.pendingCommands = configData.pendingCommands || [];
           state.cart.forEach(item => {
+            const pId = item.id;
             let command = '';
-            if (item.id === 'vip-rank') command = `lp user ${username} parent set vip`;
-            else if (item.id === 'mvp-rank') command = `lp user ${username} parent set mvp`;
-            else if (item.id === 'legend-rank') command = `lp user ${username} parent set legend`;
-            else if (item.id === 'crate-keys') command = `crate key give ${username} seasonal 5`;
-            else if (item.id === 'velocity-aura') command = `aura give ${username} velocity`;
+            
+            if (pId.endsWith('-rank')) {
+              command = `lp user ${username} parent set ${pId.replace('-rank', '')}`;
+            } else if (pId.includes('-key-x')) {
+              const parts = pId.split('-key-x');
+              command = `crate key give ${username} ${parts[0]} ${parts[1]}`;
+            } else if (pId.endsWith('-trail') || pId.endsWith('-aura')) {
+              command = `aura give ${username} ${pId.split('-')[0]}`;
+            } else if (pId.startsWith('tag-')) {
+              command = `tags give ${username} ${pId.replace('tag-', '')}`;
+            }
 
             if (command) {
               configData.pendingCommands.push(command);
             }
           });
+
+          // Queue Discord DM confirmation action
+          const discordId = localStorage.getItem('mc_discord_id');
+          if (discordId) {
+            configData.actions = configData.actions || [];
+            configData.actions.push({
+              type: 'send_dm',
+              discordUserId: discordId,
+              title: '🛒 Purchase Delivered Successfully!',
+              description: `Hey **${username}**!\n\nYour purchase on the **KryloSMP Store** has been successfully processed and delivered in-game!\n\n**Items Delivered:**\n${state.cart.map(item => `• **${item.name}** (${item.price} KC)`).join('\n')}\n\nThank you for supporting **KryloSMP**! 💖`,
+              color: '#00ff66'
+            });
+          }
 
           // Save back updated config
           await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
@@ -537,3 +562,152 @@ function logOutUser() {
 // Bind to window for onclick handlers
 window.logOutUser = logOutUser;
 window.openLoginModal = openLoginModal;
+
+// Programmatic Product Generator (100+ Products)
+function generateAndRenderProducts() {
+  const products = [];
+
+  // 1. RANKS (10 unique ranks)
+  const rankNames = [
+    { id: 'vip-rank', name: 'VIP Rank', badge: 'VIP', icon: 'fa-mug-hot', color: 'green', price: 500, desc: 'Includes `/fly` command in claims, green username prefix, and set up to 3 homes.' },
+    { id: 'mvp-rank', name: 'MVP Rank', badge: 'MVP', icon: 'fa-medal', color: 'orange', price: 1000, desc: 'Includes all VIP perks, orange username prefix, set up to 6 homes, and access to `/feed` command.' },
+    { id: 'legend-rank', name: 'Legend Rank', badge: 'LEGEND', icon: 'fa-crown', color: 'gold', price: 2500, desc: 'The ultimate rank. Includes golden username prefix, `/god` in safezones, and 12 homes.' },
+    { id: 'titan-rank', name: 'Titan Rank', badge: 'TITAN', icon: 'fa-shield-halved', color: 'red', price: 5000, desc: 'Titan tier. Includes dark red prefix, 20 homes, `/heal` command (cooldown), and priority queues.' },
+    { id: 'champion-rank', name: 'Champion Rank', badge: 'CHAMPION', icon: 'fa-trophy', color: 'cyan', price: 7500, desc: 'Champion status. Includes cyan username prefix, 30 homes, and custom join/leave broadcast messages.' },
+    { id: 'elite-rank', name: 'Elite Rank', badge: 'ELITE', icon: 'fa-gem', color: 'pink', price: 10000, desc: 'Elite rank. Includes custom pink prefix, 40 homes, `/enderchest` command, and VIP slots in events.' },
+    { id: 'overlord-rank', name: 'Overlord Rank', badge: 'OVERLORD', icon: 'fa-skull', color: 'purple', price: 15000, desc: 'Overlord status. Includes purple prefix, 50 homes, `/craft` command, and exclusive discord channel.' },
+    { id: 'god-rank', name: 'God Rank', badge: 'GOD', icon: 'fa-bolt', color: 'yellow', price: 25000, desc: 'God rank status. Includes yellow prefix, 80 homes, `/back` command, and double server votes multiplier.' },
+    { id: 'immortal-rank', name: 'Immortal Rank', badge: 'IMMORTAL', icon: 'fa-infinity', color: 'white', price: 50000, desc: 'Immortal status. Includes white prefix, unlimited homes, all kits unlocked, and custom tag request.' },
+    { id: 'antigravity-rank', name: 'Antigravity Rank', badge: 'ANTIGRAVITY', icon: 'fa-rocket', color: 'pink', price: 100000, desc: 'The supreme rank of KryloSMP. Includes custom neon pink prefix, toggleable creative mode in base claim, and staff bypass permissions.' }
+  ];
+
+  rankNames.forEach(r => {
+    products.push({
+      id: r.id,
+      name: r.name,
+      price: r.price,
+      category: 'ranks',
+      badge: r.badge,
+      icon: r.icon,
+      color: r.color,
+      desc: r.desc,
+      perks: [r.desc.substring(0, 30), 'Exclusive Discord Role', '100% safe delivery in-game']
+    });
+  });
+
+  // 2. CRATE KEYS (15 products of various bundles)
+  const keyTypes = [
+    { type: 'seasonal', name: 'Season Crate Key', price: 60, desc: 'Mystery seasonal crate keys' },
+    { type: 'mythic', name: 'Mythic Crate Key', price: 100, desc: 'Epic mythic crate keys' },
+    { type: 'legendary', name: 'Legendary Crate Key', price: 200, desc: 'Elite legendary crate keys' }
+  ];
+  const bundles = [1, 5, 10, 20, 50];
+
+  keyTypes.forEach(kt => {
+    bundles.forEach(b => {
+      const discountedPrice = Math.round(kt.price * b * (1 - (b > 1 ? (b > 10 ? 0.25 : 0.15) : 0)));
+      products.push({
+        id: `${kt.type}-key-x${b}`,
+        name: `${b}x ${kt.name}s`,
+        price: discountedPrice,
+        category: 'keys',
+        badge: 'KEYS',
+        icon: 'fa-key',
+        color: 'cyan',
+        desc: `Open mystery ${kt.type} loot crates at spawn to win rare weapons and spawners. Bundle of ${b}.`,
+        perks: [`Contains ${b}x keys`, 'Chance to win epic items', 'Instant delivery']
+      });
+    });
+  });
+
+  // 3. COSMETICS (trails & auras - 25 items)
+  const trails = [
+    'Fire', 'Frost', 'Rainbow', 'Emerald', 'Quartz', 'Amethyst', 'Redstone', 'Diamond', 
+    'Ender', 'Slime', 'Gold', 'Portal', 'Hearts', 'Smoke', 'Bubble', 'Notes', 'Crit', 'Spark'
+  ];
+  trails.forEach(t => {
+    products.push({
+      id: `${t.toLowerCase()}-trail`,
+      name: `${t} Particle Trail`,
+      price: 250,
+      category: 'cosmetics',
+      badge: 'TRAIL',
+      icon: 'fa-sparkles',
+      color: 'pink',
+      desc: `Leaves a glowing trail of ${t.toLowerCase()} particles behind you as you walk, run, or fly.`,
+      perks: ['Equip via `/aura` command', 'Fully togglable in-game', 'Cosmetic only']
+    });
+  });
+
+  const auras = ['Nebula', 'Supernova', 'Void', 'Horizon', 'Eclipse', 'Vortex', 'Aurora'];
+  auras.forEach(a => {
+    products.push({
+      id: `${a.toLowerCase()}-aura`,
+      name: `${a} Orbiting Aura`,
+      price: 500,
+      category: 'cosmetics',
+      badge: 'AURA',
+      icon: 'fa-wand-magic-sparkles',
+      color: 'pink',
+      desc: `Glowing ${a.toLowerCase()} particles orbit around your character dynamically as you play.`,
+      perks: ['Orbiting visual effect', 'Equip via `/aura` command', 'Cosmetic only']
+    });
+  });
+
+  // 4. CHAT TAGS / SUFFIXES (50 products)
+  const tags = [
+    'Rich', 'SWEAT', 'Tryhard', 'Pro', 'Noob', 'PvP-God', 'Grinder', 'Merchant', 'Builder', 
+    'Farmer', 'Slayer', 'Clown', 'Toxic', 'VIP+', 'MVP+', 'Legend+', 'Challenger', 'Gladiator', 
+    'Hunter', 'Miner', 'Explorer', 'Smuggler', 'Warlord', 'Sorcerer', 'Healer', 'Knight', 
+    'King', 'Queen', 'Emperor', 'Lord', 'Duke', 'Baron', 'Count', 'Paladin', 'Rogue', 
+    'Mage', 'Assassin', 'Ninja', 'Samurai', 'Shogun', 'Sensei', 'Guru', 'Master', 'Elder', 
+    'Sage', 'Monk', 'Wizard', 'Warlock', 'Necromancer', 'Alchemist'
+  ];
+
+  tags.forEach((t, i) => {
+    const isSpecial = i % 5 === 0;
+    const price = isSpecial ? 300 : 150;
+    products.push({
+      id: `tag-${t.toLowerCase()}`,
+      name: `Chat Tag: [${t}]`,
+      price: price,
+      category: 'tags',
+      badge: 'TAG',
+      icon: 'fa-tags',
+      color: isSpecial ? 'gold' : 'green',
+      desc: `Unlock the custom suffix tag [${t}] to show off in chat. Can be toggled on or off at any time.`,
+      perks: [`Prefix: [${t}]`, 'Unlocks instantly', 'Fully togglable via `/tags`']
+    });
+  });
+
+  // Render them all dynamically!
+  const productsGrid = document.getElementById('productsGrid');
+  productsGrid.innerHTML = products.map(p => {
+    const badgeClass = `${p.category === 'ranks' ? p.id.split('-')[0] : p.category}-badge`;
+    const featuredClass = p.id === 'mvp-rank' ? 'featured' : '';
+    const featuredBanner = p.id === 'mvp-rank' ? `<div class="featured-banner"><i class="fa-solid fa-fire"></i> Most Popular</div>` : '';
+    
+    return `
+      <div class="product-card ${p.category} ${featuredClass}" data-id="${p.id}">
+        ${featuredBanner}
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="product-header">
+            <span class="prod-badge ${badgeClass}"><i class="fa-solid ${p.icon}"></i> ${p.badge}</span>
+            <h3>${p.name}</h3>
+            <div class="price">${p.price} KC</div>
+          </div>
+          <p class="description">${p.desc}</p>
+          <ul class="perks-list">
+            ${p.perks.map(perk => `<li><i class="fa-solid fa-check"></i> ${perk}</li>`).join('')}
+          </ul>
+          <button class="btn-add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">
+            <i class="fa-solid fa-plus"></i> Add to Cart
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  console.log(`[Store Generator] Successfully generated ${products.length} products dynamically!`);
+}
