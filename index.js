@@ -248,7 +248,7 @@ function updateCartUI() {
   }
 }
 
-// Apply Promo / Creator Code (100% Free checkout support)
+// Apply Promo / Creator Code (20% Discount support)
 function handleApplyPromo() {
   const code = promoCodeInput.value.trim().toUpperCase();
 
@@ -260,13 +260,13 @@ function handleApplyPromo() {
     return;
   }
 
-  // List of valid free-checkout codes
-  const freeCodes = ['KRYLO', 'FREE', 'KRYLOSMP', 'KRISHIV'];
+  // List of valid 20% discount codes
+  const activeCodes = ['KRYLO', 'KRYLOSMP', 'KRISHIV', 'WELCOMESMP'];
 
-  if (freeCodes.includes(code)) {
-    state.discountPercentage = 100;
+  if (activeCodes.includes(code)) {
+    state.discountPercentage = 20;
     state.appliedPromoCode = code;
-    promoStatusMsg.textContent = `✅ Code '${code}' Applied: 100% OFF (FREE)!`;
+    promoStatusMsg.textContent = `✅ Code '${code}' Applied: 20% OFF!`;
     promoStatusMsg.style.color = 'var(--accent-green)';
     promoStatusMsg.style.display = 'block';
   } else {
