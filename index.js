@@ -106,7 +106,7 @@ function setupEventListeners() {
   // Buy All Bundle Button click handler
   if (btnBuyAll) {
     btnBuyAll.addEventListener('click', () => {
-      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 15000);
+      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 243196);
       cartSidebar.classList.add('open');
     });
   }
