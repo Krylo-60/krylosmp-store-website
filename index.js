@@ -30,10 +30,24 @@ const btnCloseModal = document.getElementById('btnCloseModal');
 const successUserDisplay = document.getElementById('successUserDisplay');
 const playerCounter = document.querySelector('.player-count');
 
+// Login / Register Elements
+const btnLoginHeader = document.getElementById('btnLoginHeader');
+const userProfileHeader = document.getElementById('userProfileHeader');
+const accountModal = document.getElementById('accountModal');
+const btnCloseAccountModal = document.getElementById('btnCloseAccountModal');
+const modalStep1 = document.getElementById('modalStep1');
+const modalStep2 = document.getElementById('modalStep2');
+const regMcUsername = document.getElementById('regMcUsername');
+const regDiscordId = document.getElementById('regDiscordId');
+const btnRequestRegCode = document.getElementById('btnRequestRegCode');
+const regCodeInput = document.getElementById('regCodeInput');
+const btnConfirmRegCode = document.getElementById('btnConfirmRegCode');
+
 // Initialize Store
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   updatePlayerCounter();
+  checkActiveSession();
   setInterval(updatePlayerCounter, 30000); // Update status every 30s
 });
 
@@ -71,6 +85,12 @@ function setupEventListeners() {
   // Checkout submit
   btnCheckout.addEventListener('click', processCheckout);
   btnCloseModal.addEventListener('click', () => successModal.classList.remove('open'));
+
+  // Account modal toggles
+  btnLoginHeader.addEventListener('click', openLoginModal);
+  btnCloseAccountModal.addEventListener('click', () => accountModal.classList.remove('open'));
+  btnRequestRegCode.addEventListener('click', handleRequestCode);
+  btnConfirmRegCode.addEventListener('click', handleConfirmCode);
 
   // Interactive mouse move glow effect for premium product cards
   productCards.forEach(card => {
@@ -233,3 +253,210 @@ async function processCheckout() {
     cartSidebar.classList.remove('open');
   }, 1500);
 }
+
+// Check Active Session
+function checkActiveSession() {
+  const user = localStorage.getItem('mc_user');
+  const discordId = localStorage.getItem('mc_discord_id');
+  if (user && discordId) {
+    logInUser(user, discordId);
+  }
+}
+
+// Open Login Modal
+function openLoginModal() {
+  // Reset steps
+  modalStep1.style.display = 'block';
+  modalStep2.style.display = 'none';
+  regMcUsername.value = '';
+  regDiscordId.value = '';
+  regCodeInput.value = '';
+  accountModal.classList.add('open');
+}
+
+// Handle Request Code (Step 1)
+async function handleRequestCode() {
+  const mcUsername = regMcUsername.value.trim();
+  const discordId = regDiscordId.value.trim();
+
+  if (!mcUsername || !discordId) {
+    alert("Please fill in both fields!");
+    return;
+  }
+
+  btnRequestRegCode.disabled = true;
+  btnRequestRegCode.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Checking Database...`;
+
+  try {
+    // Check if the user is already verified on Discord!
+    const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get_config', guildId: '1524878881918685405' })
+    });
+
+    if (configRes.ok) {
+      const configData = await configRes.json();
+      if (configData.verifiedPlayers && configData.verifiedPlayers[discordId]) {
+        const linkedName = configData.verifiedPlayers[discordId].name;
+        if (linkedName.toLowerCase() === mcUsername.toLowerCase()) {
+          console.log("[Store] Player is already verified on Discord. Logging in instantly!");
+          logInUser(linkedName, discordId);
+          accountModal.classList.remove('open');
+          btnRequestRegCode.disabled = false;
+          btnRequestRegCode.innerHTML = `Next <i class="fa-solid fa-arrow-right"></i>`;
+          return;
+        }
+      }
+    }
+
+    // If not verified, request a verification code
+    console.log("[Store] Requesting in-game verification code from API...");
+    const verifyRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'request_verification',
+        guildId: '1524878881918685405',
+        name: mcUsername,
+        discordUserId: discordId
+      })
+    });
+
+    if (verifyRes.ok) {
+      const data = await verifyRes.json();
+      if (data.ok) {
+        // Go to Step 2
+        state.tempMcUsername = mcUsername;
+        state.tempDiscordId = discordId;
+        modalStep1.style.display = 'none';
+        modalStep2.style.display = 'block';
+      } else {
+        alert(`Failed: ${data.error || 'Server error'}`);
+      }
+    } else {
+      alert("Failed to connect to verification server.");
+    }
+  } catch (err) {
+    alert(`Error: ${err.message}`);
+  } finally {
+    btnRequestRegCode.disabled = false;
+    btnRequestRegCode.innerHTML = `Next <i class="fa-solid fa-arrow-right"></i>`;
+  }
+}
+
+// Handle Confirm Code (Step 2)
+async function handleConfirmCode() {
+  const code = regCodeInput.value.trim();
+  if (!code) {
+    alert("Please enter the verification code!");
+    return;
+  }
+
+  btnConfirmRegCode.disabled = true;
+  btnConfirmRegCode.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying...`;
+
+  try {
+    const res = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'confirm_verification',
+        guildId: '1524878881918685405',
+        code: code,
+        discordUserId: state.tempDiscordId
+      })
+    });
+
+    if (res.ok) {
+      const result = await res.json();
+      if (result.ok) {
+        logInUser(state.tempMcUsername, state.tempDiscordId);
+        accountModal.classList.remove('open');
+      } else {
+        alert(`Verification failed: ${result.error || 'Invalid or expired code.'}`);
+      }
+    } else {
+      alert("Failed to connect to verification server.");
+    }
+  } catch (err) {
+    alert(`Error: ${err.message}`);
+  } finally {
+    btnConfirmRegCode.disabled = false;
+    btnConfirmRegCode.innerHTML = `Verify & Log In`;
+  }
+}
+
+// Log In User
+async function logInUser(username, discordId) {
+  localStorage.setItem('mc_user', username);
+  localStorage.setItem('mc_discord_id', discordId);
+  
+  state.mcUsername = username;
+  mcUsernameInput.value = username;
+
+  // Render profile widget in header
+  const avatarUrl = `https://mc-heads.net/avatar/${username}`;
+  
+  // Default Rank
+  let rank = 'Member';
+  
+  userProfileHeader.innerHTML = `
+    <div class="profile-widget">
+      <img src="${avatarUrl}" class="profile-avatar" alt="Avatar">
+      <div class="profile-info">
+        <span class="profile-name">${username}</span>
+        <span class="profile-rank" id="profileRank">${rank}</span>
+      </div>
+      <button class="btn-logout" id="btnLogout" onclick="logOutUser()"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+  `;
+
+  // Update Cart UI for linked status
+  cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
+  cartUsernameDisplay.style.color = 'var(--accent-green)';
+
+  updateCartUI();
+
+  // Dynamically fetch actual user rank & economy details from Vercel config
+  try {
+    const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get_config', guildId: '1524878881918685405' })
+    });
+    if (configRes.ok) {
+      const configData = await configRes.json();
+      
+      // Update balance if economyData exists
+      if (configData.economyData && configData.economyData[username]) {
+        const balance = configData.economyData[username].balance || 0;
+        document.getElementById('profileRank').innerHTML = `${rank} • <b style="color: var(--accent-gold);">${balance} KC</b>`;
+      }
+    }
+  } catch (err) {
+    console.warn("Failed to retrieve profile rank/economy details:", err.message);
+  }
+}
+
+// Log Out User
+function logOutUser() {
+  localStorage.removeItem('mc_user');
+  localStorage.removeItem('mc_discord_id');
+  
+  state.mcUsername = '';
+  mcUsernameInput.value = '';
+
+  userProfileHeader.innerHTML = `
+    <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()"><i class="fa-solid fa-user-lock"></i> Register / Login</button>
+  `;
+
+  cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-user"></i> <span>Not bound</span>`;
+  cartUsernameDisplay.style.color = '';
+
+  updateCartUI();
+}
+
+// Bind to window for onclick handlers
+window.logOutUser = logOutUser;
+window.openLoginModal = openLoginModal;
