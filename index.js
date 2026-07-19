@@ -2,13 +2,9 @@
 const state = {
   mcUsername: '',
   cart: [],
-  products: [
-    { id: 'vip-rank', name: 'VIP Rank', price: 500 },
-    { id: 'mvp-rank', name: 'MVP Rank', price: 1000 },
-    { id: 'legend-rank', name: 'Krylo Legend Rank', price: 2500 },
-    { id: 'crate-keys', name: '5x Crate Keys', price: 300 },
-    { id: 'velocity-aura', name: 'Neon Velocity Aura', price: 200 }
-  ]
+  discountPercentage: 0,
+  appliedPromoCode: '',
+  products: []
 };
 
 // DOM Elements
@@ -29,6 +25,11 @@ const successModal = document.getElementById('successModal');
 const btnCloseModal = document.getElementById('btnCloseModal');
 const successUserDisplay = document.getElementById('successUserDisplay');
 const playerCounter = document.querySelector('.player-count');
+
+// Promo Code Elements
+const promoCodeInput = document.getElementById('promoCodeInput');
+const btnApplyPromo = document.getElementById('btnApplyPromo');
+const promoStatusMsg = document.getElementById('promoStatusMsg');
 
 // Login / Register Elements
 const btnLoginHeader = document.getElementById('btnLoginHeader');
@@ -94,6 +95,9 @@ function setupEventListeners() {
   btnCloseAccountModal.addEventListener('click', () => accountModal.classList.remove('open'));
   btnRequestRegCode.addEventListener('click', handleRequestCode);
   btnConfirmRegCode.addEventListener('click', handleConfirmCode);
+
+  // Promo code button
+  btnApplyPromo.addEventListener('click', handleApplyPromo);
 
   // Interactive mouse move glow effect for dynamic product cards (Event Delegation)
   productsGrid.addEventListener('mousemove', (e) => {
@@ -224,17 +228,59 @@ function updateCartUI() {
     cartItemsList.appendChild(row);
   });
 
-  cartSubtotal.textContent = `${subtotal} KC`;
+  // Apply discount
+  const discountAmount = subtotal * (state.discountPercentage / 100);
+  const finalTotal = Math.max(0, Math.round(subtotal - discountAmount));
+
+  if (state.discountPercentage > 0) {
+    cartSubtotal.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.9em; margin-right: 0.5rem;">${subtotal} KC</span> ${finalTotal} KC`;
+  } else {
+    cartSubtotal.textContent = `${subtotal} KC`;
+  }
 
   // Enable/disable checkout based on username bind status
   if (state.mcUsername) {
     btnCheckout.disabled = false;
-    btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${subtotal} KC`;
+    btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
   } else {
     btnCheckout.disabled = true;
     btnCheckout.innerHTML = `<i class="fa-solid fa-user-tag"></i> Bind Username to Checkout`;
   }
 }
+
+// Apply Promo / Creator Code (100% Free checkout support)
+function handleApplyPromo() {
+  const code = promoCodeInput.value.trim().toUpperCase();
+
+  if (!code) {
+    state.discountPercentage = 0;
+    state.appliedPromoCode = '';
+    promoStatusMsg.style.display = 'none';
+    updateCartUI();
+    return;
+  }
+
+  // List of valid free-checkout codes
+  const freeCodes = ['KRYLO', 'FREE', 'KRYLOSMP', 'KRISHIV'];
+
+  if (freeCodes.includes(code)) {
+    state.discountPercentage = 100;
+    state.appliedPromoCode = code;
+    promoStatusMsg.textContent = `✅ Code '${code}' Applied: 100% OFF (FREE)!`;
+    promoStatusMsg.style.color = 'var(--accent-green)';
+    promoStatusMsg.style.display = 'block';
+  } else {
+    state.discountPercentage = 0;
+    state.appliedPromoCode = '';
+    promoStatusMsg.textContent = `❌ Invalid or expired code!`;
+    promoStatusMsg.style.color = '#ff3333';
+    promoStatusMsg.style.display = 'block';
+  }
+
+  updateCartUI();
+}
+
+window.handleApplyPromo = handleApplyPromo;
 
 // Expose remove function to global scope for onclick handler
 window.removeFromCart = removeFromCart;
@@ -244,6 +290,8 @@ async function processCheckout() {
   if (!state.mcUsername || state.cart.length === 0) return;
 
   const subtotal = state.cart.reduce((sum, item) => sum + item.price, 0);
+  const discountAmount = subtotal * (state.discountPercentage / 100);
+  const finalTotal = Math.max(0, Math.round(subtotal - discountAmount));
   const username = state.mcUsername;
 
   btnCheckout.disabled = true;
@@ -264,11 +312,11 @@ async function processCheckout() {
       if (configData.economyData && configData.economyData[username]) {
         const currentBalance = configData.economyData[username].balance || 0;
         
-        if (currentBalance >= subtotal) {
+        if (currentBalance >= finalTotal) {
           console.log("[Store] Sufficient coins. Processing coin deduction and item delivery...");
           
           // Deduct balance
-          configData.economyData[username].balance = currentBalance - subtotal;
+          configData.economyData[username].balance = currentBalance - finalTotal;
           
           // Queue commands dynamically based on product categories
           configData.pendingCommands = configData.pendingCommands || [];
@@ -317,7 +365,7 @@ async function processCheckout() {
           });
 
           // Update local profile widget with new balance
-          const newBalance = currentBalance - subtotal;
+          const newBalance = currentBalance - finalTotal;
           const profileRankElem = document.getElementById('profileRank');
           if (profileRankElem) {
             profileRankElem.innerHTML = `Member • <b style="color: var(--accent-gold);">${newBalance} KC</b>`;
