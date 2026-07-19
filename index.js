@@ -25,11 +25,15 @@ const successModal = document.getElementById('successModal');
 const btnCloseModal = document.getElementById('btnCloseModal');
 const successUserDisplay = document.getElementById('successUserDisplay');
 const playerCounter = document.querySelector('.player-count');
+const btnBuyAll = document.getElementById('btnBuyAll');
 
-// Promo Code Elements
+// Promo Code & Tax Elements
 const promoCodeInput = document.getElementById('promoCodeInput');
 const btnApplyPromo = document.getElementById('btnApplyPromo');
 const promoStatusMsg = document.getElementById('promoStatusMsg');
+const lblSubtotal = document.getElementById('lblSubtotal');
+const lblDiscount = document.getElementById('lblDiscount');
+const lblTax = document.getElementById('lblTax');
 
 // Login / Register Elements
 const btnLoginHeader = document.getElementById('btnLoginHeader');
@@ -98,6 +102,14 @@ function setupEventListeners() {
 
   // Promo code button
   btnApplyPromo.addEventListener('click', handleApplyPromo);
+
+  // Buy All Bundle Button click handler
+  if (btnBuyAll) {
+    btnBuyAll.addEventListener('click', () => {
+      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 15000);
+      cartSidebar.classList.add('open');
+    });
+  }
 
   // Interactive mouse move glow effect for dynamic product cards (Event Delegation)
   productsGrid.addEventListener('mousemove', (e) => {
@@ -202,7 +214,10 @@ function updateCartUI() {
         <span>Add ranks or items to get started!</span>
       </div>
     `;
-    cartSubtotal.textContent = '0 KC';
+    if (lblSubtotal) lblSubtotal.textContent = '0 KC';
+    if (lblDiscount) lblDiscount.textContent = '0 KC';
+    if (lblTax) lblTax.textContent = '0 KC';
+    if (cartSubtotal) cartSubtotal.textContent = '0 KC';
     btnCheckout.disabled = true;
     btnCheckout.innerHTML = `<i class="fa-solid fa-lock"></i> Checkout`;
     return;
@@ -228,15 +243,16 @@ function updateCartUI() {
     cartItemsList.appendChild(row);
   });
 
-  // Apply discount
-  const discountAmount = subtotal * (state.discountPercentage / 100);
-  const finalTotal = Math.max(0, Math.round(subtotal - discountAmount));
+  // Apply discount and 3% game tax
+  const discountAmount = Math.round(subtotal * (state.discountPercentage / 100));
+  const discountedSubtotal = subtotal - discountAmount;
+  const taxAmount = Math.round(discountedSubtotal * 0.03);
+  const finalTotal = Math.max(0, Math.round(discountedSubtotal + taxAmount));
 
-  if (state.discountPercentage > 0) {
-    cartSubtotal.innerHTML = `<span style="text-decoration: line-through; opacity: 0.5; font-size: 0.9em; margin-right: 0.5rem;">${subtotal} KC</span> ${finalTotal} KC`;
-  } else {
-    cartSubtotal.textContent = `${subtotal} KC`;
-  }
+  if (lblSubtotal) lblSubtotal.textContent = `${subtotal} KC`;
+  if (lblDiscount) lblDiscount.textContent = `-${discountAmount} KC`;
+  if (lblTax) lblTax.textContent = `+${taxAmount} KC`;
+  if (cartSubtotal) cartSubtotal.textContent = `${finalTotal} KC`;
 
   // Enable/disable checkout based on username bind status
   if (state.mcUsername) {
@@ -298,99 +314,53 @@ async function processCheckout() {
   btnCheckout.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Checkout...`;
 
   try {
-    // 1. Fetch the server config from database
-    const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+    const res = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'get_config', guildId: '1524878881918685405' })
+      body: JSON.stringify({
+        action: 'checkout',
+        guildId: '1524878881918685405',
+        username: username,
+        discordUserId: localStorage.getItem('mc_discord_id'),
+        cart: state.cart.map(item => item.id),
+        promoCode: state.appliedPromoCode
+      })
     });
 
-    if (configRes.ok) {
-      const configData = await configRes.json();
-      
-      // Check if user has economy data & enough balance
-      if (configData.economyData && configData.economyData[username]) {
-        const currentBalance = configData.economyData[username].balance || 0;
-        
-        if (currentBalance >= finalTotal) {
-          console.log("[Store] Sufficient coins. Processing coin deduction and item delivery...");
-          
-          // Deduct balance
-          configData.economyData[username].balance = currentBalance - finalTotal;
-          
-          // Queue commands dynamically based on product categories
-          configData.pendingCommands = configData.pendingCommands || [];
-          state.cart.forEach(item => {
-            const pId = item.id;
-            let command = '';
-            
-            if (pId.endsWith('-rank')) {
-              command = `lp user ${username} parent set ${pId.replace('-rank', '')}`;
-            } else if (pId.includes('-key-x')) {
-              const parts = pId.split('-key-x');
-              command = `crate key give ${username} ${parts[0]} ${parts[1]}`;
-            } else if (pId.endsWith('-trail') || pId.endsWith('-aura')) {
-              command = `aura give ${username} ${pId.split('-')[0]}`;
-            } else if (pId.startsWith('tag-')) {
-              command = `tags give ${username} ${pId.replace('tag-', '')}`;
-            }
+    const data = await res.json().catch(() => ({}));
 
-            if (command) {
-              configData.pendingCommands.push(command);
-            }
-          });
-
-          // Queue Discord DM confirmation action
-          const discordId = localStorage.getItem('mc_discord_id');
-          if (discordId) {
-            configData.actions = configData.actions || [];
-            configData.actions.push({
-              type: 'send_dm',
-              discordUserId: discordId,
-              title: '🛒 Purchase Delivered Successfully!',
-              description: `Hey **${username}**!\n\nYour purchase on the **KryloSMP Store** has been successfully processed and delivered in-game!\n\n**Items Delivered:**\n${state.cart.map(item => `• **${item.name}** (${item.price} KC)`).join('\n')}\n\nThank you for supporting **KryloSMP**! 💖`,
-              color: '#00ff66'
-            });
-          }
-
-          // Save back updated config
-          await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'save_config',
-              guildId: '1524878881918685405',
-              config: configData
-            })
-          });
-
-          // Update local profile widget with new balance
-          const newBalance = currentBalance - finalTotal;
-          const profileRankElem = document.getElementById('profileRank');
-          if (profileRankElem) {
-            profileRankElem.innerHTML = `Member • <b style="color: var(--accent-gold);">${newBalance} KC</b>`;
-          }
-        } else {
-          console.warn("[Store] Insufficient coins. Success modal will show but no items delivered.");
-        }
-      } else {
-        console.warn("[Store] Economy account not found. Success modal will show but no items delivered.");
+    if (res.ok && data.ok) {
+      // Update local profile widget with new balance
+      const profileRankElem = document.getElementById('profileRank');
+      if (profileRankElem) {
+        profileRankElem.innerHTML = `Member • <b style="color: var(--accent-gold);">${data.newBalance} KC</b>`;
       }
+      
+      // Show success modal & clean cart
+      setTimeout(() => {
+        successUserDisplay.textContent = username;
+        successModal.classList.add('open');
+        
+        state.cart = [];
+        state.discountPercentage = 0;
+        state.appliedPromoCode = '';
+        if (promoCodeInput) promoCodeInput.value = '';
+        if (promoStatusMsg) promoStatusMsg.style.display = 'none';
+        
+        updateCartUI();
+        cartSidebar.classList.remove('open');
+      }, 1000);
+    } else {
+      alert(`Error: ${data.error || 'Failed to complete transaction'}`);
+      btnCheckout.disabled = false;
+      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
     }
   } catch (err) {
-    console.error("Database check failed, proceeding with simulation only:", err.message);
+    console.error("Checkout failed:", err.message);
+    alert(`Checkout error: ${err.message}`);
+    btnCheckout.disabled = false;
+    btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
   }
-
-  // 2. Always show success modal & clean cart
-  setTimeout(() => {
-    successUserDisplay.textContent = username;
-    successModal.classList.add('open');
-    
-    // Clear cart and update
-    state.cart = [];
-    updateCartUI();
-    cartSidebar.classList.remove('open');
-  }, 1000);
 }
 
 // Check Active Session
