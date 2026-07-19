@@ -494,10 +494,21 @@ async function logInUser(username, discordId) {
     if (configRes.ok) {
       const configData = await configRes.json();
       
+      // Resolve Rank from verifiedPlayers entry
+      if (configData.verifiedPlayers && configData.verifiedPlayers[discordId]) {
+        rank = configData.verifiedPlayers[discordId].rank || 'Member';
+      }
+
       // Update balance if economyData exists
+      let balanceStr = '0 KC';
       if (configData.economyData && configData.economyData[username]) {
         const balance = configData.economyData[username].balance || 0;
-        document.getElementById('profileRank').innerHTML = `${rank} • <b style="color: var(--accent-gold);">${balance} KC</b>`;
+        balanceStr = `${balance} KC`;
+      }
+      
+      const profileRankElem = document.getElementById('profileRank');
+      if (profileRankElem) {
+        profileRankElem.innerHTML = `${rank} • <b style="color: var(--accent-gold);">${balanceStr}</b>`;
       }
     }
   } catch (err) {
