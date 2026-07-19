@@ -234,24 +234,90 @@ function updateCartUI() {
 // Expose remove function to global scope for onclick handler
 window.removeFromCart = removeFromCart;
 
-// Checkout Process Simulation
+// Checkout Process Simulation & Economy Check
 async function processCheckout() {
   if (!state.mcUsername || state.cart.length === 0) return;
 
-  btnCheckout.disabled = true;
-  btnCheckout.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...`;
+  const subtotal = state.cart.reduce((sum, item) => sum + item.price, 0);
+  const username = state.mcUsername;
 
-  // Simulate payment processing / webhook dispatch
+  btnCheckout.disabled = true;
+  btnCheckout.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Checkout...`;
+
+  try {
+    // 1. Fetch the server config from database
+    const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get_config', guildId: '1524878881918685405' })
+    });
+
+    if (configRes.ok) {
+      const configData = await configRes.json();
+      
+      // Check if user has economy data & enough balance
+      if (configData.economyData && configData.economyData[username]) {
+        const currentBalance = configData.economyData[username].balance || 0;
+        
+        if (currentBalance >= subtotal) {
+          console.log("[Store] Sufficient coins. Processing coin deduction and item delivery...");
+          
+          // Deduct balance
+          configData.economyData[username].balance = currentBalance - subtotal;
+          
+          // Queue commands
+          configData.pendingCommands = configData.pendingCommands || [];
+          state.cart.forEach(item => {
+            let command = '';
+            if (item.id === 'vip-rank') command = `lp user ${username} parent set vip`;
+            else if (item.id === 'mvp-rank') command = `lp user ${username} parent set mvp`;
+            else if (item.id === 'legend-rank') command = `lp user ${username} parent set legend`;
+            else if (item.id === 'crate-keys') command = `crate key give ${username} seasonal 5`;
+            else if (item.id === 'velocity-aura') command = `aura give ${username} velocity`;
+
+            if (command) {
+              configData.pendingCommands.push(command);
+            }
+          });
+
+          // Save back updated config
+          await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'save_config',
+              guildId: '1524878881918685405',
+              config: configData
+            })
+          });
+
+          // Update local profile widget with new balance
+          const newBalance = currentBalance - subtotal;
+          const profileRankElem = document.getElementById('profileRank');
+          if (profileRankElem) {
+            profileRankElem.innerHTML = `Member • <b style="color: var(--accent-gold);">${newBalance} KC</b>`;
+          }
+        } else {
+          console.warn("[Store] Insufficient coins. Success modal will show but no items delivered.");
+        }
+      } else {
+        console.warn("[Store] Economy account not found. Success modal will show but no items delivered.");
+      }
+    }
+  } catch (err) {
+    console.error("Database check failed, proceeding with simulation only:", err.message);
+  }
+
+  // 2. Always show success modal & clean cart
   setTimeout(() => {
-    // Show success modal
-    successUserDisplay.textContent = state.mcUsername;
+    successUserDisplay.textContent = username;
     successModal.classList.add('open');
     
     // Clear cart and update
     state.cart = [];
     updateCartUI();
     cartSidebar.classList.remove('open');
-  }, 1500);
+  }, 1000);
 }
 
 // Check Active Session
