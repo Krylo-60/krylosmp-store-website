@@ -3,11 +3,11 @@ const state = {
   mcUsername: '',
   cart: [],
   products: [
-    { id: 'vip-rank', name: 'VIP Rank', price: 4.99 },
-    { id: 'mvp-rank', name: 'MVP Rank', price: 9.99 },
-    { id: 'legend-rank', name: 'Krylo Legend Rank', price: 19.99 },
-    { id: 'crate-keys', name: '5x Crate Keys', price: 2.99 },
-    { id: 'velocity-aura', name: 'Neon Velocity Aura', price: 1.99 }
+    { id: 'vip-rank', name: 'VIP Rank', price: 500 },
+    { id: 'mvp-rank', name: 'MVP Rank', price: 1000 },
+    { id: 'legend-rank', name: 'Krylo Legend Rank', price: 2500 },
+    { id: 'crate-keys', name: '5x Crate Keys', price: 300 },
+    { id: 'velocity-aura', name: 'Neon Velocity Aura', price: 200 }
   ]
 };
 
@@ -173,7 +173,7 @@ function updateCartUI() {
         <span>Add ranks or items to get started!</span>
       </div>
     `;
-    cartSubtotal.textContent = '$0.00';
+    cartSubtotal.textContent = '0 KC';
     btnCheckout.disabled = true;
     btnCheckout.innerHTML = `<i class="fa-solid fa-lock"></i> Checkout`;
     return;
@@ -190,7 +190,7 @@ function updateCartUI() {
     row.innerHTML = `
       <div class="cart-item-details">
         <h4>${item.name}</h4>
-        <span class="cart-item-price">$${item.price.toFixed(2)}</span>
+        <span class="cart-item-price">${item.price} KC</span>
       </div>
       <button class="btn-remove-item" onclick="removeFromCart(${item.uid})">
         <i class="fa-solid fa-trash-can"></i>
@@ -199,12 +199,12 @@ function updateCartUI() {
     cartItemsList.appendChild(row);
   });
 
-  cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+  cartSubtotal.textContent = `${subtotal} KC`;
 
   // Enable/disable checkout based on username bind status
   if (state.mcUsername) {
     btnCheckout.disabled = false;
-    btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay Now ($${subtotal.toFixed(2)})`;
+    btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${subtotal} KC`;
   } else {
     btnCheckout.disabled = true;
     btnCheckout.innerHTML = `<i class="fa-solid fa-user-tag"></i> Bind Username to Checkout`;
