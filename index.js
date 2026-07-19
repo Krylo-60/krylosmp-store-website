@@ -106,7 +106,7 @@ function setupEventListeners() {
   // Buy All Bundle Button click handler
   if (btnBuyAll) {
     btnBuyAll.addEventListener('click', () => {
-      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 243196);
+      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 226983);
       cartSidebar.classList.add('open');
     });
   }
@@ -611,6 +611,19 @@ function generateAndRenderProducts() {
       desc: r.desc,
       perks: [r.desc.substring(0, 30), 'Exclusive Discord Role', '100% safe delivery in-game']
     });
+  });
+
+  // Add Supreme Buy All Bundle (16% off + 5% game tax built-in)
+  products.push({
+    id: 'krylo-ultimate-bundle',
+    name: 'Krylo Ultimate Bundle (Buy All)',
+    price: 226983,
+    category: 'ranks',
+    badge: 'ALL BUNDLE',
+    icon: 'fa-cubes-stacked',
+    color: 'gold',
+    desc: 'Unlocks ALL 100 ranks, crate keys, cosmetics, and chat tags instantly. Includes a 16% bundle discount and a 5% game tax.',
+    perks: ['All 10 Ranks (VIP to Antigravity)', 'All 15 Key bundles & cosmetics', 'All 50 custom chat suffix tags']
   });
 
   // 2. CRATE KEYS (15 products of various bundles)
