@@ -207,6 +207,74 @@
     </div>
   </footer>
 
+  <!-- Support Chat Trigger Button -->
+  <button id="btnSupportChat" class="support-chat-trigger" style="position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #5352ed, #3742fa); border: none; color: #fff; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(83, 82, 237, 0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; transition: transform 0.3s ease;">
+    <i class="fa-solid fa-comments"></i>
+  </button>
+
+  <!-- Support Chat Window Widget -->
+  <div id="supportChatWindow" class="support-chat-window" style="position: fixed; bottom: 95px; right: 20px; width: 370px; height: 580px; border-radius: 20px; background: rgba(18, 18, 30, 0.96); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 1000; display: none; flex-direction: column; overflow: hidden; font-family: inherit; transition: all 0.3s ease; backdrop-filter: blur(15px);">
+    
+    <!-- Header Screen -->
+    <div class="chat-header" style="background: linear-gradient(135deg, #5352ed, #3742fa); padding: 1.8rem 1.5rem; color: #fff; position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <!-- Logo -->
+        <div style="background: #2ed573; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 800; color: #fff; box-shadow: 0 2px 10px rgba(46,213,115,0.4);"><i class="fa-solid fa-robot"></i></div>
+        <!-- Close -->
+        <button id="btnCloseChat" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; opacity: 0.8; transition: opacity 0.2s;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <h2 id="lblChatHeaderGreeting" style="font-size: 1.5rem; font-weight: 700; margin: 0; line-height: 1.3;">Hi there 👋</h2>
+      <h3 style="font-size: 1.2rem; font-weight: 600; margin: 0.2rem 0 0; opacity: 0.9;">How can we help?</h3>
+    </div>
+
+    <!-- Home Tab Screen -->
+    <div id="chatHomeTab" style="flex-grow: 1; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; overflow-y: auto;">
+      <div id="btnStartChatThread" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1.2rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.3s ease;">
+        <div>
+          <h4 style="margin: 0 0 0.2rem; font-size: 0.95rem; font-weight: 600; color: var(--text-main);">Ask a question</h4>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">AI Agent and team can help</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: #3742fa; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; border: 2px solid rgba(255,255,255,0.1);">KC</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Thread Screen (Hidden by default) -->
+    <div id="chatMessagesTab" style="flex-grow: 1; display: none; flex-direction: column; overflow: hidden; background: rgba(0,0,0,0.15);">
+      <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1rem; border-bottom: 1px solid var(--glass-border); background: rgba(255,255,255,0.02);">
+        <button id="btnBackToHome" style="background: none; border: none; color: var(--text-main); font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; opacity: 0.8;"><i class="fa-solid fa-chevron-left"></i> Back</button>
+        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-left: auto;">Krims AI Support</span>
+      </div>
+      
+      <div id="chatMessagesList" style="flex-grow: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem;">
+        <!-- Welcome Message -->
+        <div class="chat-msg bot" style="align-self: flex-start; max-width: 85%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px 12px 12px 2px; padding: 0.8rem 1rem; font-size: 0.85rem; color: var(--text-main); line-height: 1.4;">
+          Hey there! I am the **Krims Code AI Assistant**. 🤖<br><br>How can I help you with the store today? Ask me about ranks, keys, cosmetics, or custom codes!
+        </div>
+      </div>
+
+      <!-- Input Footer -->
+      <div style="padding: 0.8rem; border-top: 1px solid var(--glass-border); display: flex; gap: 0.5rem; background: rgba(18, 18, 30, 0.98);">
+        <input type="text" id="chatInput" placeholder="Write a message..." style="flex-grow: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 8px; padding: 0.5rem 0.8rem; color: var(--text-main); font-family: inherit; font-size: 0.85rem; outline: none; border: 1px solid var(--glass-border);">
+        <button id="btnSendChat" style="background: #3742fa; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+
+    <!-- Navigation Bar Footer -->
+    <div class="chat-nav" style="display: flex; border-top: 1px solid var(--glass-border); background: rgba(18, 18, 30, 0.98); height: 60px;">
+      <button id="tabHomeBtn" style="flex: 1; background: none; border: none; color: #3742fa; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; cursor: pointer; font-size: 0.75rem; font-weight: 600; font-family: inherit;">
+        <i class="fa-solid fa-house" style="font-size: 1.1rem;"></i>
+        <span>Home</span>
+      </button>
+      <button id="tabMessagesBtn" style="flex: 1; background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; cursor: pointer; font-size: 0.75rem; font-weight: 500; font-family: inherit;">
+        <i class="fa-solid fa-message" style="font-size: 1.1rem;"></i>
+        <span>Messages</span>
+      </button>
+    </div>
+
+  </div>
+
   <script src="index.js"></script>
 </body>
 </html>
