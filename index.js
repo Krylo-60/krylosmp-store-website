@@ -596,7 +596,7 @@ function generateAndRenderProducts() {
     { id: 'overlord-rank', name: 'Overlord Rank', badge: 'OVERLORD', icon: 'fa-skull', color: 'purple', price: 15000, desc: 'Overlord status. Includes purple prefix, 50 homes, `/craft` command, and exclusive discord channel.' },
     { id: 'god-rank', name: 'God Rank', badge: 'GOD', icon: 'fa-bolt', color: 'yellow', price: 25000, desc: 'God rank status. Includes yellow prefix, 80 homes, `/back` command, and double server votes multiplier.' },
     { id: 'immortal-rank', name: 'Immortal Rank', badge: 'IMMORTAL', icon: 'fa-infinity', color: 'white', price: 50000, desc: 'Immortal status. Includes white prefix, unlimited homes, all kits unlocked, and custom tag request.' },
-    { id: 'antigravity-rank', name: 'Antigravity Rank', badge: 'ANTIGRAVITY', icon: 'fa-rocket', color: 'pink', price: 100000, desc: 'The supreme rank of KryloSMP. Includes custom neon pink prefix, toggleable creative mode in base claim, and staff bypass permissions.' }
+    { id: 'krylo-god-rank', name: 'Krylo God Rank', badge: 'KRYLO GOD', icon: 'fa-rocket', color: 'pink', price: 100000, desc: 'The supreme rank of KryloSMP. Includes custom neon pink prefix, toggleable creative mode in base claim, and staff bypass permissions.' }
   ];
 
   rankNames.forEach(r => {
@@ -623,7 +623,7 @@ function generateAndRenderProducts() {
     icon: 'fa-cubes-stacked',
     color: 'gold',
     desc: 'Unlocks ALL 100 ranks, crate keys, cosmetics, and chat tags instantly. Includes a 16% bundle discount and a 5% game tax.',
-    perks: ['All 10 Ranks (VIP to Antigravity)', 'All 15 Key bundles & cosmetics', 'All 50 custom chat suffix tags']
+    perks: ['All 10 Ranks (VIP to Krylo God)', 'All 15 Key bundles & cosmetics', 'All 50 custom chat suffix tags']
   });
 
   // 2. CRATE KEYS (15 products of various bundles)
