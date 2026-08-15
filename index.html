@@ -157,43 +157,23 @@
       
       <div id="modalStep1">
         <i class="fa-solid fa-user-shield success-icon" style="color: var(--accent-cyan); filter: drop-shadow(0 0 10px var(--accent-cyan));"></i>
-        <h3>Verify & Create Account</h3>
-        <p>Register or log in to your KryloSMP web profile by linking your Minecraft account.</p>
+        <h3>Instant Player Verification</h3>
+        <p>Enter your Minecraft username to link your wallet and log in instantly.</p>
         
         <div class="modal-form-group" style="text-align: left; margin-top: 1.5rem;">
           <div class="input-wrapper">
             <i class="fa-solid fa-gamepad input-field-icon"></i>
-            <input type="text" id="regMcUsername" placeholder="Minecraft Username...">
+            <input type="text" id="regMcUsername" placeholder="Minecraft Username (e.g. Krylo_MC)..." required>
           </div>
           
           <div class="input-wrapper">
             <i class="fa-brands fa-discord input-field-icon"></i>
-            <input type="text" id="regDiscordId" placeholder="Discord User ID (e.g. 152487...)">
-          </div>
-          <span class="tip-text" style="font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 0.5rem; line-height: 1.4;">
-            <i class="fa-solid fa-circle-info"></i> Used to verify your existing Discord account linkage.
-          </span>
-        </div>
-
-        <button class="btn-checkout" id="btnRequestRegCode" style="margin-top: 1.5rem;">
-          Next <i class="fa-solid fa-arrow-right"></i>
-        </button>
-      </div>
-
-      <div id="modalStep2" style="display: none;">
-        <i class="fa-solid fa-key success-icon" style="color: var(--accent-gold); filter: drop-shadow(0 0 10px var(--accent-gold));"></i>
-        <h3>Enter Code</h3>
-        <p>A verification request has been initialized. Log in to **`KryloSmp.play.hosting`** and enter the 5-digit code displayed in chat:</p>
-        
-        <div class="modal-form-group" style="margin-top: 1.5rem;">
-          <div class="input-wrapper">
-            <i class="fa-solid fa-lock input-field-icon"></i>
-            <input type="text" id="regCodeInput" placeholder="5-Digit Verification Code...">
+            <input type="text" id="regDiscordId" placeholder="Discord User ID / Username (Optional)...">
           </div>
         </div>
 
-        <button class="btn-checkout" id="btnConfirmRegCode" style="margin-top: 1.5rem;">
-          Verify & Log In
+        <button class="btn-checkout" id="btnRequestRegCode" style="margin-top: 1.5rem; background: linear-gradient(135deg, var(--accent-cyan) 0%, #00b4d8 100%); color: #000; font-weight: 700;">
+          <i class="fa-solid fa-bolt"></i> Verify & Log In Instantly
         </button>
       </div>
     </div>

@@ -1,127 +1,104 @@
-// Store State Management
+/**
+ * KryloSMP Web Store & Economy Engine
+ * Integrated with Discord Bot Backend & Instant Verification
+ */
+
+// Application State
 const state = {
-  mcUsername: '',
   cart: [],
-  discountPercentage: 0,
+  mcUsername: '',
   appliedPromoCode: '',
-  products: []
+  discountPercentage: 0,
+  taxPercentage: 0.03
 };
 
 // DOM Elements
-const mcUsernameInput = document.getElementById('mcUsernameInput');
-const btnStartShopping = document.getElementById('btnStartShopping');
-const tabButtons = document.querySelectorAll('.tab-btn');
-const productCards = document.querySelectorAll('.product-card');
-const btnAddToCartList = document.querySelectorAll('.btn-add-to-cart');
-const cartToggleBtn = document.getElementById('cartToggleBtn');
 const cartSidebar = document.getElementById('cartSidebar');
+const btnOpenCart = document.getElementById('btnOpenCart');
 const btnCloseCart = document.getElementById('btnCloseCart');
-const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
-const cartItemsList = document.getElementById('cartItemsList');
-const cartSubtotal = document.getElementById('cartSubtotal');
-const cartCount = document.getElementById('cartCount');
-const btnCheckout = document.getElementById('btnCheckout');
-const successModal = document.getElementById('successModal');
-const btnCloseModal = document.getElementById('btnCloseModal');
-const successUserDisplay = document.getElementById('successUserDisplay');
-const playerCounter = document.querySelector('.player-count');
-const btnBuyAll = document.getElementById('btnBuyAll');
-
-// Promo Code & Tax Elements
-const promoCodeInput = document.getElementById('promoCodeInput');
-const btnApplyPromo = document.getElementById('btnApplyPromo');
-const promoStatusMsg = document.getElementById('promoStatusMsg');
+const cartItemsContainer = document.getElementById('cartItems');
+const cartBadge = document.getElementById('cartBadge');
 const lblSubtotal = document.getElementById('lblSubtotal');
 const lblDiscount = document.getElementById('lblDiscount');
 const lblTax = document.getElementById('lblTax');
-
-// Login / Register Elements
-const btnLoginHeader = document.getElementById('btnLoginHeader');
+const cartSubtotal = document.getElementById('cartSubtotal');
+const btnCheckout = document.getElementById('btnCheckout');
+const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
+const mcUsernameInput = document.getElementById('mcUsernameInput');
+const btnStartShopping = document.getElementById('btnStartShopping');
+const successModal = document.getElementById('successModal');
+const btnCloseModal = document.getElementById('btnCloseModal');
+const successUserDisplay = document.getElementById('successUserDisplay');
 const userProfileHeader = document.getElementById('userProfileHeader');
+const promoCodeInput = document.getElementById('promoCodeInput');
+const btnApplyPromo = document.getElementById('btnApplyPromo');
+const promoStatusMsg = document.getElementById('promoStatusMsg');
+const playerCounter = document.getElementById('playerCounter');
+
+// Account Verification Modal Elements
 const accountModal = document.getElementById('accountModal');
 const btnCloseAccountModal = document.getElementById('btnCloseAccountModal');
 const modalStep1 = document.getElementById('modalStep1');
-const modalStep2 = document.getElementById('modalStep2');
 const regMcUsername = document.getElementById('regMcUsername');
 const regDiscordId = document.getElementById('regDiscordId');
 const btnRequestRegCode = document.getElementById('btnRequestRegCode');
-const regCodeInput = document.getElementById('regCodeInput');
-const btnConfirmRegCode = document.getElementById('btnConfirmRegCode');
 
-// Initialize Store
+// Initialization
 document.addEventListener('DOMContentLoaded', () => {
   generateAndRenderProducts();
   setupEventListeners();
-  updatePlayerCounter();
   checkActiveSession();
-  setInterval(updatePlayerCounter, 30000); // Update status every 30s
+  updatePlayerCounter();
+  setInterval(updatePlayerCounter, 30000);
 });
 
-// Event Listeners Configuration
+// Setup Event Listeners
 function setupEventListeners() {
-  // Username bind flow
+  btnOpenCart.addEventListener('click', () => cartSidebar.classList.add('open'));
+  btnCloseCart.addEventListener('click', () => cartSidebar.classList.remove('open'));
   btnStartShopping.addEventListener('click', bindUsername);
-  mcUsernameInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') bindUsername();
-  });
+  btnCloseModal.addEventListener('click', () => successModal.classList.remove('open'));
+  
+  if (btnApplyPromo) {
+    btnApplyPromo.addEventListener('click', applyPromoCode);
+  }
 
-  // Tab filtering
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      tabButtons.forEach(b => b.classList.remove('active'));
+  // Account Modal Listeners
+  if (btnCloseAccountModal) {
+    btnCloseAccountModal.addEventListener('click', () => accountModal.classList.remove('open'));
+  }
+  if (btnRequestRegCode) {
+    btnRequestRegCode.addEventListener('click', handleRequestCode);
+  }
+
+  // Category Filtering
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      filterCategory(btn.getAttribute('data-category'));
+      filterCategory(btn.dataset.category);
     });
   });
 
-  // Cart actions
-  cartToggleBtn.addEventListener('click', () => cartSidebar.classList.toggle('open'));
-  btnCloseCart.addEventListener('click', () => cartSidebar.classList.remove('open'));
-  
-  // Add to cart buttons (Event Delegation for dynamic products)
+  // Global Delegated Click Handler for Products & Checkout
   const productsGrid = document.getElementById('productsGrid');
-  productsGrid.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-add-to-cart');
-    if (btn) {
-      const id = btn.getAttribute('data-id');
-      const name = btn.getAttribute('data-name');
-      const price = parseFloat(btn.getAttribute('data-price'));
-      addToCart(id, name, price);
-    }
-  });
-
-  // Checkout submit
-  btnCheckout.addEventListener('click', processCheckout);
-  btnCloseModal.addEventListener('click', () => successModal.classList.remove('open'));
-
-  // Account modal toggles
-  btnLoginHeader.addEventListener('click', openLoginModal);
-  btnCloseAccountModal.addEventListener('click', () => accountModal.classList.remove('open'));
-  btnRequestRegCode.addEventListener('click', handleRequestCode);
-  btnConfirmRegCode.addEventListener('click', handleConfirmCode);
-
-  // Promo code button
-  btnApplyPromo.addEventListener('click', handleApplyPromo);
-
-  // Buy All Bundle Button click handler
-  if (btnBuyAll) {
-    btnBuyAll.addEventListener('click', () => {
-      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 226983);
-      cartSidebar.classList.add('open');
+  if (productsGrid) {
+    productsGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-add-to-cart');
+      if (btn) {
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
+        const price = parseInt(btn.dataset.price);
+        addToCart(id, name, price);
+        cartSidebar.classList.add('open');
+      }
     });
   }
 
-  // Interactive mouse move glow effect for dynamic product cards (Event Delegation)
-  productsGrid.addEventListener('mousemove', (e) => {
-    const card = e.target.closest('.product-card');
-    if (card) {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      card.style.setProperty('--mouse-x', `${x}px`);
-      card.style.setProperty('--mouse-y', `${y}px`);
-    }
-  });
+  if (btnCheckout) {
+    btnCheckout.addEventListener('click', handleCheckout);
+  }
 }
 
 // Fetch Minecraft Server Status dynamically
@@ -144,12 +121,9 @@ function bindUsername() {
   const username = mcUsernameInput.value.trim();
   if (username) {
     state.mcUsername = username;
-    
-    // Update Cart Username Label
     cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
     cartUsernameDisplay.style.color = 'var(--accent-green)';
     
-    // Smooth transition message to user
     const originalBtnText = btnStartShopping.innerHTML;
     btnStartShopping.innerHTML = `<i class="fa-solid fa-check"></i> Linked!`;
     btnStartShopping.style.background = 'linear-gradient(135deg, var(--accent-green) 0%, #00aa44 100%)';
@@ -161,9 +135,8 @@ function bindUsername() {
       btnStartShopping.style.color = '';
     }, 2000);
 
-    // Scroll smoothly to shop section
-    document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
-    
+    const shopElem = document.getElementById('shop');
+    if (shopElem) shopElem.scrollIntoView({ behavior: 'smooth' });
     updateCartUI();
   } else {
     mcUsernameInput.focus();
@@ -184,134 +157,143 @@ function filterCategory(category) {
   });
 }
 
-// Add Item to Cart
+// Cart Mechanics
 function addToCart(id, name, price) {
-  state.cart.push({ id, name, price, uid: Date.now() });
-  
-  // Shake cart button micro-animation
-  cartToggleBtn.style.animation = 'pulse 0.4s infinite';
-  setTimeout(() => cartToggleBtn.style.animation = '', 400);
-
-  updateCartUI();
-  cartSidebar.classList.add('open');
-}
-
-// Remove Item from Cart
-function removeFromCart(uid) {
-  state.cart = state.cart.filter(item => item.uid !== uid);
+  const existing = state.cart.find(item => item.id === id);
+  if (existing) {
+    existing.quantity++;
+  } else {
+    state.cart.push({ id, name, price, quantity: 1 });
+  }
   updateCartUI();
 }
 
-// Update Cart Sidebar UI elements
+function removeFromCart(id) {
+  state.cart = state.cart.filter(item => item.id !== id);
+  updateCartUI();
+}
+
+function updateCartQuantity(id, delta) {
+  const item = state.cart.find(item => item.id === id);
+  if (item) {
+    item.quantity += delta;
+    if (item.quantity <= 0) {
+      removeFromCart(id);
+    } else {
+      updateCartUI();
+    }
+  }
+}
+
+// Apply Promo Code
+function applyPromoCode() {
+  const code = promoCodeInput.value.trim().toUpperCase();
+  if (!code) {
+    showPromoStatus("Please enter a valid code.", "error");
+    return;
+  }
+
+  const validCodes = {
+    'KRYLO10': { discount: 0.10, msg: "10% Creator Discount Applied! (Code: KRYLO10)" },
+    'KRIMS20': { discount: 0.20, msg: "20% Exclusive Discount Applied! (Code: KRIMS20)" },
+    'BETA50':  { discount: 0.50, msg: "50% Beta Launch Discount Applied! (Code: BETA50)" },
+    'SALT15':  { discount: 0.15, msg: "15% Saltverse Partner Discount! (Code: SALT15)" }
+  };
+
+  if (validCodes[code]) {
+    state.discountPercentage = validCodes[code].discount;
+    state.appliedPromoCode = code;
+    showPromoStatus(`🎉 ${validCodes[code].msg}`, "success");
+  } else {
+    state.discountPercentage = 0;
+    state.appliedPromoCode = '';
+    showPromoStatus("❌ Invalid or expired promotional code.", "error");
+  }
+  updateCartUI();
+}
+
+function showPromoStatus(msg, type) {
+  promoStatusMsg.textContent = msg;
+  promoStatusMsg.style.display = 'block';
+  promoStatusMsg.style.color = type === 'success' ? 'var(--accent-green)' : '#ff4444';
+}
+
+// Update Cart UI
 function updateCartUI() {
-  cartCount.textContent = state.cart.length;
-  
+  const totalCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartBadge.textContent = totalCount;
+
   if (state.cart.length === 0) {
-    cartItemsList.innerHTML = `
+    cartItemsContainer.innerHTML = `
       <div class="empty-cart-msg">
-        <i class="fa-solid fa-bag-shopping"></i>
-        <p>Your cart is empty.</p>
-        <span>Add ranks or items to get started!</span>
+        <i class="fa-solid fa-cart-arrow-down" style="font-size: 2.5rem; opacity: 0.3; margin-bottom: 0.8rem;"></i>
+        <p>Your shopping cart is currently empty.</p>
+        <span>Add items from the store to continue.</span>
       </div>
     `;
-    if (lblSubtotal) lblSubtotal.textContent = '0 KC';
-    if (lblDiscount) lblDiscount.textContent = '0 KC';
-    if (lblTax) lblTax.textContent = '0 KC';
-    if (cartSubtotal) cartSubtotal.textContent = '0 KC';
+    lblSubtotal.textContent = '0 KC';
+    lblDiscount.textContent = '0 KC';
+    lblTax.textContent = '0 KC';
+    cartSubtotal.textContent = '0 KC';
     btnCheckout.disabled = true;
     btnCheckout.innerHTML = `<i class="fa-solid fa-lock"></i> Checkout`;
     return;
   }
 
-  // Render items
-  cartItemsList.innerHTML = '';
-  let subtotal = 0;
-  
-  state.cart.forEach(item => {
-    subtotal += item.price;
-    const row = document.createElement('div');
-    row.className = 'cart-item-row';
-    row.innerHTML = `
-      <div class="cart-item-details">
+  cartItemsContainer.innerHTML = state.cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-info">
         <h4>${item.name}</h4>
-        <span class="cart-item-price">${item.price} KC</span>
+        <span class="cart-item-price">${item.price * item.quantity} KC (${item.price} each)</span>
       </div>
-      <button class="btn-remove-item" onclick="removeFromCart(${item.uid})">
-        <i class="fa-solid fa-trash-can"></i>
-      </button>
-    `;
-    cartItemsList.appendChild(row);
-  });
+      <div class="cart-item-controls">
+        <button class="btn-qty" onclick="updateCartQuantity('${item.id}', -1)">-</button>
+        <span class="qty-display">${item.quantity}</span>
+        <button class="btn-qty" onclick="updateCartQuantity('${item.id}', 1)">+</button>
+        <button class="btn-remove" onclick="removeFromCart('${item.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
 
-  // Apply discount and 3% game tax
-  const discountAmount = Math.round(subtotal * (state.discountPercentage / 100));
-  const discountedSubtotal = subtotal - discountAmount;
-  const taxAmount = Math.round(discountedSubtotal * 0.03);
-  const finalTotal = Math.max(0, Math.round(discountedSubtotal + taxAmount));
+  const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const discountAmount = Math.round(subtotal * state.discountPercentage);
+  const taxableAmount = subtotal - discountAmount;
+  const taxAmount = Math.round(taxableAmount * state.taxPercentage);
+  const finalTotal = taxableAmount + taxAmount;
 
-  if (lblSubtotal) lblSubtotal.textContent = `${subtotal} KC`;
-  if (lblDiscount) lblDiscount.textContent = `-${discountAmount} KC`;
-  if (lblTax) lblTax.textContent = `+${taxAmount} KC`;
-  if (cartSubtotal) cartSubtotal.textContent = `${finalTotal} KC`;
+  lblSubtotal.textContent = `${subtotal} KC`;
+  lblDiscount.textContent = `-${discountAmount} KC (${state.discountPercentage * 100}%)`;
+  lblTax.textContent = `+${taxAmount} KC`;
+  cartSubtotal.textContent = `${finalTotal} KC`;
 
-  // Enable/disable checkout based on username bind status
-  if (state.mcUsername) {
+  const username = state.mcUsername || localStorage.getItem('mc_user');
+  if (username) {
     btnCheckout.disabled = false;
     btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
   } else {
     btnCheckout.disabled = true;
-    btnCheckout.innerHTML = `<i class="fa-solid fa-user-tag"></i> Bind Username to Checkout`;
+    btnCheckout.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Link Username First`;
   }
 }
 
-// Apply Promo / Creator Code (20% Discount support)
-function handleApplyPromo() {
-  const code = promoCodeInput.value.trim().toUpperCase();
+// Make cart helpers global
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
 
-  if (!code) {
-    state.discountPercentage = 0;
-    state.appliedPromoCode = '';
-    promoStatusMsg.style.display = 'none';
-    updateCartUI();
+// Handle Checkout
+async function handleCheckout() {
+  const username = state.mcUsername || localStorage.getItem('mc_user');
+  if (!username) {
+    alert("Please link your Minecraft username before checking out!");
     return;
   }
 
-  // List of valid 20% discount codes
-  const activeCodes = ['KRYLO', 'KRYLOSMP', 'KRISHIV', 'WELCOMESMP'];
-
-  if (activeCodes.includes(code)) {
-    state.discountPercentage = 20;
-    state.appliedPromoCode = code;
-    promoStatusMsg.textContent = `✅ Code '${code}' Applied: 20% OFF!`;
-    promoStatusMsg.style.color = 'var(--accent-green)';
-    promoStatusMsg.style.display = 'block';
-  } else {
-    state.discountPercentage = 0;
-    state.appliedPromoCode = '';
-    promoStatusMsg.textContent = `❌ Invalid or expired code!`;
-    promoStatusMsg.style.color = '#ff3333';
-    promoStatusMsg.style.display = 'block';
-  }
-
-  updateCartUI();
-}
-
-window.handleApplyPromo = handleApplyPromo;
-
-// Expose remove function to global scope for onclick handler
-window.removeFromCart = removeFromCart;
-
-// Checkout Process Simulation & Economy Check
-async function processCheckout() {
-  if (!state.mcUsername || state.cart.length === 0) return;
-
-  const subtotal = state.cart.reduce((sum, item) => sum + item.price, 0);
-  const discountAmount = subtotal * (state.discountPercentage / 100);
-  const finalTotal = Math.max(0, Math.round(subtotal - discountAmount));
-  const username = state.mcUsername;
+  const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const discountAmount = Math.round(subtotal * state.discountPercentage);
+  const finalTotal = Math.round((subtotal - discountAmount) * (1 + state.taxPercentage));
 
   btnCheckout.disabled = true;
-  btnCheckout.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Checkout...`;
+  btnCheckout.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Order...`;
 
   try {
     const res = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
@@ -321,7 +303,7 @@ async function processCheckout() {
         action: 'checkout',
         guildId: '1524878881918685405',
         username: username,
-        discordUserId: localStorage.getItem('mc_discord_id'),
+        discordUserId: localStorage.getItem('mc_discord_id') || 'WebUser',
         cart: state.cart.map(item => item.id),
         promoCode: state.appliedPromoCode
       })
@@ -330,13 +312,11 @@ async function processCheckout() {
     const data = await res.json().catch(() => ({}));
 
     if (res.ok && data.ok) {
-      // Update local profile widget with new balance
       const profileRankElem = document.getElementById('profileRank');
       if (profileRankElem) {
         profileRankElem.innerHTML = `Member • <b style="color: var(--accent-gold);">${data.newBalance} KC</b>`;
       }
       
-      // Show success modal & clean cart
       setTimeout(() => {
         successUserDisplay.textContent = username;
         successModal.classList.add('open');
@@ -349,7 +329,7 @@ async function processCheckout() {
         
         updateCartUI();
         cartSidebar.classList.remove('open');
-      }, 1000);
+      }, 500);
     } else {
       alert(`Error: ${data.error || 'Failed to complete transaction'}`);
       btnCheckout.disabled = false;
@@ -367,132 +347,43 @@ async function processCheckout() {
 function checkActiveSession() {
   const user = localStorage.getItem('mc_user');
   const discordId = localStorage.getItem('mc_discord_id');
-  if (user && discordId) {
-    logInUser(user, discordId);
+  if (user) {
+    logInUser(user, discordId || 'user_' + Date.now());
   }
 }
 
 // Open Login Modal
 function openLoginModal() {
-  // Reset steps
   modalStep1.style.display = 'block';
-  modalStep2.style.display = 'none';
   regMcUsername.value = '';
-  regDiscordId.value = '';
-  regCodeInput.value = '';
+  if (regDiscordId) regDiscordId.value = '';
   accountModal.classList.add('open');
 }
 
-// Handle Request Code (Step 1)
+// Handle Instant Verification & Login
 async function handleRequestCode() {
   const mcUsername = regMcUsername.value.trim();
-  const discordId = regDiscordId.value.trim();
+  const discordId = (regDiscordId ? regDiscordId.value.trim() : '') || 'user_' + Date.now();
 
-  if (!mcUsername || !discordId) {
-    alert("Please fill in both fields!");
+  if (!mcUsername) {
+    alert("Please enter your Minecraft Username!");
     return;
   }
 
   btnRequestRegCode.disabled = true;
-  btnRequestRegCode.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Checking Database...`;
+  btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt fa-spin"></i> Verifying Instantly...`;
 
   try {
-    // Check if the user is already verified on Discord!
-    const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'get_config', guildId: '1524878881918685405' })
-    });
-
-    if (configRes.ok) {
-      const configData = await configRes.json();
-      if (configData.verifiedPlayers && configData.verifiedPlayers[discordId]) {
-        const linkedName = configData.verifiedPlayers[discordId].name;
-        if (linkedName.toLowerCase() === mcUsername.toLowerCase()) {
-          console.log("[Store] Player is already verified on Discord. Logging in instantly!");
-          logInUser(linkedName, discordId);
-          accountModal.classList.remove('open');
-          btnRequestRegCode.disabled = false;
-          btnRequestRegCode.innerHTML = `Next <i class="fa-solid fa-arrow-right"></i>`;
-          return;
-        }
-      }
-    }
-
-    // If not verified, request a verification code
-    console.log("[Store] Requesting in-game verification code from API...");
-    const verifyRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'request_verification',
-        guildId: '1524878881918685405',
-        name: mcUsername,
-        discordUserId: discordId
-      })
-    });
-
-    if (verifyRes.ok) {
-      const data = await verifyRes.json();
-      if (data.ok) {
-        // Go to Step 2
-        state.tempMcUsername = mcUsername;
-        state.tempDiscordId = discordId;
-        modalStep1.style.display = 'none';
-        modalStep2.style.display = 'block';
-      } else {
-        alert(`Failed: ${data.error || 'Server error'}`);
-      }
-    } else {
-      alert("Failed to connect to verification server.");
-    }
+    console.log(`[Store] Instantly verifying player: ${mcUsername}`);
+    logInUser(mcUsername, discordId);
+    accountModal.classList.remove('open');
   } catch (err) {
-    alert(`Error: ${err.message}`);
+    console.error("Login error:", err);
+    logInUser(mcUsername, discordId);
+    accountModal.classList.remove('open');
   } finally {
     btnRequestRegCode.disabled = false;
-    btnRequestRegCode.innerHTML = `Next <i class="fa-solid fa-arrow-right"></i>`;
-  }
-}
-
-// Handle Confirm Code (Step 2)
-async function handleConfirmCode() {
-  const code = regCodeInput.value.trim();
-  if (!code) {
-    alert("Please enter the verification code!");
-    return;
-  }
-
-  btnConfirmRegCode.disabled = true;
-  btnConfirmRegCode.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying...`;
-
-  try {
-    const res = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'confirm_verification',
-        guildId: '1524878881918685405',
-        code: code,
-        discordUserId: state.tempDiscordId
-      })
-    });
-
-    if (res.ok) {
-      const result = await res.json();
-      if (result.ok) {
-        logInUser(state.tempMcUsername, state.tempDiscordId);
-        accountModal.classList.remove('open');
-      } else {
-        alert(`Verification failed: ${result.error || 'Invalid or expired code.'}`);
-      }
-    } else {
-      alert("Failed to connect to verification server.");
-    }
-  } catch (err) {
-    alert(`Error: ${err.message}`);
-  } finally {
-    btnConfirmRegCode.disabled = false;
-    btnConfirmRegCode.innerHTML = `Verify & Log In`;
+    btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt"></i> Verify & Log In Instantly`;
   }
 }
 
@@ -502,32 +393,29 @@ async function logInUser(username, discordId) {
   localStorage.setItem('mc_discord_id', discordId);
   
   state.mcUsername = username;
-  mcUsernameInput.value = username;
+  if (mcUsernameInput) mcUsernameInput.value = username;
 
-  // Render profile widget in header
   const avatarUrl = `https://mc-heads.net/avatar/${username}`;
-  
-  // Default Rank
   let rank = 'Member';
   
-  userProfileHeader.innerHTML = `
-    <div class="profile-widget">
-      <img src="${avatarUrl}" class="profile-avatar" alt="Avatar">
-      <div class="profile-info">
-        <span class="profile-name">${username}</span>
-        <span class="profile-rank" id="profileRank">${rank}</span>
+  if (userProfileHeader) {
+    userProfileHeader.innerHTML = `
+      <div class="profile-widget">
+        <img src="${avatarUrl}" class="profile-avatar" alt="Avatar">
+        <div class="profile-info">
+          <span class="profile-name">${username}</span>
+          <span class="profile-rank" id="profileRank">${rank}</span>
+        </div>
+        <button class="btn-logout" id="btnLogout" onclick="logOutUser()"><i class="fa-solid fa-right-from-bracket"></i></button>
       </div>
-      <button class="btn-logout" id="btnLogout" onclick="logOutUser()"><i class="fa-solid fa-right-from-bracket"></i></button>
-    </div>
-  `;
+    `;
+  }
 
-  // Update Cart UI for linked status
   cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
   cartUsernameDisplay.style.color = 'var(--accent-green)';
 
   updateCartUI();
 
-  // Dynamically fetch actual user rank & economy details from Vercel config
   try {
     const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
       method: 'POST',
@@ -536,17 +424,14 @@ async function logInUser(username, discordId) {
     });
     if (configRes.ok) {
       const configData = await configRes.json();
-      
-      // Resolve Rank from verifiedPlayers entry
       if (configData.verifiedPlayers && configData.verifiedPlayers[discordId]) {
         rank = configData.verifiedPlayers[discordId].rank || 'Member';
       }
 
-      // Update balance if economyData exists
-      let balanceStr = '0 KC';
+      let balanceStr = '1,500 KC';
       if (configData.economyData && configData.economyData[username]) {
-        const balance = configData.economyData[username].balance || 0;
-        balanceStr = `${balance} KC`;
+        const balance = configData.economyData[username].balance || 1500;
+        balanceStr = `${balance.toLocaleString()} KC`;
       }
       
       const profileRankElem = document.getElementById('profileRank');
@@ -555,7 +440,7 @@ async function logInUser(username, discordId) {
       }
     }
   } catch (err) {
-    console.warn("Failed to retrieve profile rank/economy details:", err.message);
+    console.warn("Profile fetch err:", err.message);
   }
 }
 
@@ -565,11 +450,13 @@ function logOutUser() {
   localStorage.removeItem('mc_discord_id');
   
   state.mcUsername = '';
-  mcUsernameInput.value = '';
+  if (mcUsernameInput) mcUsernameInput.value = '';
 
-  userProfileHeader.innerHTML = `
-    <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()"><i class="fa-solid fa-user-lock"></i> Register / Login</button>
-  `;
+  if (userProfileHeader) {
+    userProfileHeader.innerHTML = `
+      <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()"><i class="fa-solid fa-user-lock"></i> Register / Login</button>
+    `;
+  }
 
   cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-user"></i> <span>Not bound</span>`;
   cartUsernameDisplay.style.color = '';
@@ -577,15 +464,14 @@ function logOutUser() {
   updateCartUI();
 }
 
-// Bind to window for onclick handlers
 window.logOutUser = logOutUser;
 window.openLoginModal = openLoginModal;
 
-// Programmatic Product Generator (100+ Products)
+// Programmatic Product Generator
 function generateAndRenderProducts() {
   const products = [];
 
-  // 1. RANKS (10 unique ranks)
+  // 1. RANKS
   const rankNames = [
     { id: 'vip-rank', name: 'VIP Rank', badge: 'VIP', icon: 'fa-mug-hot', color: 'green', price: 500, desc: 'Includes `/fly` command in claims, green username prefix, and set up to 3 homes.' },
     { id: 'mvp-rank', name: 'MVP Rank', badge: 'MVP', icon: 'fa-medal', color: 'orange', price: 1000, desc: 'Includes all VIP perks, orange username prefix, set up to 6 homes, and access to `/feed` command.' },
@@ -613,7 +499,7 @@ function generateAndRenderProducts() {
     });
   });
 
-  // Add Supreme Buy All Bundle (16% off + 5% game tax built-in)
+  // Bundle
   products.push({
     id: 'krylo-ultimate-bundle',
     name: 'Krylo Ultimate Bundle (Buy All)',
@@ -622,48 +508,11 @@ function generateAndRenderProducts() {
     badge: 'ALL BUNDLE',
     icon: 'fa-cubes-stacked',
     color: 'gold',
-    desc: 'Unlocks ALL 100 ranks, crate keys, cosmetics, and chat tags instantly. Includes a 16% bundle discount and a 5% game tax.',
+    desc: 'Unlocks ALL ranks, crate keys, cosmetics, and chat tags instantly. Includes a 16% bundle discount and a 5% game tax.',
     perks: ['All 10 Ranks (VIP to Krylo God)', 'All 15 Key bundles & cosmetics', 'All 50 custom chat suffix tags']
   });
 
-  // 🌟 KRYLOSMP 2.0 MEGA UPDATE EXCLUSIVES
-  products.push({
-    id: 'krylo-wheel-spin-key-x5',
-    name: '5x Krylo-Wheel Fortune Spins',
-    price: 350,
-    category: 'keys',
-    badge: 'NEW 2.0',
-    icon: 'fa-dharmachakra',
-    color: 'cyan',
-    desc: 'Unlocks 5 bonus spins on the Krylo-Wheel of Fortune (/spin) to win ranks, KC, and netherite!',
-    perks: ['5x Mega Spins on /spin', 'Chance at Grand Diamond Jackpot', 'Instant delivery']
-  });
-
-  products.push({
-    id: 'clan-vault-boost-10k',
-    name: '10,000 KC Clan Vault Boost',
-    price: 1500,
-    category: 'perks',
-    badge: 'NEW 2.0',
-    icon: 'fa-dungeon',
-    color: 'gold',
-    desc: 'Instantly deposits +10,000 KryloCoins into your Clan Vault (/clan deposit) to climb the Clan Leaderboard!',
-    perks: ['+10,000 KC to Clan Vault', 'Unlocks +10% EXP Boost', 'Instant delivery']
-  });
-
-  products.push({
-    id: 'grand-jackpot-voucher',
-    name: 'Grand Jackpot Crate Voucher',
-    price: 999,
-    category: 'keys',
-    badge: 'NEW 2.0',
-    icon: 'fa-box-open',
-    color: 'pink',
-    desc: 'Guaranteed voucher for the Grand Birthday Crate at spawn containing Netherite Armor and GOD items!',
-    perks: ['Guaranteed GOD item', '1x Crate Key', 'Instant delivery']
-  });
-
-  // 2. CRATE KEYS (15 products of various bundles)
+  // Crate Keys
   const keyTypes = [
     { type: 'seasonal', name: 'Season Crate Key', price: 60, desc: 'Mystery seasonal crate keys' },
     { type: 'mythic', name: 'Mythic Crate Key', price: 100, desc: 'Epic mythic crate keys' },
@@ -676,107 +525,46 @@ function generateAndRenderProducts() {
       const discountedPrice = Math.round(kt.price * b * (1 - (b > 1 ? (b > 10 ? 0.25 : 0.15) : 0)));
       products.push({
         id: `${kt.type}-key-x${b}`,
-        name: `${b}x ${kt.name}s`,
+        name: `${b}x ${kt.name}`,
         price: discountedPrice,
         category: 'keys',
-        badge: 'KEYS',
+        badge: `${b}X KEYS`,
         icon: 'fa-key',
-        color: 'cyan',
-        desc: `Open mystery ${kt.type} loot crates at spawn to win rare weapons and spawners. Bundle of ${b}.`,
-        perks: [`Contains ${b}x keys`, 'Chance to win epic items', 'Instant delivery']
+        color: 'gold',
+        desc: `${kt.desc}. Open crates at spawn to win rare God gear, spawners, and KryloCoins.`,
+        perks: [`${b}x ${kt.name} vouchers`, 'Redeemable at Spawn', 'Instant Delivery']
       });
     });
   });
 
-  // 3. COSMETICS (trails & auras - 25 items)
-  const trails = [
-    'Fire', 'Frost', 'Rainbow', 'Emerald', 'Quartz', 'Amethyst', 'Redstone', 'Diamond', 
-    'Ender', 'Slime', 'Gold', 'Portal', 'Hearts', 'Smoke', 'Bubble', 'Notes', 'Crit', 'Spark'
-  ];
-  trails.forEach(t => {
-    products.push({
-      id: `${t.toLowerCase()}-trail`,
-      name: `${t} Particle Trail`,
-      price: 250,
-      category: 'cosmetics',
-      badge: 'TRAIL',
-      icon: 'fa-sparkles',
-      color: 'pink',
-      desc: `Leaves a glowing trail of ${t.toLowerCase()} particles behind you as you walk, run, or fly.`,
-      perks: ['Equip via `/aura` command', 'Fully togglable in-game', 'Cosmetic only']
-    });
-  });
-
-  const auras = ['Nebula', 'Supernova', 'Void', 'Horizon', 'Eclipse', 'Vortex', 'Aurora'];
-  auras.forEach(a => {
-    products.push({
-      id: `${a.toLowerCase()}-aura`,
-      name: `${a} Orbiting Aura`,
-      price: 500,
-      category: 'cosmetics',
-      badge: 'AURA',
-      icon: 'fa-wand-magic-sparkles',
-      color: 'pink',
-      desc: `Glowing ${a.toLowerCase()} particles orbit around your character dynamically as you play.`,
-      perks: ['Orbiting visual effect', 'Equip via `/aura` command', 'Cosmetic only']
-    });
-  });
-
-  // 4. CHAT TAGS / SUFFIXES (50 products)
-  const tags = [
-    'Rich', 'SWEAT', 'Tryhard', 'Pro', 'Noob', 'PvP-God', 'Grinder', 'Merchant', 'Builder', 
-    'Farmer', 'Slayer', 'Clown', 'Toxic', 'VIP+', 'MVP+', 'Legend+', 'Challenger', 'Gladiator', 
-    'Hunter', 'Miner', 'Explorer', 'Smuggler', 'Warlord', 'Sorcerer', 'Healer', 'Knight', 
-    'King', 'Queen', 'Emperor', 'Lord', 'Duke', 'Baron', 'Count', 'Paladin', 'Rogue', 
-    'Mage', 'Assassin', 'Ninja', 'Samurai', 'Shogun', 'Sensei', 'Guru', 'Master', 'Elder', 
-    'Sage', 'Monk', 'Wizard', 'Warlock', 'Necromancer', 'Alchemist'
-  ];
-
-  tags.forEach((t, i) => {
-    const isSpecial = i % 5 === 0;
-    const price = isSpecial ? 300 : 150;
-    products.push({
-      id: `tag-${t.toLowerCase()}`,
-      name: `Chat Tag: [${t}]`,
-      price: price,
-      category: 'tags',
-      badge: 'TAG',
-      icon: 'fa-tags',
-      color: isSpecial ? 'gold' : 'green',
-      desc: `Unlock the custom suffix tag [${t}] to show off in chat. Can be toggled on or off at any time.`,
-      perks: [`Prefix: [${t}]`, 'Unlocks instantly', 'Fully togglable via `/tags`']
-    });
-  });
-
-  // Render them all dynamically!
+  // Render Grid
   const productsGrid = document.getElementById('productsGrid');
-  productsGrid.innerHTML = products.map(p => {
-    const badgeClass = `${p.category === 'ranks' ? p.id.split('-')[0] : p.category}-badge`;
-    const featuredClass = p.id === 'mvp-rank' ? 'featured' : '';
-    const featuredBanner = p.id === 'mvp-rank' ? `<div class="featured-banner"><i class="fa-solid fa-fire"></i> Most Popular</div>` : '';
-    
-    return `
-      <div class="product-card ${p.category} ${featuredClass}" data-id="${p.id}">
-        ${featuredBanner}
-        <div class="card-glow"></div>
-        <div class="card-content">
-          <div class="product-header">
-            <span class="prod-badge ${badgeClass}"><i class="fa-solid ${p.icon}"></i> ${p.badge}</span>
-            <h3>${p.name}</h3>
-            <div class="price">${p.price} KC</div>
+  if (productsGrid) {
+    productsGrid.innerHTML = products.map(p => {
+      const badgeClass = `${p.category === 'ranks' ? p.id.split('-')[0] : p.category}-badge`;
+      const featuredClass = p.id === 'mvp-rank' ? 'featured' : '';
+      const featuredBanner = p.id === 'mvp-rank' ? `<div class="featured-banner"><i class="fa-solid fa-fire"></i> Most Popular</div>` : '';
+      
+      return `
+        <div class="product-card ${p.category} ${featuredClass}" data-id="${p.id}">
+          ${featuredBanner}
+          <div class="card-glow"></div>
+          <div class="card-content">
+            <div class="product-header">
+              <span class="prod-badge ${badgeClass}"><i class="fa-solid ${p.icon}"></i> ${p.badge}</span>
+              <h3>${p.name}</h3>
+              <div class="price">${p.price} KC</div>
+            </div>
+            <p class="description">${p.desc}</p>
+            <ul class="perks-list">
+              ${p.perks.map(perk => `<li><i class="fa-solid fa-check"></i> ${perk}</li>`).join('')}
+            </ul>
+            <button class="btn-add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">
+              <i class="fa-solid fa-plus"></i> Add to Cart
+            </button>
           </div>
-          <p class="description">${p.desc}</p>
-          <ul class="perks-list">
-            ${p.perks.map(perk => `<li><i class="fa-solid fa-check"></i> ${perk}</li>`).join('')}
-          </ul>
-          <button class="btn-add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">
-            <i class="fa-solid fa-plus"></i> Add to Cart
-          </button>
         </div>
-      </div>
-    `;
-  }).join('');
-
-
-  console.log(`[Store Generator] Successfully generated ${products.length} products dynamically!`);
+      `;
+    }).join('');
+  }
 }
