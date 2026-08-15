@@ -12,37 +12,6 @@ const state = {
   taxPercentage: 0.03
 };
 
-// DOM Elements
-const cartSidebar = document.getElementById('cartSidebar');
-const btnOpenCart = document.getElementById('btnOpenCart');
-const btnCloseCart = document.getElementById('btnCloseCart');
-const cartItemsContainer = document.getElementById('cartItems');
-const cartBadge = document.getElementById('cartBadge');
-const lblSubtotal = document.getElementById('lblSubtotal');
-const lblDiscount = document.getElementById('lblDiscount');
-const lblTax = document.getElementById('lblTax');
-const cartSubtotal = document.getElementById('cartSubtotal');
-const btnCheckout = document.getElementById('btnCheckout');
-const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
-const mcUsernameInput = document.getElementById('mcUsernameInput');
-const btnStartShopping = document.getElementById('btnStartShopping');
-const successModal = document.getElementById('successModal');
-const btnCloseModal = document.getElementById('btnCloseModal');
-const successUserDisplay = document.getElementById('successUserDisplay');
-const userProfileHeader = document.getElementById('userProfileHeader');
-const promoCodeInput = document.getElementById('promoCodeInput');
-const btnApplyPromo = document.getElementById('btnApplyPromo');
-const promoStatusMsg = document.getElementById('promoStatusMsg');
-const playerCounter = document.getElementById('playerCounter');
-
-// Account Verification Modal Elements
-const accountModal = document.getElementById('accountModal');
-const btnCloseAccountModal = document.getElementById('btnCloseAccountModal');
-const modalStep1 = document.getElementById('modalStep1');
-const regMcUsername = document.getElementById('regMcUsername');
-const regDiscordId = document.getElementById('regDiscordId');
-const btnRequestRegCode = document.getElementById('btnRequestRegCode');
-
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
   generateAndRenderProducts();
@@ -54,34 +23,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Setup Event Listeners
 function setupEventListeners() {
-  btnOpenCart.addEventListener('click', () => cartSidebar.classList.add('open'));
-  btnCloseCart.addEventListener('click', () => cartSidebar.classList.remove('open'));
-  btnStartShopping.addEventListener('click', bindUsername);
-  btnCloseModal.addEventListener('click', () => successModal.classList.remove('open'));
-  
+  const cartSidebar = document.getElementById('cartSidebar');
+  const cartToggleBtn = document.getElementById('cartToggleBtn');
+  const btnCloseCart = document.getElementById('btnCloseCart');
+  const btnStartShopping = document.getElementById('btnStartShopping');
+  const successModal = document.getElementById('successModal');
+  const btnCloseModal = document.getElementById('btnCloseModal');
+  const btnApplyPromo = document.getElementById('btnApplyPromo');
+  const btnBuyAll = document.getElementById('btnBuyAll');
+  const btnLoginHeader = document.getElementById('btnLoginHeader');
+  const accountModal = document.getElementById('accountModal');
+  const btnCloseAccountModal = document.getElementById('btnCloseAccountModal');
+  const btnRequestRegCode = document.getElementById('btnRequestRegCode');
+  const btnCheckout = document.getElementById('btnCheckout');
+
+  if (cartToggleBtn && cartSidebar) {
+    cartToggleBtn.addEventListener('click', () => cartSidebar.classList.add('open'));
+  }
+  if (btnCloseCart && cartSidebar) {
+    btnCloseCart.addEventListener('click', () => cartSidebar.classList.remove('open'));
+  }
+  if (btnStartShopping) {
+    btnStartShopping.addEventListener('click', bindUsername);
+  }
+  if (btnCloseModal && successModal) {
+    btnCloseModal.addEventListener('click', () => successModal.classList.remove('open'));
+  }
   if (btnApplyPromo) {
     btnApplyPromo.addEventListener('click', applyPromoCode);
   }
-
-  // Account Modal Listeners
-  if (btnCloseAccountModal) {
+  if (btnLoginHeader) {
+    btnLoginHeader.addEventListener('click', openLoginModal);
+  }
+  if (btnCloseAccountModal && accountModal) {
     btnCloseAccountModal.addEventListener('click', () => accountModal.classList.remove('open'));
   }
   if (btnRequestRegCode) {
     btnRequestRegCode.addEventListener('click', handleRequestCode);
   }
+  if (btnCheckout) {
+    btnCheckout.addEventListener('click', handleCheckout);
+  }
+  if (btnBuyAll) {
+    btnBuyAll.addEventListener('click', () => {
+      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 226983);
+      if (cartSidebar) cartSidebar.classList.add('open');
+    });
+  }
 
   // Category Filtering
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  filterBtns.forEach(btn => {
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      tabBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      filterCategory(btn.dataset.category);
+      filterCategory(btn.dataset.category || 'all');
     });
   });
 
-  // Global Delegated Click Handler for Products & Checkout
+  // Global Delegated Click Handler for Products
   const productsGrid = document.getElementById('productsGrid');
   if (productsGrid) {
     productsGrid.addEventListener('click', (e) => {
@@ -89,51 +89,66 @@ function setupEventListeners() {
       if (btn) {
         const id = btn.dataset.id;
         const name = btn.dataset.name;
-        const price = parseInt(btn.dataset.price);
+        const price = parseInt(btn.dataset.price, 10);
         addToCart(id, name, price);
-        cartSidebar.classList.add('open');
+        const sidebar = document.getElementById('cartSidebar');
+        if (sidebar) sidebar.classList.add('open');
       }
     });
-  }
-
-  if (btnCheckout) {
-    btnCheckout.addEventListener('click', handleCheckout);
   }
 }
 
 // Fetch Minecraft Server Status dynamically
 async function updatePlayerCounter() {
+  const counterElems = document.querySelectorAll('.player-count');
   try {
     const res = await fetch('https://api.mcsrvstat.us/3/KryloSmp.play.hosting');
     const data = await res.json();
     if (data.online) {
-      playerCounter.innerHTML = `<b style="color: var(--accent-green);">${data.players.online}/${data.players.max}</b> Online`;
+      counterElems.forEach(el => {
+        el.innerHTML = `<b style="color: var(--accent-green);">${data.players.online}/${data.players.max}</b> Online`;
+      });
     } else {
-      playerCounter.innerHTML = `<span style="color: #ff3333;">Offline</span>`;
+      counterElems.forEach(el => {
+        el.innerHTML = `<span style="color: #ff3333;">Offline</span>`;
+      });
     }
   } catch {
-    playerCounter.innerHTML = `<b style="color: var(--accent-green);">12/50</b> Online`;
+    counterElems.forEach(el => {
+      el.innerHTML = `<b style="color: var(--accent-green);">12/50</b> Online`;
+    });
   }
 }
 
 // Bind Username
 function bindUsername() {
+  const mcUsernameInput = document.getElementById('mcUsernameInput');
+  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
+  const btnStartShopping = document.getElementById('btnStartShopping');
+  
+  if (!mcUsernameInput) return;
   const username = mcUsernameInput.value.trim();
   if (username) {
     state.mcUsername = username;
-    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
-    cartUsernameDisplay.style.color = 'var(--accent-green)';
+    localStorage.setItem('mc_user', username);
+
+    if (cartUsernameDisplay) {
+      cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
+      cartUsernameDisplay.style.color = 'var(--accent-green)';
+    }
     
-    const originalBtnText = btnStartShopping.innerHTML;
-    btnStartShopping.innerHTML = `<i class="fa-solid fa-check"></i> Linked!`;
-    btnStartShopping.style.background = 'linear-gradient(135deg, var(--accent-green) 0%, #00aa44 100%)';
-    btnStartShopping.style.color = '#000';
-    
-    setTimeout(() => {
-      btnStartShopping.innerHTML = originalBtnText;
-      btnStartShopping.style.background = '';
-      btnStartShopping.style.color = '';
-    }, 2000);
+    if (btnStartShopping) {
+      const originalBtnText = btnStartShopping.innerHTML;
+      btnStartShopping.innerHTML = `<i class="fa-solid fa-check"></i> Linked!`;
+      btnStartShopping.style.background = 'linear-gradient(135deg, var(--accent-green) 0%, #00aa44 100%)';
+      btnStartShopping.style.color = '#000';
+      
+      setTimeout(() => {
+        btnStartShopping.innerHTML = originalBtnText;
+        btnStartShopping.style.background = '';
+        btnStartShopping.style.color = '';
+      }, 2000);
+    }
 
     const shopElem = document.getElementById('shop');
     if (shopElem) shopElem.scrollIntoView({ behavior: 'smooth' });
@@ -187,6 +202,10 @@ function updateCartQuantity(id, delta) {
 
 // Apply Promo Code
 function applyPromoCode() {
+  const promoCodeInput = document.getElementById('promoCodeInput');
+  const promoStatusMsg = document.getElementById('promoStatusMsg');
+  if (!promoCodeInput) return;
+
   const code = promoCodeInput.value.trim().toUpperCase();
   if (!code) {
     showPromoStatus("Please enter a valid code.", "error");
@@ -213,6 +232,8 @@ function applyPromoCode() {
 }
 
 function showPromoStatus(msg, type) {
+  const promoStatusMsg = document.getElementById('promoStatusMsg');
+  if (!promoStatusMsg) return;
   promoStatusMsg.textContent = msg;
   promoStatusMsg.style.display = 'block';
   promoStatusMsg.style.color = type === 'success' ? 'var(--accent-green)' : '#ff4444';
@@ -220,8 +241,19 @@ function showPromoStatus(msg, type) {
 
 // Update Cart UI
 function updateCartUI() {
+  const cartBadge = document.getElementById('cartCount');
+  const cartItemsContainer = document.getElementById('cartItemsList');
+  const lblSubtotal = document.getElementById('lblSubtotal');
+  const lblDiscount = document.getElementById('lblDiscount');
+  const lblTax = document.getElementById('lblTax');
+  const cartSubtotal = document.getElementById('cartSubtotal');
+  const btnCheckout = document.getElementById('btnCheckout');
+  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
+
   const totalCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  cartBadge.textContent = totalCount;
+  if (cartBadge) cartBadge.textContent = totalCount;
+
+  if (!cartItemsContainer) return;
 
   if (state.cart.length === 0) {
     cartItemsContainer.innerHTML = `
@@ -231,12 +263,14 @@ function updateCartUI() {
         <span>Add items from the store to continue.</span>
       </div>
     `;
-    lblSubtotal.textContent = '0 KC';
-    lblDiscount.textContent = '0 KC';
-    lblTax.textContent = '0 KC';
-    cartSubtotal.textContent = '0 KC';
-    btnCheckout.disabled = true;
-    btnCheckout.innerHTML = `<i class="fa-solid fa-lock"></i> Checkout`;
+    if (lblSubtotal) lblSubtotal.textContent = '0 KC';
+    if (lblDiscount) lblDiscount.textContent = '0 KC';
+    if (lblTax) lblTax.textContent = '0 KC';
+    if (cartSubtotal) cartSubtotal.textContent = '0 KC';
+    if (btnCheckout) {
+      btnCheckout.disabled = true;
+      btnCheckout.innerHTML = `<i class="fa-solid fa-lock"></i> Checkout`;
+    }
     return;
   }
 
@@ -261,22 +295,28 @@ function updateCartUI() {
   const taxAmount = Math.round(taxableAmount * state.taxPercentage);
   const finalTotal = taxableAmount + taxAmount;
 
-  lblSubtotal.textContent = `${subtotal} KC`;
-  lblDiscount.textContent = `-${discountAmount} KC (${state.discountPercentage * 100}%)`;
-  lblTax.textContent = `+${taxAmount} KC`;
-  cartSubtotal.textContent = `${finalTotal} KC`;
+  if (lblSubtotal) lblSubtotal.textContent = `${subtotal} KC`;
+  if (lblDiscount) lblDiscount.textContent = `-${discountAmount} KC (${state.discountPercentage * 100}%)`;
+  if (lblTax) lblTax.textContent = `+${taxAmount} KC`;
+  if (cartSubtotal) cartSubtotal.textContent = `${finalTotal} KC`;
 
   const username = state.mcUsername || localStorage.getItem('mc_user');
-  if (username) {
-    btnCheckout.disabled = false;
-    btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
-  } else {
-    btnCheckout.disabled = true;
-    btnCheckout.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Link Username First`;
+  if (btnCheckout) {
+    if (username) {
+      btnCheckout.disabled = false;
+      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+    } else {
+      btnCheckout.disabled = true;
+      btnCheckout.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Link Username First`;
+    }
+  }
+
+  if (cartUsernameDisplay && username) {
+    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
+    cartUsernameDisplay.style.color = 'var(--accent-green)';
   }
 }
 
-// Make cart helpers global
 window.updateCartQuantity = updateCartQuantity;
 window.removeFromCart = removeFromCart;
 
@@ -292,8 +332,17 @@ async function handleCheckout() {
   const discountAmount = Math.round(subtotal * state.discountPercentage);
   const finalTotal = Math.round((subtotal - discountAmount) * (1 + state.taxPercentage));
 
-  btnCheckout.disabled = true;
-  btnCheckout.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Order...`;
+  const btnCheckout = document.getElementById('btnCheckout');
+  const successModal = document.getElementById('successModal');
+  const successUserDisplay = document.getElementById('successUserDisplay');
+  const promoCodeInput = document.getElementById('promoCodeInput');
+  const promoStatusMsg = document.getElementById('promoStatusMsg');
+  const cartSidebar = document.getElementById('cartSidebar');
+
+  if (btnCheckout) {
+    btnCheckout.disabled = true;
+    btnCheckout.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Processing Order...`;
+  }
 
   try {
     const res = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
@@ -318,8 +367,8 @@ async function handleCheckout() {
       }
       
       setTimeout(() => {
-        successUserDisplay.textContent = username;
-        successModal.classList.add('open');
+        if (successUserDisplay) successUserDisplay.textContent = username;
+        if (successModal) successModal.classList.add('open');
         
         state.cart = [];
         state.discountPercentage = 0;
@@ -328,18 +377,22 @@ async function handleCheckout() {
         if (promoStatusMsg) promoStatusMsg.style.display = 'none';
         
         updateCartUI();
-        cartSidebar.classList.remove('open');
+        if (cartSidebar) cartSidebar.classList.remove('open');
       }, 500);
     } else {
       alert(`Error: ${data.error || 'Failed to complete transaction'}`);
-      btnCheckout.disabled = false;
-      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+      if (btnCheckout) {
+        btnCheckout.disabled = false;
+        btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+      }
     }
   } catch (err) {
     console.error("Checkout failed:", err.message);
     alert(`Checkout error: ${err.message}`);
-    btnCheckout.disabled = false;
-    btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+    if (btnCheckout) {
+      btnCheckout.disabled = false;
+      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+    }
   }
 }
 
@@ -354,14 +407,25 @@ function checkActiveSession() {
 
 // Open Login Modal
 function openLoginModal() {
-  modalStep1.style.display = 'block';
-  regMcUsername.value = '';
+  const accountModal = document.getElementById('accountModal');
+  const modalStep1 = document.getElementById('modalStep1');
+  const regMcUsername = document.getElementById('regMcUsername');
+  const regDiscordId = document.getElementById('regDiscordId');
+
+  if (modalStep1) modalStep1.style.display = 'block';
+  if (regMcUsername) regMcUsername.value = '';
   if (regDiscordId) regDiscordId.value = '';
-  accountModal.classList.add('open');
+  if (accountModal) accountModal.classList.add('open');
 }
 
 // Handle Instant Verification & Login
 async function handleRequestCode() {
+  const regMcUsername = document.getElementById('regMcUsername');
+  const regDiscordId = document.getElementById('regDiscordId');
+  const btnRequestRegCode = document.getElementById('btnRequestRegCode');
+  const accountModal = document.getElementById('accountModal');
+
+  if (!regMcUsername) return;
   const mcUsername = regMcUsername.value.trim();
   const discordId = (regDiscordId ? regDiscordId.value.trim() : '') || 'user_' + Date.now();
 
@@ -370,20 +434,24 @@ async function handleRequestCode() {
     return;
   }
 
-  btnRequestRegCode.disabled = true;
-  btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt fa-spin"></i> Verifying Instantly...`;
+  if (btnRequestRegCode) {
+    btnRequestRegCode.disabled = true;
+    btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt fa-spin"></i> Verifying Instantly...`;
+  }
 
   try {
     console.log(`[Store] Instantly verifying player: ${mcUsername}`);
     logInUser(mcUsername, discordId);
-    accountModal.classList.remove('open');
+    if (accountModal) accountModal.classList.remove('open');
   } catch (err) {
     console.error("Login error:", err);
     logInUser(mcUsername, discordId);
-    accountModal.classList.remove('open');
+    if (accountModal) accountModal.classList.remove('open');
   } finally {
-    btnRequestRegCode.disabled = false;
-    btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt"></i> Verify & Log In Instantly`;
+    if (btnRequestRegCode) {
+      btnRequestRegCode.disabled = false;
+      btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt"></i> Verify & Log In Instantly`;
+    }
   }
 }
 
@@ -393,6 +461,10 @@ async function logInUser(username, discordId) {
   localStorage.setItem('mc_discord_id', discordId);
   
   state.mcUsername = username;
+  const mcUsernameInput = document.getElementById('mcUsernameInput');
+  const userProfileHeader = document.getElementById('userProfileHeader');
+  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
+
   if (mcUsernameInput) mcUsernameInput.value = username;
 
   const avatarUrl = `https://mc-heads.net/avatar/${username}`;
@@ -411,8 +483,10 @@ async function logInUser(username, discordId) {
     `;
   }
 
-  cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
-  cartUsernameDisplay.style.color = 'var(--accent-green)';
+  if (cartUsernameDisplay) {
+    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
+    cartUsernameDisplay.style.color = 'var(--accent-green)';
+  }
 
   updateCartUI();
 
@@ -450,6 +524,10 @@ function logOutUser() {
   localStorage.removeItem('mc_discord_id');
   
   state.mcUsername = '';
+  const mcUsernameInput = document.getElementById('mcUsernameInput');
+  const userProfileHeader = document.getElementById('userProfileHeader');
+  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
+
   if (mcUsernameInput) mcUsernameInput.value = '';
 
   if (userProfileHeader) {
@@ -458,8 +536,10 @@ function logOutUser() {
     `;
   }
 
-  cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-user"></i> <span>Not bound</span>`;
-  cartUsernameDisplay.style.color = '';
+  if (cartUsernameDisplay) {
+    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-user"></i> <span>Not bound</span>`;
+    cartUsernameDisplay.style.color = '';
+  }
 
   updateCartUI();
 }
