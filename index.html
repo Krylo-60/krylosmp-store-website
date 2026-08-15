@@ -3,32 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>KryloSMP Store — Premium Ranks, Keys & Perks</title>
-  <meta name="description" content="Official webstore for the KryloSMP Minecraft Server. Purchase VIP, MVP, Legend ranks, crate keys, and exclusive cosmetics. Java & Bedrock crossplay!">
+  <title>KryloSMP — Official Server Hub & Player Portal</title>
+  <meta name="description" content="Official portal for the KryloSMP Minecraft Server. Check live server status, connect your Minecraft account, view your KryloCoins wallet, and join our Discord!">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="index.css?v=3.0">
+  <link rel="stylesheet" href="index.css?v=4.0">
 </head>
 <body>
 
-  <!-- Background Glowing Blobs -->
-  <div class="glow-blob blob-1" id="blob1"></div>
-  <div class="glow-blob blob-2" id="blob2"></div>
+  <!-- Background Glow Effects -->
+  <div class="glow-blob blob-1"></div>
+  <div class="glow-blob blob-2"></div>
 
-  <!-- Header Section -->
+  <!-- Header -->
   <header>
     <div class="nav-container">
-      <a href="#" class="logo" id="navLogo">
+      <a href="#" class="logo">
         <i class="fa-solid fa-crown logo-icon"></i>
         <span>Krylo<span>SMP</span></span>
       </a>
       
       <nav class="desktop-nav">
         <a href="#home" class="active"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="#shop"><i class="fa-solid fa-shopping-cart"></i> Store</a>
-        <a href="https://krylosmp.web.app" target="_blank"><i class="fa-solid fa-users"></i> Portal</a>
+        <a href="https://krylosmp.web.app" target="_blank"><i class="fa-solid fa-users"></i> Player Database</a>
         <a href="https://discord.gg/xYmyPxSx7u" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
       </nav>
 
@@ -36,139 +35,131 @@
         <div class="server-status" onclick="copyServerIp()" title="Click to copy IP">
           <div class="status-indicator"></div>
           <span class="status-text">KryloSmp.play.hosting</span>
-          <span class="player-count">Loading...</span>
+          <span class="player-count">Checking...</span>
         </div>
         
         <div class="user-profile-header" id="userProfileHeader">
           <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()">
-            <i class="fa-solid fa-user-lock"></i> <span>Register / Login</span>
+            <i class="fa-solid fa-user-lock"></i> <span>Link Account</span>
           </button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Main Content -->
   <main>
     <!-- Hero Section -->
     <section class="hero" id="home">
       <div class="hero-content">
-        <span class="badge"><i class="fa-solid fa-bolt"></i> Instant 1-Click Verification Active</span>
-        <h1>Elevate Your <br>Minecraft Experience</h1>
-        <p>Support server development and unlock premium ranks, mythic crate keys, custom particle trails, and exclusive perks on Java & Bedrock!</p>
+        <span class="badge"><i class="fa-solid fa-bolt"></i> Official Season 1 Network</span>
+        <h1>Welcome to <br><span class="gradient-text">KryloSMP</span></h1>
+        <p>The premier Minecraft SMP featuring custom economy, clans, crossplay voice chat, and competitive PvP on Java & Bedrock 1.21.x.</p>
         
-        <!-- Username Input Form -->
+        <!-- Quick Link Minecraft Username -->
         <div class="username-box" id="usernameInputBox">
-          <i class="fa-solid fa-user user-input-icon"></i>
+          <i class="fa-solid fa-gamepad user-input-icon"></i>
           <input type="text" id="mcUsernameInput" placeholder="Enter Minecraft Username (e.g. Krylo_MC)..." autocomplete="off">
-          <button id="btnStartShopping" onclick="bindUsername()">Shop Now <i class="fa-solid fa-arrow-right"></i></button>
+          <button id="btnStartShopping" onclick="bindUsername()">
+            <i class="fa-solid fa-link"></i> Link Profile
+          </button>
         </div>
-        <span class="input-tip"><i class="fa-solid fa-circle-info"></i> Enter your username to unlock 1-click cart purchases and wallet linking</span>
+        <span class="input-tip"><i class="fa-solid fa-circle-info"></i> Instant 0-code profile linking & wallet sync</span>
       </div>
     </section>
 
-    <!-- Shop Section -->
-    <section class="shop-section" id="shop">
-      <div class="section-header">
-        <h2>⚡ Featured Products & Ranks</h2>
-        <p>Choose from our selection of premium upgrades and ranks designed for Java & Bedrock crossplay.</p>
-        
-        <!-- Category Tabs -->
-        <div class="category-tabs">
-          <button class="tab-btn active" data-category="all" id="tabAll">🔥 All Items</button>
-          <button class="tab-btn" data-category="ranks" id="tabRanks">👑 Ranks</button>
-          <button class="tab-btn" data-category="keys" id="tabKeys">🔑 Keys</button>
-          <button class="tab-btn" data-category="cosmetics" id="tabCosmetics">✨ Cosmetics</button>
-          <button class="tab-btn" data-category="tags" id="tabTags">🏷️ Chat Tags</button>
-          <button class="buy-all-btn" id="btnBuyAll" onclick="handleBuyAllBundle()"><i class="fa-solid fa-bolt"></i> Buy All Bundle</button>
+    <!-- Server Connection & Info Cards -->
+    <section class="info-section">
+      <div class="info-grid">
+        <!-- Card 1: Server Connection Details -->
+        <div class="info-card connection-card">
+          <div class="card-icon"><i class="fa-solid fa-server"></i></div>
+          <h3>Server Connection Details</h3>
+          <p>Join millions of players on any device. Crossplay enabled!</p>
+          
+          <div class="connection-details">
+            <div class="detail-row">
+              <span class="detail-label">☕ Java Server IP:</span>
+              <span class="detail-value copyable" onclick="copyText('KryloSmp.play.hosting:25565')">KryloSmp.play.hosting:25565 📋</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">🪨 Bedrock Server IP:</span>
+              <span class="detail-value copyable" onclick="copyText('KryloSmp.play.hosting')">KryloSmp.play.hosting 📋</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">🔌 Bedrock Port:</span>
+              <span class="detail-value copyable" onclick="copyText('19132')">19132 📋</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">🎮 Supported Versions:</span>
+              <span class="detail-value highlight">Java & Bedrock 1.20.x - 1.21.x</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Products Grid -->
-      <div class="products-grid" id="productsGrid">
-        <!-- Programmatically rendered -->
+        <!-- Card 2: Player Wallet & Linked Account -->
+        <div class="info-card wallet-card">
+          <div class="card-icon"><i class="fa-solid fa-wallet"></i></div>
+          <h3>Your Player Profile</h3>
+          <p id="profileStatusSubtitle">Not currently linked. Enter your username above to link!</p>
+          
+          <div class="wallet-display-box" id="walletDisplayBox">
+            <img src="https://mc-heads.net/avatar/MHF_Steve" id="heroAvatar" class="hero-avatar" alt="Avatar">
+            <div class="wallet-details">
+              <h4 id="heroPlayerName">Guest Player</h4>
+              <span class="wallet-rank" id="heroPlayerRank">Unlinked Account</span>
+              <span class="wallet-balance" id="heroPlayerBalance">0 KryloCoins</span>
+            </div>
+          </div>
+
+          <button class="btn-portal-action" onclick="openLoginModal()">
+            <i class="fa-solid fa-bolt"></i> Instant Account Verification
+          </button>
+        </div>
+
+        <!-- Card 3: In-Game Economy Commands -->
+        <div class="info-card commands-card">
+          <div class="card-icon"><i class="fa-solid fa-terminal"></i></div>
+          <h3>Essential In-Game Commands</h3>
+          <p>Commands to earn, trade, and spend KryloCoins in-game:</p>
+          
+          <div class="commands-list">
+            <div class="cmd-item"><code>/shop</code> <span>Open the in-game GUI store to buy items & perks</span></div>
+            <div class="cmd-item"><code>/daily</code> <span>Claim your daily KryloCoin reward streak</span></div>
+            <div class="cmd-item"><code>/balance</code> <span>Check your current wallet & vault balance</span></div>
+            <div class="cmd-item"><code>/clan</code> <span>Create or join a clan, upgrade vault, recruit allies</span></div>
+            <div class="cmd-item"><code>/pvp</code> <span>Challenge players in the ranked combat arena</span></div>
+          </div>
+        </div>
+
+        <!-- Card 4: Community & Support -->
+        <div class="info-card community-card">
+          <div class="card-icon"><i class="fa-brands fa-discord"></i></div>
+          <h3>Join Our Community</h3>
+          <p>Participate in giveaways, claim booster perks, and get 24/7 staff assistance.</p>
+          
+          <div class="community-buttons">
+            <a href="https://discord.gg/xYmyPxSx7u" target="_blank" class="btn-discord-join">
+              <i class="fa-brands fa-discord"></i> Join Discord Server
+            </a>
+            <a href="https://krylosmp.web.app" target="_blank" class="btn-portal-secondary">
+              <i class="fa-solid fa-database"></i> Explore Full Database
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- Floating Cart Summary Button -->
-  <div class="cart-floating-btn" id="cartToggleBtn" onclick="toggleCartDrawer()">
-    <i class="fa-solid fa-shopping-cart"></i>
-    <span class="cart-badge" id="cartCount">0</span>
-  </div>
-
-  <!-- Shopping Cart Sidebar Drawer -->
-  <div class="cart-sidebar" id="cartSidebar">
-    <div class="cart-header">
-      <h3><i class="fa-solid fa-shopping-cart"></i> Shopping Cart</h3>
-      <button class="close-cart-btn" id="btnCloseCart" onclick="toggleCartDrawer(false)"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    
-    <div class="cart-username-banner" id="cartUsernameDisplay">
-      <i class="fa-solid fa-user"></i> <span>Not bound</span>
-    </div>
-
-    <div class="cart-items" id="cartItemsList">
-      <div class="empty-cart-msg">
-        <i class="fa-solid fa-bag-shopping"></i>
-        <p>Your cart is empty.</p>
-        <span>Add ranks or keys to get started!</span>
-      </div>
-    </div>
-
-    <div class="cart-footer">
-      <div class="promo-code-section">
-        <input type="text" id="promoCodeInput" placeholder="Promo or Creator Code...">
-        <button id="btnApplyPromo" onclick="applyPromoCode()">Apply</button>
-      </div>
-      <div class="promo-status-msg" id="promoStatusMsg" style="display: none;"></div>
-      
-      <div class="cart-totals">
-        <div class="total-row">
-          <span>Subtotal:</span>
-          <span id="lblSubtotal">0 KC</span>
-        </div>
-        <div class="total-row discount-row">
-          <span>Discount:</span>
-          <span id="lblDiscount">0 KC</span>
-        </div>
-        <div class="total-row tax-row">
-          <span>Game Tax (3%):</span>
-          <span id="lblTax">0 KC</span>
-        </div>
-        <div class="total-row grand-total">
-          <span>Total:</span>
-          <span id="cartSubtotal">0 KC</span>
-        </div>
-      </div>
-      
-      <button class="btn-checkout" id="btnCheckout" onclick="handleCheckout()" disabled>
-        <i class="fa-solid fa-lock"></i> Checkout
-      </button>
-    </div>
-  </div>
-
-  <!-- Checkout Success Modal -->
-  <div class="success-modal" id="successModal" onclick="if(event.target===this)closeSuccessModal()">
-    <div class="modal-card">
-      <i class="fa-solid fa-circle-check success-icon"></i>
-      <h3>Order Placed Successfully!</h3>
-      <p>Thank you for supporting <strong>KryloSMP</strong>! Your purchase has been linked to username:</p>
-      <div class="success-user-box" id="successUserDisplay">Krylo_MC</div>
-      <p class="delivery-tip">🎁 Your ranks and items will be delivered automatically in-game within 2 minutes. Please remain online!</p>
-      <button class="btn-close-modal" id="btnCloseModal" onclick="closeSuccessModal()">Continue</button>
-    </div>
-  </div>
-
-  <!-- Account Verification / Register Modal -->
+  <!-- Instant Verification / Link Account Modal -->
   <div class="success-modal" id="accountModal" onclick="if(event.target===this)closeLoginModal()">
     <div class="modal-card">
-      <button class="close-cart-btn modal-close-x" id="btnCloseAccountModal" onclick="closeLoginModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close-x" id="btnCloseAccountModal" onclick="closeLoginModal()"><i class="fa-solid fa-xmark"></i></button>
       
       <div id="modalStep1">
-        <i class="fa-solid fa-user-shield success-icon" style="color: var(--accent-cyan); filter: drop-shadow(0 0 10px var(--accent-cyan));"></i>
+        <i class="fa-solid fa-user-shield success-icon"></i>
         <h3>Instant Player Verification</h3>
-        <p>Enter your Minecraft username to link your wallet and log in instantly with 0 codes.</p>
+        <p>Enter your Minecraft IGN to link your player wallet and claim verified status. No codes required!</p>
         
         <form onsubmit="handleAccountFormSubmit(event)">
           <div class="modal-form-group">
@@ -183,8 +174,8 @@
             </div>
           </div>
 
-          <button type="submit" class="btn-checkout btn-verify-instant" id="btnRequestRegCode">
-            <i class="fa-solid fa-bolt"></i> Verify & Log In Instantly
+          <button type="submit" class="btn-submit-verify" id="btnRequestRegCode">
+            <i class="fa-solid fa-bolt"></i> Verify & Link Instantly
           </button>
         </form>
       </div>
@@ -199,6 +190,6 @@
     </div>
   </footer>
 
-  <script src="index.js?v=3.0"></script>
+  <script src="index.js?v=4.0"></script>
 </body>
 </html>
