@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KryloSMP Store — Premium Ranks & Perks</title>
-  <meta name="description" content="Official webstore for the KryloSMP Minecraft Server. Purchase VIP, MVP, Legend ranks, crate keys, and exclusive neon velocity aura cosmetics. Join now!">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KryloSMP Store — Premium Ranks, Keys & Perks</title>
+  <meta name="description" content="Official webstore for the KryloSMP Minecraft Server. Purchase VIP, MVP, Legend ranks, crate keys, and exclusive cosmetics. Java & Bedrock crossplay!">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -24,19 +24,25 @@
         <i class="fa-solid fa-crown logo-icon"></i>
         <span>Krylo<span>SMP</span></span>
       </a>
-      <nav>
+      
+      <nav class="desktop-nav">
         <a href="#home" class="active"><i class="fa-solid fa-house"></i> Home</a>
         <a href="#shop"><i class="fa-solid fa-shopping-cart"></i> Store</a>
+        <a href="https://krylosmp.web.app" target="_blank"><i class="fa-solid fa-users"></i> Portal</a>
         <a href="https://discord.gg/xYmyPxSx7u" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
       </nav>
-      <div class="header-right" style="display: flex; align-items: center; gap: 1.5rem;">
-        <div class="server-status">
+
+      <div class="header-right">
+        <div class="server-status" onclick="copyServerIp()" title="Click to copy IP">
           <div class="status-indicator"></div>
           <span class="status-text">KryloSmp.play.hosting</span>
-          <span class="player-count">Loading status...</span>
+          <span class="player-count">Loading...</span>
         </div>
+        
         <div class="user-profile-header" id="userProfileHeader">
-          <button class="btn-login-header" id="btnLoginHeader"><i class="fa-solid fa-user-lock"></i> Register / Login</button>
+          <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()">
+            <i class="fa-solid fa-user-lock"></i> <span>Register / Login</span>
+          </button>
         </div>
       </div>
     </div>
@@ -47,53 +53,55 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
       <div class="hero-content">
-        <span class="badge"><i class="fa-solid fa-star"></i> Season 1 Store is Live</span>
+        <span class="badge"><i class="fa-solid fa-bolt"></i> Instant 1-Click Verification Active</span>
         <h1>Elevate Your <br>Minecraft Experience</h1>
-        <p>Support the server development and unlock premium features, custom particles, exclusive ranks, and extra server perks!</p>
+        <p>Support server development and unlock premium ranks, mythic crate keys, custom particle trails, and exclusive perks on Java & Bedrock!</p>
         
         <!-- Username Input Form -->
         <div class="username-box" id="usernameInputBox">
           <i class="fa-solid fa-user user-input-icon"></i>
-          <input type="text" id="mcUsernameInput" placeholder="Enter Minecraft Username..." autocomplete="off">
-          <button id="btnStartShopping">Shop Now <i class="fa-solid fa-arrow-right"></i></button>
+          <input type="text" id="mcUsernameInput" placeholder="Enter Minecraft Username (e.g. Krylo_MC)..." autocomplete="off">
+          <button id="btnStartShopping" onclick="bindUsername()">Shop Now <i class="fa-solid fa-arrow-right"></i></button>
         </div>
-        <span class="input-tip"><i class="fa-solid fa-circle-info"></i> Enter your username to unlock product customization & purchase options</span>
+        <span class="input-tip"><i class="fa-solid fa-circle-info"></i> Enter your username to unlock 1-click cart purchases and wallet linking</span>
       </div>
     </section>
 
     <!-- Shop Section -->
     <section class="shop-section" id="shop">
       <div class="section-header">
-        <h2>⚡ Featured Products</h2>
+        <h2>⚡ Featured Products & Ranks</h2>
         <p>Choose from our selection of premium upgrades and ranks designed for Java & Bedrock crossplay.</p>
-        <div class="category-tabs" style="display: flex; align-items: center; width: 100%; flex-wrap: wrap; gap: 0.5rem;">
+        
+        <!-- Category Tabs -->
+        <div class="category-tabs">
           <button class="tab-btn active" data-category="all" id="tabAll">🔥 All Items</button>
           <button class="tab-btn" data-category="ranks" id="tabRanks">👑 Ranks</button>
           <button class="tab-btn" data-category="keys" id="tabKeys">🔑 Keys</button>
           <button class="tab-btn" data-category="cosmetics" id="tabCosmetics">✨ Cosmetics</button>
           <button class="tab-btn" data-category="tags" id="tabTags">🏷️ Chat Tags</button>
-          <button class="buy-all-btn" id="btnBuyAll" style="background: linear-gradient(135deg, #ff007f, #7f00ff); border: none; color: #fff; padding: 0.5rem 1.2rem; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 0, 127, 0.4); margin-left: auto; display: flex; align-items: center; gap: 0.4rem; border: 1px solid rgba(255,255,255,0.1);"><i class="fa-solid fa-bolt"></i> Buy All Bundle</button>
+          <button class="buy-all-btn" id="btnBuyAll" onclick="handleBuyAllBundle()"><i class="fa-solid fa-bolt"></i> Buy All Bundle</button>
         </div>
       </div>
 
       <!-- Products Grid -->
       <div class="products-grid" id="productsGrid">
-        <!-- Generated programmatically in index.js -->
+        <!-- Programmatically rendered -->
       </div>
     </section>
   </main>
 
-  <!-- Floating Cart Summary -->
-  <div class="cart-floating-btn" id="cartToggleBtn">
+  <!-- Floating Cart Summary Button -->
+  <div class="cart-floating-btn" id="cartToggleBtn" onclick="toggleCartDrawer()">
     <i class="fa-solid fa-shopping-cart"></i>
     <span class="cart-badge" id="cartCount">0</span>
   </div>
 
-  <!-- Shopping Cart Sidebar -->
+  <!-- Shopping Cart Sidebar Drawer -->
   <div class="cart-sidebar" id="cartSidebar">
     <div class="cart-header">
       <h3><i class="fa-solid fa-shopping-cart"></i> Shopping Cart</h3>
-      <button class="close-cart-btn" id="btnCloseCart"><i class="fa-solid fa-xmark"></i></button>
+      <button class="close-cart-btn" id="btnCloseCart" onclick="toggleCartDrawer(false)"><i class="fa-solid fa-xmark"></i></button>
     </div>
     
     <div class="cart-username-banner" id="cartUsernameDisplay">
@@ -104,77 +112,81 @@
       <div class="empty-cart-msg">
         <i class="fa-solid fa-bag-shopping"></i>
         <p>Your cart is empty.</p>
-        <span>Add ranks or items to get started!</span>
+        <span>Add ranks or keys to get started!</span>
       </div>
     </div>
 
     <div class="cart-footer">
-      <div class="promo-code-section" style="margin-bottom: 1rem; display: flex; gap: 0.5rem;">
-        <input type="text" id="promoCodeInput" placeholder="Promo or Creator Code..." style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 0.5rem 0.8rem; border-radius: 8px; color: var(--text-main); font-family: inherit; font-size: 0.85rem; flex-grow: 1; outline: none; transition: border-color 0.3s ease;">
-        <button id="btnApplyPromo" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: all 0.3s ease;">Apply</button>
+      <div class="promo-code-section">
+        <input type="text" id="promoCodeInput" placeholder="Promo or Creator Code...">
+        <button id="btnApplyPromo" onclick="applyPromoCode()">Apply</button>
       </div>
-      <div class="promo-status-msg" id="promoStatusMsg" style="font-size: 0.75rem; margin-bottom: 0.8rem; text-align: left; display: none;"></div>
-      <div class="cart-totals" style="display: flex; flex-direction: column; gap: 0.4rem; border-top: 1px solid var(--glass-border); padding-top: 0.8rem; margin-bottom: 0.8rem;">
-        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; opacity: 0.8;">
+      <div class="promo-status-msg" id="promoStatusMsg" style="display: none;"></div>
+      
+      <div class="cart-totals">
+        <div class="total-row">
           <span>Subtotal:</span>
           <span id="lblSubtotal">0 KC</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; opacity: 0.8; color: var(--accent-green);">
+        <div class="total-row discount-row">
           <span>Discount:</span>
           <span id="lblDiscount">0 KC</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; opacity: 0.8; color: #ff9f43;">
+        <div class="total-row tax-row">
           <span>Game Tax (3%):</span>
           <span id="lblTax">0 KC</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; border-top: 1px dashed var(--glass-border); padding-top: 0.4rem; margin-top: 0.2rem;">
+        <div class="total-row grand-total">
           <span>Total:</span>
           <span id="cartSubtotal">0 KC</span>
         </div>
       </div>
-      <button class="btn-checkout" id="btnCheckout" disabled>
+      
+      <button class="btn-checkout" id="btnCheckout" onclick="handleCheckout()" disabled>
         <i class="fa-solid fa-lock"></i> Checkout
       </button>
     </div>
   </div>
 
   <!-- Checkout Success Modal -->
-  <div class="success-modal" id="successModal">
+  <div class="success-modal" id="successModal" onclick="if(event.target===this)closeSuccessModal()">
     <div class="modal-card">
       <i class="fa-solid fa-circle-check success-icon"></i>
       <h3>Order Placed Successfully!</h3>
-      <p>Thank you for supporting **KryloSMP**! Your purchase has been linked to username:</p>
-      <div class="success-user-box" id="successUserDisplay">Krylo</div>
+      <p>Thank you for supporting <strong>KryloSMP</strong>! Your purchase has been linked to username:</p>
+      <div class="success-user-box" id="successUserDisplay">Krylo_MC</div>
       <p class="delivery-tip">🎁 Your ranks and items will be delivered automatically in-game within 2 minutes. Please remain online!</p>
-      <button class="btn-close-modal" id="btnCloseModal">Continue</button>
+      <button class="btn-close-modal" id="btnCloseModal" onclick="closeSuccessModal()">Continue</button>
     </div>
   </div>
 
   <!-- Account Verification / Register Modal -->
-  <div class="success-modal" id="accountModal">
-    <div class="modal-card" style="position: relative;">
-      <button class="close-cart-btn" id="btnCloseAccountModal" style="position: absolute; top: 1.5rem; right: 1.5rem;"><i class="fa-solid fa-xmark"></i></button>
+  <div class="success-modal" id="accountModal" onclick="if(event.target===this)closeLoginModal()">
+    <div class="modal-card">
+      <button class="close-cart-btn modal-close-x" id="btnCloseAccountModal" onclick="closeLoginModal()"><i class="fa-solid fa-xmark"></i></button>
       
       <div id="modalStep1">
         <i class="fa-solid fa-user-shield success-icon" style="color: var(--accent-cyan); filter: drop-shadow(0 0 10px var(--accent-cyan));"></i>
         <h3>Instant Player Verification</h3>
-        <p>Enter your Minecraft username to link your wallet and log in instantly.</p>
+        <p>Enter your Minecraft username to link your wallet and log in instantly with 0 codes.</p>
         
-        <div class="modal-form-group" style="text-align: left; margin-top: 1.5rem;">
-          <div class="input-wrapper">
-            <i class="fa-solid fa-gamepad input-field-icon"></i>
-            <input type="text" id="regMcUsername" placeholder="Minecraft Username (e.g. Krylo_MC)..." required>
+        <form onsubmit="handleAccountFormSubmit(event)">
+          <div class="modal-form-group">
+            <div class="input-wrapper">
+              <i class="fa-solid fa-gamepad input-field-icon"></i>
+              <input type="text" id="regMcUsername" placeholder="Minecraft Username (e.g. Krylo_MC)..." required autocomplete="off">
+            </div>
+            
+            <div class="input-wrapper">
+              <i class="fa-brands fa-discord input-field-icon"></i>
+              <input type="text" id="regDiscordId" placeholder="Discord User ID / Tag (Optional)..." autocomplete="off">
+            </div>
           </div>
-          
-          <div class="input-wrapper">
-            <i class="fa-brands fa-discord input-field-icon"></i>
-            <input type="text" id="regDiscordId" placeholder="Discord User ID / Username (Optional)...">
-          </div>
-        </div>
 
-        <button class="btn-checkout" id="btnRequestRegCode" style="margin-top: 1.5rem; background: linear-gradient(135deg, var(--accent-cyan) 0%, #00b4d8 100%); color: #000; font-weight: 700;">
-          <i class="fa-solid fa-bolt"></i> Verify & Log In Instantly
-        </button>
+          <button type="submit" class="btn-checkout btn-verify-instant" id="btnRequestRegCode">
+            <i class="fa-solid fa-bolt"></i> Verify & Log In Instantly
+          </button>
+        </form>
       </div>
     </div>
   </div>
@@ -182,7 +194,7 @@
   <!-- Footer -->
   <footer>
     <div class="footer-container">
-      <p>© 2026 KryloSMP. All rights reserved.</p>
+      <p>© 2026 KryloSMP Network. All rights reserved.</p>
       <p class="mojang-disclaimer">Not an official Minecraft product. We are not associated with or approved by Mojang Studios or Microsoft.</p>
     </div>
   </footer>

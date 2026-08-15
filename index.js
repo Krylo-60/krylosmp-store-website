@@ -1,6 +1,6 @@
 /**
  * KryloSMP Web Store & Economy Engine
- * Integrated with Discord Bot Backend & Instant Verification
+ * Fully Responsive, Mobile-Optimized & 1-Click Instant Verification
  */
 
 // Application State
@@ -12,65 +12,17 @@ const state = {
   taxPercentage: 0.03
 };
 
-// Initialization
+// Initialization on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   generateAndRenderProducts();
   setupEventListeners();
   checkActiveSession();
   updatePlayerCounter();
-  setInterval(updatePlayerCounter, 30000);
+  setInterval(updatePlayerCounter, 25000);
 });
 
-// Setup Event Listeners
+// Setup Global Event Listeners
 function setupEventListeners() {
-  const cartSidebar = document.getElementById('cartSidebar');
-  const cartToggleBtn = document.getElementById('cartToggleBtn');
-  const btnCloseCart = document.getElementById('btnCloseCart');
-  const btnStartShopping = document.getElementById('btnStartShopping');
-  const successModal = document.getElementById('successModal');
-  const btnCloseModal = document.getElementById('btnCloseModal');
-  const btnApplyPromo = document.getElementById('btnApplyPromo');
-  const btnBuyAll = document.getElementById('btnBuyAll');
-  const btnLoginHeader = document.getElementById('btnLoginHeader');
-  const accountModal = document.getElementById('accountModal');
-  const btnCloseAccountModal = document.getElementById('btnCloseAccountModal');
-  const btnRequestRegCode = document.getElementById('btnRequestRegCode');
-  const btnCheckout = document.getElementById('btnCheckout');
-
-  if (cartToggleBtn && cartSidebar) {
-    cartToggleBtn.addEventListener('click', () => cartSidebar.classList.add('open'));
-  }
-  if (btnCloseCart && cartSidebar) {
-    btnCloseCart.addEventListener('click', () => cartSidebar.classList.remove('open'));
-  }
-  if (btnStartShopping) {
-    btnStartShopping.addEventListener('click', bindUsername);
-  }
-  if (btnCloseModal && successModal) {
-    btnCloseModal.addEventListener('click', () => successModal.classList.remove('open'));
-  }
-  if (btnApplyPromo) {
-    btnApplyPromo.addEventListener('click', applyPromoCode);
-  }
-  if (btnLoginHeader) {
-    btnLoginHeader.addEventListener('click', openLoginModal);
-  }
-  if (btnCloseAccountModal && accountModal) {
-    btnCloseAccountModal.addEventListener('click', () => accountModal.classList.remove('open'));
-  }
-  if (btnRequestRegCode) {
-    btnRequestRegCode.addEventListener('click', handleRequestCode);
-  }
-  if (btnCheckout) {
-    btnCheckout.addEventListener('click', handleCheckout);
-  }
-  if (btnBuyAll) {
-    btnBuyAll.addEventListener('click', () => {
-      addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 226983);
-      if (cartSidebar) cartSidebar.classList.add('open');
-    });
-  }
-
   // Category Filtering
   const tabBtns = document.querySelectorAll('.tab-btn');
   tabBtns.forEach(btn => {
@@ -81,7 +33,7 @@ function setupEventListeners() {
     });
   });
 
-  // Global Delegated Click Handler for Products
+  // Global Delegated Click Handler for Products (fallback in addition to inline onclick)
   const productsGrid = document.getElementById('productsGrid');
   if (productsGrid) {
     productsGrid.addEventListener('click', (e) => {
@@ -91,36 +43,93 @@ function setupEventListeners() {
         const name = btn.dataset.name;
         const price = parseInt(btn.dataset.price, 10);
         addToCart(id, name, price);
-        const sidebar = document.getElementById('cartSidebar');
-        if (sidebar) sidebar.classList.add('open');
       }
     });
   }
 }
 
-// Fetch Minecraft Server Status dynamically
-async function updatePlayerCounter() {
-  const counterElems = document.querySelectorAll('.player-count');
-  try {
-    const res = await fetch('https://api.mcsrvstat.us/3/KryloSmp.play.hosting');
-    const data = await res.json();
-    if (data.online) {
-      counterElems.forEach(el => {
-        el.innerHTML = `<b style="color: var(--accent-green);">${data.players.online}/${data.players.max}</b> Online`;
-      });
-    } else {
-      counterElems.forEach(el => {
-        el.innerHTML = `<span style="color: #ff3333;">Offline</span>`;
-      });
-    }
-  } catch {
-    counterElems.forEach(el => {
-      el.innerHTML = `<b style="color: var(--accent-green);">12/50</b> Online`;
-    });
+// Modal Control Functions (Explicitly exported to window)
+function openLoginModal() {
+  const accountModal = document.getElementById('accountModal');
+  const regMcUsername = document.getElementById('regMcUsername');
+  const regDiscordId = document.getElementById('regDiscordId');
+
+  if (regMcUsername) regMcUsername.value = '';
+  if (regDiscordId) regDiscordId.value = '';
+  
+  if (accountModal) {
+    accountModal.classList.add('open');
+    accountModal.style.display = 'flex';
   }
 }
 
-// Bind Username
+function closeLoginModal() {
+  const accountModal = document.getElementById('accountModal');
+  if (accountModal) {
+    accountModal.classList.remove('open');
+    accountModal.style.display = 'none';
+  }
+}
+
+function closeSuccessModal() {
+  const successModal = document.getElementById('successModal');
+  if (successModal) {
+    successModal.classList.remove('open');
+    successModal.style.display = 'none';
+  }
+}
+
+function toggleCartDrawer(forceState) {
+  const cartSidebar = document.getElementById('cartSidebar');
+  if (!cartSidebar) return;
+  if (forceState === true) {
+    cartSidebar.classList.add('open');
+  } else if (forceState === false) {
+    cartSidebar.classList.remove('open');
+  } else {
+    cartSidebar.classList.toggle('open');
+  }
+}
+
+// Handle Instant Account Verification & Login
+async function handleAccountFormSubmit(event) {
+  if (event) event.preventDefault();
+  
+  const regMcUsername = document.getElementById('regMcUsername');
+  const regDiscordId = document.getElementById('regDiscordId');
+  const btnRequestRegCode = document.getElementById('btnRequestRegCode');
+
+  if (!regMcUsername) return;
+  const mcUsername = regMcUsername.value.trim();
+  const discordId = (regDiscordId ? regDiscordId.value.trim() : '') || 'web_' + Date.now();
+
+  if (!mcUsername) {
+    alert("Please enter your Minecraft Username!");
+    return;
+  }
+
+  if (btnRequestRegCode) {
+    btnRequestRegCode.disabled = true;
+    btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt fa-spin"></i> Verifying Instantly...`;
+  }
+
+  try {
+    console.log(`[Store] Instantly verifying player: ${mcUsername}`);
+    logInUser(mcUsername, discordId);
+    closeLoginModal();
+  } catch (err) {
+    console.error("Login error:", err);
+    logInUser(mcUsername, discordId);
+    closeLoginModal();
+  } finally {
+    if (btnRequestRegCode) {
+      btnRequestRegCode.disabled = false;
+      btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt"></i> Verify & Log In Instantly`;
+    }
+  }
+}
+
+// Bind Username from Hero Input Box
 function bindUsername() {
   const mcUsernameInput = document.getElementById('mcUsernameInput');
   const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
@@ -160,12 +169,137 @@ function bindUsername() {
   }
 }
 
+// Log In User and update UI
+async function logInUser(username, discordId) {
+  localStorage.setItem('mc_user', username);
+  localStorage.setItem('mc_discord_id', discordId);
+  
+  state.mcUsername = username;
+  const mcUsernameInput = document.getElementById('mcUsernameInput');
+  const userProfileHeader = document.getElementById('userProfileHeader');
+  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
+
+  if (mcUsernameInput) mcUsernameInput.value = username;
+
+  const avatarUrl = `https://mc-heads.net/avatar/${username}`;
+  let rank = 'Member';
+  
+  if (userProfileHeader) {
+    userProfileHeader.innerHTML = `
+      <div class="profile-widget">
+        <img src="${avatarUrl}" class="profile-avatar" alt="Avatar">
+        <div class="profile-info">
+          <span class="profile-name">${username}</span>
+          <span class="profile-rank" id="profileRank">${rank}</span>
+        </div>
+        <button class="btn-logout" id="btnLogout" onclick="logOutUser()"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
+    `;
+  }
+
+  if (cartUsernameDisplay) {
+    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
+    cartUsernameDisplay.style.color = 'var(--accent-green)';
+  }
+
+  updateCartUI();
+
+  try {
+    const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get_config', guildId: '1524878881918685405' })
+    });
+    if (configRes.ok) {
+      const configData = await configRes.json();
+      if (configData.verifiedPlayers && configData.verifiedPlayers[discordId]) {
+        rank = configData.verifiedPlayers[discordId].rank || 'Member';
+      }
+
+      let balanceStr = '1,500 KC';
+      if (configData.economyData && configData.economyData[username]) {
+        const balance = configData.economyData[username].balance || 1500;
+        balanceStr = `${balance.toLocaleString()} KC`;
+      }
+      
+      const profileRankElem = document.getElementById('profileRank');
+      if (profileRankElem) {
+        profileRankElem.innerHTML = `${rank} • <b style="color: var(--accent-gold);">${balanceStr}</b>`;
+      }
+    }
+  } catch (err) {
+    console.warn("Profile sync err:", err.message);
+  }
+}
+
+// Log Out User
+function logOutUser() {
+  localStorage.removeItem('mc_user');
+  localStorage.removeItem('mc_discord_id');
+  
+  state.mcUsername = '';
+  const mcUsernameInput = document.getElementById('mcUsernameInput');
+  const userProfileHeader = document.getElementById('userProfileHeader');
+  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
+
+  if (mcUsernameInput) mcUsernameInput.value = '';
+
+  if (userProfileHeader) {
+    userProfileHeader.innerHTML = `
+      <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()"><i class="fa-solid fa-user-lock"></i> <span>Register / Login</span></button>
+    `;
+  }
+
+  if (cartUsernameDisplay) {
+    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-user"></i> <span>Not bound</span>`;
+    cartUsernameDisplay.style.color = '';
+  }
+
+  updateCartUI();
+}
+
+// Check Active Session on Page Load
+function checkActiveSession() {
+  const user = localStorage.getItem('mc_user');
+  const discordId = localStorage.getItem('mc_discord_id');
+  if (user) {
+    logInUser(user, discordId || 'web_' + Date.now());
+  }
+}
+
+// Fetch Minecraft Server Status
+async function updatePlayerCounter() {
+  const counterElems = document.querySelectorAll('.player-count');
+  try {
+    const res = await fetch('https://api.mcsrvstat.us/3/KryloSmp.play.hosting');
+    const data = await res.json();
+    if (data.online) {
+      counterElems.forEach(el => {
+        el.innerHTML = `<b style="color: var(--accent-green);">${data.players.online}/${data.players.max}</b> Online`;
+      });
+    } else {
+      counterElems.forEach(el => {
+        el.innerHTML = `<span style="color: #ff3333;">Offline</span>`;
+      });
+    }
+  } catch {
+    counterElems.forEach(el => {
+      el.innerHTML = `<b style="color: var(--accent-green);">12/50</b> Online`;
+    });
+  }
+}
+
+function copyServerIp() {
+  navigator.clipboard.writeText('KryloSmp.play.hosting');
+  alert('📋 Server IP KryloSmp.play.hosting copied to clipboard!');
+}
+
 // Category Tabs Filter
 function filterCategory(category) {
   const cards = document.querySelectorAll('.product-card');
   cards.forEach(card => {
     if (category === 'all' || card.classList.contains(category)) {
-      card.style.display = 'block';
+      card.style.display = 'flex';
     } else {
       card.style.display = 'none';
     }
@@ -181,16 +315,12 @@ function addToCart(id, name, price) {
     state.cart.push({ id, name, price, quantity: 1 });
   }
   updateCartUI();
-  const sidebar = document.getElementById('cartSidebar');
-  if (sidebar) sidebar.classList.add('open');
+  toggleCartDrawer(true);
 }
 
 function handleAddToCartClick(id, name, price) {
   addToCart(id, name, price);
 }
-
-window.handleAddToCartClick = handleAddToCartClick;
-window.addToCart = addToCart;
 
 function removeFromCart(id) {
   state.cart = state.cart.filter(item => item.id !== id);
@@ -207,6 +337,10 @@ function updateCartQuantity(id, delta) {
       updateCartUI();
     }
   }
+}
+
+function handleBuyAllBundle() {
+  addToCart('krylo-ultimate-bundle', 'Krylo Ultimate Bundle (Buy All)', 226983);
 }
 
 // Apply Promo Code
@@ -267,9 +401,9 @@ function updateCartUI() {
   if (state.cart.length === 0) {
     cartItemsContainer.innerHTML = `
       <div class="empty-cart-msg">
-        <i class="fa-solid fa-cart-arrow-down" style="font-size: 2.5rem; opacity: 0.3; margin-bottom: 0.8rem;"></i>
-        <p>Your shopping cart is currently empty.</p>
-        <span>Add items from the store to continue.</span>
+        <i class="fa-solid fa-bag-shopping"></i>
+        <p>Your cart is empty.</p>
+        <span>Add ranks or keys to get started!</span>
       </div>
     `;
     if (lblSubtotal) lblSubtotal.textContent = '0 KC';
@@ -287,7 +421,7 @@ function updateCartUI() {
     <div class="cart-item">
       <div class="cart-item-info">
         <h4>${item.name}</h4>
-        <span class="cart-item-price">${item.price * item.quantity} KC (${item.price} each)</span>
+        <span class="cart-item-price">${(item.price * item.quantity).toLocaleString()} KC</span>
       </div>
       <div class="cart-item-controls">
         <button class="btn-qty" onclick="updateCartQuantity('${item.id}', -1)">-</button>
@@ -304,16 +438,16 @@ function updateCartUI() {
   const taxAmount = Math.round(taxableAmount * state.taxPercentage);
   const finalTotal = taxableAmount + taxAmount;
 
-  if (lblSubtotal) lblSubtotal.textContent = `${subtotal} KC`;
-  if (lblDiscount) lblDiscount.textContent = `-${discountAmount} KC (${state.discountPercentage * 100}%)`;
-  if (lblTax) lblTax.textContent = `+${taxAmount} KC`;
-  if (cartSubtotal) cartSubtotal.textContent = `${finalTotal} KC`;
+  if (lblSubtotal) lblSubtotal.textContent = `${subtotal.toLocaleString()} KC`;
+  if (lblDiscount) lblDiscount.textContent = `-${discountAmount.toLocaleString()} KC (${state.discountPercentage * 100}%)`;
+  if (lblTax) lblTax.textContent = `+${taxAmount.toLocaleString()} KC`;
+  if (cartSubtotal) cartSubtotal.textContent = `${finalTotal.toLocaleString()} KC`;
 
   const username = state.mcUsername || localStorage.getItem('mc_user');
   if (btnCheckout) {
     if (username) {
       btnCheckout.disabled = false;
-      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal.toLocaleString()} KC`;
     } else {
       btnCheckout.disabled = true;
       btnCheckout.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Link Username First`;
@@ -325,9 +459,6 @@ function updateCartUI() {
     cartUsernameDisplay.style.color = 'var(--accent-green)';
   }
 }
-
-window.updateCartQuantity = updateCartQuantity;
-window.removeFromCart = removeFromCart;
 
 // Handle Checkout
 async function handleCheckout() {
@@ -346,7 +477,6 @@ async function handleCheckout() {
   const successUserDisplay = document.getElementById('successUserDisplay');
   const promoCodeInput = document.getElementById('promoCodeInput');
   const promoStatusMsg = document.getElementById('promoStatusMsg');
-  const cartSidebar = document.getElementById('cartSidebar');
 
   if (btnCheckout) {
     btnCheckout.disabled = true;
@@ -377,7 +507,10 @@ async function handleCheckout() {
       
       setTimeout(() => {
         if (successUserDisplay) successUserDisplay.textContent = username;
-        if (successModal) successModal.classList.add('open');
+        if (successModal) {
+          successModal.classList.add('open');
+          successModal.style.display = 'flex';
+        }
         
         state.cart = [];
         state.discountPercentage = 0;
@@ -386,13 +519,13 @@ async function handleCheckout() {
         if (promoStatusMsg) promoStatusMsg.style.display = 'none';
         
         updateCartUI();
-        if (cartSidebar) cartSidebar.classList.remove('open');
-      }, 500);
+        toggleCartDrawer(false);
+      }, 400);
     } else {
       alert(`Error: ${data.error || 'Failed to complete transaction'}`);
       if (btnCheckout) {
         btnCheckout.disabled = false;
-        btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+        btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal.toLocaleString()} KC`;
       }
     }
   } catch (err) {
@@ -400,161 +533,10 @@ async function handleCheckout() {
     alert(`Checkout error: ${err.message}`);
     if (btnCheckout) {
       btnCheckout.disabled = false;
-      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal} KC`;
+      btnCheckout.innerHTML = `<i class="fa-solid fa-credit-card"></i> Pay ${finalTotal.toLocaleString()} KC`;
     }
   }
 }
-
-// Check Active Session
-function checkActiveSession() {
-  const user = localStorage.getItem('mc_user');
-  const discordId = localStorage.getItem('mc_discord_id');
-  if (user) {
-    logInUser(user, discordId || 'user_' + Date.now());
-  }
-}
-
-// Open Login Modal
-function openLoginModal() {
-  const accountModal = document.getElementById('accountModal');
-  const modalStep1 = document.getElementById('modalStep1');
-  const regMcUsername = document.getElementById('regMcUsername');
-  const regDiscordId = document.getElementById('regDiscordId');
-
-  if (modalStep1) modalStep1.style.display = 'block';
-  if (regMcUsername) regMcUsername.value = '';
-  if (regDiscordId) regDiscordId.value = '';
-  if (accountModal) accountModal.classList.add('open');
-}
-
-// Handle Instant Verification & Login
-async function handleRequestCode() {
-  const regMcUsername = document.getElementById('regMcUsername');
-  const regDiscordId = document.getElementById('regDiscordId');
-  const btnRequestRegCode = document.getElementById('btnRequestRegCode');
-  const accountModal = document.getElementById('accountModal');
-
-  if (!regMcUsername) return;
-  const mcUsername = regMcUsername.value.trim();
-  const discordId = (regDiscordId ? regDiscordId.value.trim() : '') || 'user_' + Date.now();
-
-  if (!mcUsername) {
-    alert("Please enter your Minecraft Username!");
-    return;
-  }
-
-  if (btnRequestRegCode) {
-    btnRequestRegCode.disabled = true;
-    btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt fa-spin"></i> Verifying Instantly...`;
-  }
-
-  try {
-    console.log(`[Store] Instantly verifying player: ${mcUsername}`);
-    logInUser(mcUsername, discordId);
-    if (accountModal) accountModal.classList.remove('open');
-  } catch (err) {
-    console.error("Login error:", err);
-    logInUser(mcUsername, discordId);
-    if (accountModal) accountModal.classList.remove('open');
-  } finally {
-    if (btnRequestRegCode) {
-      btnRequestRegCode.disabled = false;
-      btnRequestRegCode.innerHTML = `<i class="fa-solid fa-bolt"></i> Verify & Log In Instantly`;
-    }
-  }
-}
-
-// Log In User
-async function logInUser(username, discordId) {
-  localStorage.setItem('mc_user', username);
-  localStorage.setItem('mc_discord_id', discordId);
-  
-  state.mcUsername = username;
-  const mcUsernameInput = document.getElementById('mcUsernameInput');
-  const userProfileHeader = document.getElementById('userProfileHeader');
-  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
-
-  if (mcUsernameInput) mcUsernameInput.value = username;
-
-  const avatarUrl = `https://mc-heads.net/avatar/${username}`;
-  let rank = 'Member';
-  
-  if (userProfileHeader) {
-    userProfileHeader.innerHTML = `
-      <div class="profile-widget">
-        <img src="${avatarUrl}" class="profile-avatar" alt="Avatar">
-        <div class="profile-info">
-          <span class="profile-name">${username}</span>
-          <span class="profile-rank" id="profileRank">${rank}</span>
-        </div>
-        <button class="btn-logout" id="btnLogout" onclick="logOutUser()"><i class="fa-solid fa-right-from-bracket"></i></button>
-      </div>
-    `;
-  }
-
-  if (cartUsernameDisplay) {
-    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-circle-check"></i> Linked: <b>${username}</b>`;
-    cartUsernameDisplay.style.color = 'var(--accent-green)';
-  }
-
-  updateCartUI();
-
-  try {
-    const configRes = await fetch('https://krims-code-chatbot.vercel.app/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'get_config', guildId: '1524878881918685405' })
-    });
-    if (configRes.ok) {
-      const configData = await configRes.json();
-      if (configData.verifiedPlayers && configData.verifiedPlayers[discordId]) {
-        rank = configData.verifiedPlayers[discordId].rank || 'Member';
-      }
-
-      let balanceStr = '1,500 KC';
-      if (configData.economyData && configData.economyData[username]) {
-        const balance = configData.economyData[username].balance || 1500;
-        balanceStr = `${balance.toLocaleString()} KC`;
-      }
-      
-      const profileRankElem = document.getElementById('profileRank');
-      if (profileRankElem) {
-        profileRankElem.innerHTML = `${rank} • <b style="color: var(--accent-gold);">${balanceStr}</b>`;
-      }
-    }
-  } catch (err) {
-    console.warn("Profile fetch err:", err.message);
-  }
-}
-
-// Log Out User
-function logOutUser() {
-  localStorage.removeItem('mc_user');
-  localStorage.removeItem('mc_discord_id');
-  
-  state.mcUsername = '';
-  const mcUsernameInput = document.getElementById('mcUsernameInput');
-  const userProfileHeader = document.getElementById('userProfileHeader');
-  const cartUsernameDisplay = document.getElementById('cartUsernameDisplay');
-
-  if (mcUsernameInput) mcUsernameInput.value = '';
-
-  if (userProfileHeader) {
-    userProfileHeader.innerHTML = `
-      <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()"><i class="fa-solid fa-user-lock"></i> Register / Login</button>
-    `;
-  }
-
-  if (cartUsernameDisplay) {
-    cartUsernameDisplay.innerHTML = `<i class="fa-solid fa-user"></i> <span>Not bound</span>`;
-    cartUsernameDisplay.style.color = '';
-  }
-
-  updateCartUI();
-}
-
-window.logOutUser = logOutUser;
-window.openLoginModal = openLoginModal;
 
 // Programmatic Product Generator
 function generateAndRenderProducts() {
@@ -637,12 +619,11 @@ function generateAndRenderProducts() {
       return `
         <div class="product-card ${p.category} ${featuredClass}" data-id="${p.id}">
           ${featuredBanner}
-          <div class="card-glow"></div>
           <div class="card-content">
             <div class="product-header">
               <span class="prod-badge ${badgeClass}"><i class="fa-solid ${p.icon}"></i> ${p.badge}</span>
               <h3>${p.name}</h3>
-              <div class="price">${p.price} KC</div>
+              <div class="price">${p.price.toLocaleString()} KC</div>
             </div>
             <p class="description">${p.desc}</p>
             <ul class="perks-list">
@@ -657,3 +638,20 @@ function generateAndRenderProducts() {
     }).join('');
   }
 }
+
+// Global Window Bindings for Inline HTML Onclick Handlers
+window.openLoginModal = openLoginModal;
+window.closeLoginModal = closeLoginModal;
+window.closeSuccessModal = closeSuccessModal;
+window.toggleCartDrawer = toggleCartDrawer;
+window.handleAccountFormSubmit = handleAccountFormSubmit;
+window.bindUsername = bindUsername;
+window.logInUser = logInUser;
+window.logOutUser = logOutUser;
+window.handleAddToCartClick = handleAddToCartClick;
+window.updateCartQuantity = updateCartQuantity;
+window.removeFromCart = removeFromCart;
+window.handleBuyAllBundle = handleBuyAllBundle;
+window.applyPromoCode = applyPromoCode;
+window.handleCheckout = handleCheckout;
+window.copyServerIp = copyServerIp;
