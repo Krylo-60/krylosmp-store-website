@@ -181,7 +181,16 @@ function addToCart(id, name, price) {
     state.cart.push({ id, name, price, quantity: 1 });
   }
   updateCartUI();
+  const sidebar = document.getElementById('cartSidebar');
+  if (sidebar) sidebar.classList.add('open');
 }
+
+function handleAddToCartClick(id, name, price) {
+  addToCart(id, name, price);
+}
+
+window.handleAddToCartClick = handleAddToCartClick;
+window.addToCart = addToCart;
 
 function removeFromCart(id) {
   state.cart = state.cart.filter(item => item.id !== id);
@@ -639,7 +648,7 @@ function generateAndRenderProducts() {
             <ul class="perks-list">
               ${p.perks.map(perk => `<li><i class="fa-solid fa-check"></i> ${perk}</li>`).join('')}
             </ul>
-            <button class="btn-add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">
+            <button class="btn-add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" onclick="handleAddToCartClick('${p.id}', '${p.name}', ${p.price})">
               <i class="fa-solid fa-plus"></i> Add to Cart
             </button>
           </div>
