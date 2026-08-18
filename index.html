@@ -3,13 +3,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>KryloSMP — Official Server Store & Hub</title>
-  <meta name="description" content="Official store and hub for KryloSMP. Browse exclusive ranks, PvP kits, SkyBlock boosters, and KryloCoin packages. Crossplay Java & Bedrock.">
+  <title>KryloSMP — Official Server Store, Locator Radar & Test Lab</title>
+  <meta name="description" content="Official store, Minecraft locator bar finder, and diagnostics hub for KryloSMP. Crossplay Java & Bedrock.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="index.css?v=5.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="index.css?v=6.0">
+  <style>
+    /* Dedicated Styles for #locator and #test */
+    .locator-section, .test-section {
+      padding: 60px 0;
+      scroll-margin-top: 80px;
+    }
+    .tool-card {
+      background: rgba(16, 22, 34, 0.85);
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 20px;
+      padding: 35px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      margin-top: 25px;
+    }
+    .tool-search-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+    .tool-input-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .tool-input-wrap i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8a99ad;
+    }
+    .tool-input-wrap input {
+      width: 100%;
+      padding: 16px 16px 16px 50px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .tool-input-wrap input:focus {
+      border-color: #00e5ff;
+      box-shadow: 0 0 15px rgba(0,229,255,0.25);
+    }
+    .btn-tool-scan {
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #00e5ff, #0088ff);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.2s;
+    }
+    .btn-tool-scan:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,229,255,0.4);
+    }
+    .tool-result-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .tool-result-grid { grid-template-columns: 1fr; }
+      .tool-search-row { flex-direction: column; }
+    }
+    .tool-player-box {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .tool-player-box img {
+      width: 96px;
+      height: 96px;
+      border-radius: 14px;
+      border: 2px solid rgba(0,229,255,0.3);
+    }
+    .tool-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) {
+      .tool-metrics-grid { grid-template-columns: 1fr; }
+    }
+    .tool-metric-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+    .tool-metric-label {
+      font-size: 0.75rem;
+      color: #8a99ad;
+      margin-bottom: 4px;
+    }
+    .tool-metric-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .color-pill {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .bossbar-wrap {
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .bossbar-outer {
+      height: 14px;
+      border-radius: 4px;
+      background: #1e1e1e;
+      position: relative;
+      margin: 12px 0;
+    }
+    .bossbar-inner {
+      height: 100%;
+      width: 100%;
+      border-radius: 4px;
+      transition: 0.3s;
+    }
+    .bossbar-head-icon {
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #000;
+      overflow: hidden;
+    }
+    .bossbar-head-icon img { width: 100%; height: 100%; }
+
+    /* Test Lab Styles */
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .test-card-box {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .test-card-box h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #00e5ff;
+    }
+    .test-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(0,255,136,0.15);
+      color: #00ff88;
+      border: 1px solid rgba(0,255,136,0.3);
+    }
+  </style>
 </head>
 <body>
 
@@ -20,14 +209,16 @@
   <!-- Header -->
   <header>
     <div class="nav-container">
-      <a href="#" class="logo">
+      <a href="#home" class="logo">
         <i class="fa-solid fa-crown logo-icon"></i>
         <span>Krylo<span>SMP</span></span>
       </a>
       
       <nav class="desktop-nav">
-        <a href="#home" class="active"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="#home"><i class="fa-solid fa-house"></i> Home</a>
         <a href="#store"><i class="fa-solid fa-store"></i> Store</a>
+        <a href="#locator" id="navLocator"><i class="fa-solid fa-crosshairs"></i> #Locator</a>
+        <a href="#test" id="navTest"><i class="fa-solid fa-flask"></i> #Test</a>
         <a href="https://krylosmp.web.app" target="_blank"><i class="fa-solid fa-users"></i> Database</a>
         <a href="https://discord.gg/6vrEDTu3bx" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
       </nav>
@@ -35,7 +226,7 @@
       <div class="header-right">
         <div class="server-status" onclick="copyServerIp()" title="Click to copy IP">
           <div class="status-indicator"></div>
-          <span class="status-text">62.141.62.37:53568</span>
+          <span class="status-text">62.141.62.24:25754</span>
           <span class="player-count">Online</span>
         </div>
         
@@ -92,61 +283,140 @@
       </div>
     </section>
 
+    <!-- LOCATOR SECTION: #locator & #locater -->
+    <section class="locator-section" id="locator">
+      <div class="section-header">
+        <span class="section-tag"><i class="fa-solid fa-compass"></i> Minecraft Radar Engine</span>
+        <h2>🧭 Locator Bar Neighbor Finder</h2>
+        <p>Calculate your in-game 90% normalized bossbar radar color from your UUID or username:</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-search-row">
+          <div class="tool-input-wrap">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="inlineLocatorInput" placeholder="Enter Username or UUID (e.g. Krylo_MC, Notch, Technoblade)..." value="Krylo_MC">
+          </div>
+          <button class="btn-tool-scan" onclick="calcInlineLocator()"><i class="fa-solid fa-radar"></i> Scan Radar</button>
+        </div>
+
+        <div class="tool-result-grid">
+          <div class="tool-player-box">
+            <img id="inlineHead" src="https://mc-heads.net/avatar/Krylo_MC/128" alt="Avatar">
+            <div style="font-weight: 800; font-size: 1.2rem;" id="inlineDispName">Krylo_MC</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #8a99ad; word-break: break-all;" id="inlineDispUuid">Scanning UUID...</div>
+          </div>
+
+          <div>
+            <div class="tool-metrics-grid">
+              <div class="tool-metric-item">
+                <div class="tool-metric-label">In-Game Hex (90% Brightness)</div>
+                <div class="tool-metric-val">
+                  <span class="color-pill" id="inlinePillNorm" style="background: #b945e6;"></span>
+                  <span id="inlineHexNorm">#B945E6</span>
+                </div>
+              </div>
+              <div class="tool-metric-item">
+                <div class="tool-metric-label">Raw Hash Hex</div>
+                <div class="tool-metric-val">
+                  <span class="color-pill" id="inlinePillRaw" style="background: #ad79c1;"></span>
+                  <span id="inlineHexRaw">#AD79C1</span>
+                </div>
+              </div>
+              <div class="tool-metric-item">
+                <div class="tool-metric-label">Hue / Brightness</div>
+                <div class="tool-metric-val" id="inlineHue">283° / 90%</div>
+              </div>
+            </div>
+
+            <div class="bossbar-wrap">
+              <div style="font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px;">Simulated Minecraft BossBar Radar</div>
+              <div class="bossbar-outer">
+                <div class="bossbar-inner" id="inlineBarFill" style="background: #b945e6;"></div>
+                <div class="bossbar-head-icon">
+                  <img id="inlineBarIcon" src="https://mc-heads.net/avatar/Krylo_MC/64" alt="Icon">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEST LAB SECTION: #test -->
+    <section class="test-section" id="test">
+      <div class="section-header">
+        <span class="section-tag"><i class="fa-solid fa-flask"></i> Diagnostics & Status</span>
+        <h2>🧪 KryloSMP Live Test Lab</h2>
+        <p>Real-time node diagnostics, API bridges, and ecosystem ping tests:</p>
+      </div>
+
+      <div class="tool-card">
+        <div class="test-grid">
+          <div class="test-card-box">
+            <h3><i class="fa-solid fa-server"></i> Paper 1.21 Server</h3>
+            <p style="color: #8a99ad; font-size: 0.9rem; margin-bottom: 12px;">Node: <code>62.141.62.24:25754</code></p>
+            <span class="test-badge">ONLINE • 20.0 TPS</span>
+          </div>
+          <div class="test-card-box">
+            <h3><i class="fa-brands fa-discord"></i> Discord Bot Suite</h3>
+            <p style="color: #8a99ad; font-size: 0.9rem; margin-bottom: 12px;">Krims Code AI (MEE6 + Dyno)</p>
+            <span class="test-badge">ACTIVE • 5 GUILDS</span>
+          </div>
+          <div class="test-card-box">
+            <h3><i class="fa-solid fa-database"></i> Firebase Cloud Sync</h3>
+            <p style="color: #8a99ad; font-size: 0.9rem; margin-bottom: 12px;">Wallet & Ranks Firestore</p>
+            <span class="test-badge">SYNCED • 100% REALTIME</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Server Connection & Info Cards -->
     <section class="info-section">
       <div class="info-grid">
         <!-- Card 1: Server Connection Details -->
         <div class="info-card connection-card">
           <div class="card-icon"><i class="fa-solid fa-server"></i></div>
-          <h3>Server Connection Details</h3>
-          <p>Join on any device. Crossplay enabled!</p>
+          <h3>Server Address</h3>
+          <p>Join the server today on Java Edition or Bedrock Edition.</p>
           
-          <div class="connection-details">
-            <div class="detail-row">
-              <span class="detail-label">☕ Direct Server IP:</span>
-              <span class="detail-value copyable" onclick="copyText('62.141.62.37:53568')">62.141.62.37:53568 📋</span>
+          <div class="ip-display" onclick="copyServerIp()" title="Click to copy">
+            <span class="ip-text" id="ipText">krylosmp.play.hosting</span>
+            <button class="btn-copy" id="btnCopyIp"><i class="fa-regular fa-copy"></i></button>
+          </div>
+
+          <div class="port-specs">
+            <div class="port-spec-item">
+              <span class="port-label">Java Port:</span>
+              <span class="port-val">25754 (or default)</span>
             </div>
-            <div class="detail-row">
-              <span class="detail-label">🌐 Domain Address:</span>
-              <span class="detail-value copyable" onclick="copyText('KryloSmp.play.hosting')">KryloSmp.play.hosting 📋</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">🎮 Supported Versions:</span>
-              <span class="detail-value highlight">Java & Bedrock 1.20.x - 1.21.x</span>
+            <div class="port-spec-item">
+              <span class="port-label">Bedrock UDP:</span>
+              <span class="port-val">43089</span>
             </div>
           </div>
         </div>
 
-        <!-- Card 2: Player Wallet & Linked Account -->
-        <div class="info-card wallet-card">
-          <div class="card-icon"><i class="fa-solid fa-wallet"></i></div>
-          <h3>Your Player Profile</h3>
-          <p id="profileStatusSubtitle">Not currently linked. Enter username above!</p>
-          
-          <div class="wallet-display-box" id="walletDisplayBox">
-            <img src="https://mc-heads.net/avatar/MHF_Steve" id="heroAvatar" class="hero-avatar" alt="Avatar">
-            <div class="wallet-details">
-              <h4 id="heroPlayerName">Guest Player</h4>
-              <span class="wallet-rank" id="heroPlayerRank">Unlinked Account</span>
-              <span class="wallet-balance" id="heroPlayerBalance">0 KryloCoins</span>
-            </div>
-          </div>
-
-          <button class="btn-portal-action" onclick="openLoginModal()">
-            <i class="fa-solid fa-bolt"></i> Instant Account Verification
-          </button>
+        <!-- Card 2: 100% KryloCoins Economy -->
+        <div class="info-card currency-card">
+          <div class="card-icon"><i class="fa-solid fa-coins"></i></div>
+          <h3>100% KryloCoins (KC)</h3>
+          <p>Every rank and item is earnable entirely through gameplay.</p>
+          <ul class="kc-perks">
+            <li><i class="fa-solid fa-circle-check"></i> +100 KC per kill in FFA Arena</li>
+            <li><i class="fa-solid fa-circle-check"></i> +250 KC daily reward with <code>/daily</code></li>
+            <li><i class="fa-solid fa-circle-check"></i> Earn KC from trading, mining & quests</li>
+          </ul>
         </div>
 
-        <!-- Card 3: In-Game Economy Commands -->
+        <!-- Card 3: In-Game Commands -->
         <div class="info-card commands-card">
           <div class="card-icon"><i class="fa-solid fa-terminal"></i></div>
-          <h3>In-Game Commands</h3>
-          <p>Quick commands to use on the server:</p>
-          
+          <h3>Quick Commands</h3>
           <div class="commands-list">
-            <div class="cmd-item"><code>/shop</code> <span>Open in-game GUI store</span></div>
-            <div class="cmd-item"><code>/daily</code> <span>Claim +250 daily KryloCoins</span></div>
-            <div class="cmd-item"><code>/balance</code> <span>Check wallet balance</span></div>
+            <div class="cmd-item"><code>/shop</code> <span>Open in-game KC Store GUI</span></div>
+            <div class="cmd-item"><code>/daily</code> <span>Claim +250 KC daily gift</span></div>
             <div class="cmd-item"><code>/ffa join</code> <span>Enter FFA Combat Arena (+100 KC/kill)</span></div>
             <div class="cmd-item"><code>/is</code> <span>Open SkyBlock Island control panel</span></div>
           </div>
@@ -228,6 +498,108 @@
     </div>
   </footer>
 
-  <script src="index.js?v=5.0"></script>
+  <script>
+    // Inline Locator Engine & Hash Router Support
+    function rgbToHsv(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, v = max;
+      const d = max - min;
+      s = max === 0 ? 0 : d / max;
+      if (max === min) { h = 0; } 
+      else {
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return { h, s, v };
+    }
+
+    function hsvToRgb(h, s, v) {
+      let r, g, b;
+      const i = Math.floor(h * 6);
+      const f = h * 6 - i;
+      const p = v * (1 - s);
+      const q = v * (1 - f * s);
+      const t = v * (1 - (1 - f) * s);
+      switch (i % 6) {
+        case 0: r = v; g = t; b = p; break;
+        case 1: r = q; g = v; b = p; break;
+        case 2: r = p; g = v; b = t; break;
+        case 3: r = p; g = q; b = v; break;
+        case 4: r = t; g = p; b = v; break;
+        case 5: r = v; g = p; b = q; break;
+      }
+      const toHex = x => Math.round(x * 255).toString(16).padStart(2, '0');
+      return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    }
+
+    async function calcInlineLocator() {
+      const input = document.getElementById('inlineLocatorInput').value.trim() || 'Krylo_MC';
+      document.getElementById('inlineDispName').innerText = input;
+      document.getElementById('inlineHead').src = `https://mc-heads.net/avatar/${encodeURIComponent(input)}/128`;
+      document.getElementById('inlineBarIcon').src = `https://mc-heads.net/avatar/${encodeURIComponent(input)}/64`;
+
+      let uuid = '';
+      try {
+        const res = await fetch(`https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(input)}`);
+        if (res.ok) {
+          const data = await res.json();
+          uuid = data.id;
+          document.getElementById('inlineDispName').innerText = data.name;
+        }
+      } catch (e) {}
+
+      if (!uuid) {
+        uuid = Array.from(input).reduce((acc, c) => acc + c.charCodeAt(0).toString(16), '').padEnd(32, '0').slice(0, 32);
+      }
+
+      document.getElementById('inlineDispUuid').innerText = `${uuid.slice(0,8)}-${uuid.slice(8,12)}-${uuid.slice(12,16)}-${uuid.slice(16,20)}-${uuid.slice(20)}`;
+
+      const part1 = parseInt(uuid.slice(0, 8), 16) || 0;
+      const part2 = parseInt(uuid.slice(8, 16), 16) || 0;
+      const part3 = parseInt(uuid.slice(16, 24), 16) || 0;
+      const part4 = parseInt(uuid.slice(24, 32), 16) || 0;
+      const combined = (part1 ^ part2 ^ part3 ^ part4) & 0xFFFFFF;
+
+      const rawR = (combined >> 16) & 0xFF;
+      const rawG = (combined >> 8) & 0xFF;
+      const rawB = combined & 0xFF;
+      const rawHex = `#${rawR.toString(16).padStart(2, '0')}${rawG.toString(16).padStart(2, '0')}${rawB.toString(16).padStart(2, '0')}`.toUpperCase();
+
+      const hsv = rgbToHsv(rawR, rawG, rawB);
+      const normHex = hsvToRgb(hsv.h, Math.max(hsv.s, 0.70), 0.90).toUpperCase();
+
+      document.getElementById('inlineHexNorm').innerText = normHex;
+      document.getElementById('inlinePillNorm').style.background = normHex;
+      document.getElementById('inlineHexRaw').innerText = rawHex;
+      document.getElementById('inlinePillRaw').style.background = rawHex;
+      document.getElementById('inlineHue').innerText = `${Math.round(hsv.h * 360)}° / 90%`;
+      document.getElementById('inlineBarFill').style.background = normHex;
+    }
+
+    // Handle hash routing for #locator, #locater, #test
+    function handleHashRouting() {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#locator' || hash === '#locater') {
+        const el = document.getElementById('locator');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else if (hash === '#test') {
+        const el = document.getElementById('test');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    window.addEventListener('hashchange', handleHashRouting);
+    window.addEventListener('DOMContentLoaded', () => {
+      calcInlineLocator();
+      setTimeout(handleHashRouting, 300);
+    });
+  </script>
+
+  <script src="index.js?v=6.0"></script>
 </body>
 </html>
