@@ -190,15 +190,29 @@ const PRODUCTS = [
   }
 ];
 
-// Active state
-let currentUser = localStorage.getItem('krylo_user') || '';
+// Active User & KryloCoins Wallet State
+let currentUser = localStorage.getItem('krylo_user') || 'Krylo_MC';
+let userKcBalance = parseInt(localStorage.getItem('krylo_kc_balance') || '50000', 10);
 let selectedProduct = null;
+
+// Update header and wallet UI
+function updateWalletDisplay() {
+  const ignLabel = document.getElementById('headerUserLabel');
+  const walletLabel = document.getElementById('headerWalletLabel');
+  const avatarImg = document.getElementById('headerUserAvatar');
+  
+  if (ignLabel) ignLabel.innerText = currentUser;
+  if (walletLabel) walletLabel.innerText = `${userKcBalance.toLocaleString()} KC`;
+  if (avatarImg) avatarImg.src = `https://mc-heads.net/avatar/${encodeURIComponent(currentUser)}/32`;
+}
 
 // Platform Selector
 function setPlatform(plat) {
   currentPlatform = plat;
-  document.getElementById('platJava').classList.toggle('active', plat === 'java');
-  document.getElementById('platBedrock').classList.toggle('active', plat === 'bedrock');
+  const pJ = document.getElementById('platJava');
+  const pB = document.getElementById('platBedrock');
+  if (pJ) pJ.classList.toggle('active', plat === 'java');
+  if (pB) pB.classList.toggle('active', plat === 'bedrock');
   showToast(`Switched catalog to ${plat === 'java' ? 'Java Edition 1.21.x' : 'Bedrock Edition (Geyser)'}!`);
 }
 
@@ -206,7 +220,7 @@ function setPlatform(plat) {
 function changeCurrency(curr) {
   currentCurrency = curr;
   renderProducts();
-  showToast(`Currency updated to ${curr}!`);
+  showToast(`Currency display switched to ${curr}!`);
 }
 
 function getFormattedPrice(prod) {
@@ -258,7 +272,8 @@ function renderProducts() {
 function filterProducts(cat) {
   currentCategory = cat;
   document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  const targetBtn = document.querySelector(`.cat-btn[onclick*="${cat}"]`);
+  if (targetBtn) targetBtn.classList.add('active');
   renderProducts();
 }
 
@@ -275,9 +290,8 @@ function openProductModal(id) {
     <div class="modal-perk-item"><i class="fa-solid fa-circle-check"></i> ${p}</div>
   `).join('');
 
-  const displayUser = currentUser || 'Krylo_MC';
-  document.getElementById('modalUsername').innerText = displayUser;
-  document.getElementById('modalUserAvatar').src = `https://mc-heads.net/avatar/${encodeURIComponent(displayUser)}/64`;
+  document.getElementById('modalUsername').innerText = currentUser;
+  document.getElementById('modalUserAvatar').src = `https://mc-heads.net/avatar/${encodeURIComponent(currentUser)}/64`;
 
   document.getElementById('productModal').classList.add('active');
 }
@@ -286,10 +300,37 @@ function closeProductModal() {
   document.getElementById('productModal').classList.remove('active');
 }
 
+// Complete Purchase with Coin Wallet Sync
 function confirmPurchase() {
+  if (!selectedProduct) return;
   const user = currentUser || 'Krylo_MC';
+
+  // If buying KryloCoins / Gems packs
+  if (selectedProduct.category === 'gems') {
+    let addCoins = 10000;
+    if (selectedProduct.id === 'gems_tycoon') addCoins = 50000;
+    if (selectedProduct.id === 'gems_infinity') addCoins = 250000;
+
+    userKcBalance += addCoins;
+    localStorage.setItem('krylo_kc_balance', userKcBalance.toString());
+    updateWalletDisplay();
+    closeProductModal();
+    showToast(`🎉 Top-Up Success! +${addCoins.toLocaleString()} KryloCoins added to ${user}'s wallet! Balance: ${userKcBalance.toLocaleString()} KC`);
+    return;
+  }
+
+  // If buying with KryloCoins
+  if (userKcBalance < selectedProduct.priceKc) {
+    showToast(`❌ Insufficient KryloCoins! You need ${selectedProduct.priceKc.toLocaleString()} KC, but have ${userKcBalance.toLocaleString()} KC.`);
+    return;
+  }
+
+  // Deduct coins & save
+  userKcBalance -= selectedProduct.priceKc;
+  localStorage.setItem('krylo_kc_balance', userKcBalance.toString());
+  updateWalletDisplay();
   closeProductModal();
-  showToast(`🎉 Order Placed for ${selectedProduct.name}! In-game delivery assigned to ${user}.`);
+  showToast(`🎉 Success! ${selectedProduct.name} unlocked for ${user}! New Balance: ${userKcBalance.toLocaleString()} KC`);
 }
 
 function bindUsername() {
@@ -297,8 +338,36 @@ function bindUsername() {
   if (!val) return showToast('Please enter a valid Minecraft username!');
   currentUser = val;
   localStorage.setItem('krylo_user', val);
-  document.getElementById('headerUserLabel').innerText = val;
+  updateWalletDisplay();
   showToast(`Linked Minecraft profile: ${val}!`);
+}
+
+function openLoginModal() {
+  const input = document.getElementById('modalMcUsername');
+  if (input) input.value = currentUser;
+  document.getElementById('loginModal').classList.add('active');
+}
+
+function closeLoginModal() {
+  document.getElementById('loginModal').classList.remove('active');
+}
+
+function submitModalLogin() {
+  const input = document.getElementById('modalMcUsername');
+  const val = input ? input.value.trim() : '';
+  if (!val) return showToast('Please enter a valid username!');
+  currentUser = val;
+  localStorage.setItem('krylo_user', val);
+  updateWalletDisplay();
+  closeLoginModal();
+  showToast(`Linked profile to ${val}!`);
+}
+
+function claimDailyCoins() {
+  userKcBalance += 500;
+  localStorage.setItem('krylo_kc_balance', userKcBalance.toString());
+  updateWalletDisplay();
+  showToast(`🎁 Claimed +500 KC Daily Reward! Current balance: ${userKcBalance.toLocaleString()} KC`);
 }
 
 function copyServerIp() {
@@ -421,10 +490,11 @@ function handleHashRouting() {
 window.addEventListener('hashchange', handleHashRouting);
 document.addEventListener('DOMContentLoaded', () => {
   renderProducts();
+  updateWalletDisplay();
   calcInlineLocator();
-  if (currentUser) {
-    document.getElementById('headerUserLabel').innerText = currentUser;
-    document.getElementById('mcUsernameInput').value = currentUser;
+  const input = document.getElementById('mcUsernameInput');
+  if (input && currentUser) {
+    input.value = currentUser;
   }
   setTimeout(handleHashRouting, 300);
 });
