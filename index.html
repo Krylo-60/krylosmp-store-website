@@ -4,30 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>KryloSMP — Official Server Store & Web Hub</title>
-  <meta name="description" content="Official Minecraft store for KryloSMP (Fresh & Redish SMP style). Buy ranks, crates, gems, kits, and SkyBlock boosters. Crossplay Java & Bedrock.">
+  <meta name="description" content="Official Minecraft store for KryloSMP. 100% KryloCoins (KC) currency with manual real-money Discord ticket support. Crossplay Java & Bedrock.">
   <link rel="icon" type="image/png" href="server-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="index.css?v=8.0">
+  <link rel="stylesheet" href="index.css?v=9.0">
 </head>
 <body>
 
-  <!-- Top Announcement Bar (FreshSMP Style) -->
+  <!-- Top Announcement Bar (KC Economy & Real Money Ticket Notice) -->
   <div class="top-announcement-bar">
     <div class="top-bar-inner">
-      <span class="pulse-fire">🔥</span>
-      <span><strong>SEASON 1 RE-RELEASE:</strong> Use code <strong style="color: #FFD700;">KRYLO20</strong> for 20% off all Ranks & Crates!</span>
-      <div class="currency-picker">
-        <label><i class="fa-solid fa-globe"></i> Currency:</label>
-        <select id="currencySelect" onchange="changeCurrency(this.value)">
-          <option value="USD">USD ($)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="GBP">GBP (£)</option>
-          <option value="INR">INR (₹)</option>
-          <option value="KC" selected>KryloCoins (KC)</option>
-        </select>
+      <div class="top-bar-left">
+        <span class="pulse-fire">🪙</span>
+        <span><strong>STORE CURRENCY:</strong> All packages use <strong>KryloCoins (KC)</strong>. For Real Money, open a <strong>Discord Ticket</strong> (1–30 mins manual work).</span>
+      </div>
+      <div class="top-bar-right">
+        <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="top-ticket-btn">
+          <i class="fa-solid fa-ticket"></i> Open Support Ticket
+        </a>
       </div>
     </div>
   </div>
@@ -39,7 +36,7 @@
         <img src="server-icon.png" alt="KryloSMP Logo" class="brand-logo-img">
         <div class="brand-title-box">
           <span class="brand-name">Krylo<span class="brand-highlight">SMP</span></span>
-          <span class="brand-sub">OFFICIAL STORE</span>
+          <span class="brand-sub">OFFICIAL KC STORE</span>
         </div>
       </a>
       
@@ -47,9 +44,9 @@
         <a href="#store" class="nav-pill active"><i class="fa-solid fa-store"></i> Store</a>
         <a href="#ranks" class="nav-pill"><i class="fa-solid fa-crown"></i> Ranks</a>
         <a href="#crates" class="nav-pill"><i class="fa-solid fa-box-open"></i> Crates</a>
+        <a href="#realmoney" class="nav-pill" style="color: #ffd700; border-color: rgba(255,215,0,0.3);"><i class="fa-solid fa-credit-card"></i> Real Money Info</a>
         <a href="#locator" class="nav-pill" id="navLocator"><i class="fa-solid fa-compass"></i> #Locator</a>
         <a href="apply.html#moderator" class="nav-pill"><i class="fa-solid fa-file-pen"></i> #Apply</a>
-        <a href="https://krylosmp.web.app" target="_blank" class="nav-pill"><i class="fa-solid fa-database"></i> Database</a>
         <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="nav-pill nav-pill-discord"><i class="fa-brands fa-discord"></i> Discord</a>
       </nav>
 
@@ -71,14 +68,14 @@
     </div>
   </header>
 
-  <!-- Live Recent Purchases Ticker (Fresh & Redish SMP Style) -->
+  <!-- Live Recent Purchases Ticker -->
   <div class="live-ticker-wrap">
-    <div class="ticker-label"><i class="fa-solid fa-bolt"></i> RECENT ORDERS</div>
+    <div class="ticker-label"><i class="fa-solid fa-bolt"></i> RECENT KC UNLOCKS</div>
     <div class="ticker-marquee">
-      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Krylo_MC/32" alt=""> <strong>Krylo_MC</strong> bought <span>👑 KRYLO EXECUTIVE Rank</span> <small>2m ago</small></div>
-      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Notch/32" alt=""> <strong>Notch</strong> bought <span>5x Mythic Crates</span> <small>9m ago</small></div>
-      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Technoblade/32" alt=""> <strong>Technoblade</strong> bought <span>Netherite Titan Kit</span> <small>18m ago</small></div>
-      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Alex/32" alt=""> <strong>Alex</strong> bought <span>50,000 KryloCoins Pack</span> <small>25m ago</small></div>
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Krylo_MC/32" alt=""> <strong>Krylo_MC</strong> unlocked <span>👑 KRYLO EXECUTIVE Rank (50,000 KC)</span> <small>2m ago</small></div>
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Notch/32" alt=""> <strong>Notch</strong> unlocked <span>5x Mythic Crates (4,500 KC)</span> <small>9m ago</small></div>
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Technoblade/32" alt=""> <strong>Technoblade</strong> unlocked <span>Netherite Titan Kit (2,500 KC)</span> <small>18m ago</small></div>
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Alex/32" alt=""> <strong>Alex</strong> claimed <span>Daily +500 KC Gift</span> <small>25m ago</small></div>
     </div>
   </div>
 
@@ -88,9 +85,9 @@
       <div class="hero-banner-card">
         <img src="official_banner.jpg" alt="KryloSMP Official Banner" class="hero-bg-banner">
         <div class="hero-overlay-content">
-          <span class="hero-tag"><i class="fa-solid fa-shield-halved"></i> OFFICIAL JAVA & BEDROCK STORE</span>
-          <h1 class="hero-store-title">KryloSMP Store & Hub</h1>
-          <p class="hero-store-desc">Join thousands of players on the premier crossplay SMP network. Automatic instant delivery in seconds.</p>
+          <span class="hero-tag"><i class="fa-solid fa-coins"></i> 100% KRYLOCONS (KC) STORE</span>
+          <h1 class="hero-store-title">KryloSMP Official Store</h1>
+          <p class="hero-store-desc">Unlock exclusive server ranks, crate keys, and combat boosters using in-game <strong>KryloCoins (KC)</strong>. For Real Money purchases, open a Support Ticket on Discord.</p>
 
           <!-- Platform Selector (Java vs Bedrock) -->
           <div class="platform-selector">
@@ -109,46 +106,119 @@
               <input type="text" id="mcUsernameInput" placeholder="Enter Minecraft IGN (e.g. Krylo_MC)..." autocomplete="off">
             </div>
             <button class="btn-bind-action" onclick="bindUsername()">
-              <i class="fa-solid fa-arrow-right-to-bracket"></i> Continue to Shop
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Sync Wallet
             </button>
           </div>
 
-          <!-- Monthly Community Goal Bar (FreshSMP Style) -->
+          <!-- Monthly Community Goal Bar -->
           <div class="community-goal-wrap">
             <div class="goal-header">
-              <span><i class="fa-solid fa-trophy"></i> Monthly Server Goal: <strong>$285.00 / $500.00</strong></span>
+              <span><i class="fa-solid fa-trophy"></i> Monthly Community Goal: <strong>285,000 / 500,000 KC Spent</strong></span>
               <span class="goal-percent">57%</span>
             </div>
             <div class="goal-bar-bg">
               <div class="goal-bar-fill" style="width: 57%;"></div>
             </div>
-            <small class="goal-note">🎁 Reaching 100% unlocks a Global 2x XP & KC Multiplier for everyone!</small>
+            <small class="goal-note">🎁 Reaching 100% unlocks a Global 2x Multiplier for everyone on the server!</small>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- STORE SECTION (FreshSMP & RedishSMP Style) -->
+    <!-- REAL MONEY POLICY CARD (Notice: 1-30 mins manual work) -->
+    <section class="real-money-card-section" id="realmoney">
+      <div class="real-money-alert-box">
+        <div class="real-money-left">
+          <div class="alert-icon-gold"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+          <div>
+            <h3>Want to Pay with Real Money? (PayPal / UPI / Card / Crypto)</h3>
+            <p>Our official webstore operates primarily on <strong>KryloCoins (KC)</strong>. If you want to pay or donate with real money, please open a <strong>Support Ticket</strong> on our Discord server. Because fulfillment is manual, our team will process your payment and deliver perks within <strong>1 to 30 minutes</strong>.</p>
+          </div>
+        </div>
+        <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="btn-open-ticket-main">
+          <i class="fa-solid fa-ticket"></i> Open Ticket in Discord
+        </a>
+      </div>
+    </section>
+
+    <!-- STORE SECTION (Pure KryloCoins Packages) -->
     <section class="store-catalog" id="store">
       <div class="section-title-wrap">
         <span class="sub-badge"><i class="fa-solid fa-gem"></i> SEASON 1 CATALOG</span>
         <h2>Explore Store Packages</h2>
-        <p>Select your category below for instant in-game delivery:</p>
+        <p>All items are priced in <strong>KryloCoins (KC)</strong> with instant in-game automated delivery:</p>
       </div>
 
       <!-- Category Filter Tabs -->
       <div class="category-tabs-fresh">
         <button class="cat-btn active" onclick="filterProducts('all')"><i class="fa-solid fa-layer-group"></i> All Packages</button>
-        <button class="cat-btn" id="tabRanks" onclick="filterProducts('ranks')"><i class="fa-solid fa-crown"></i> Ranks</button>
+        <button class="cat-btn" id="tabRanks" onclick="filterProducts('ranks')"><i class="fa-solid fa-crown"></i> Server Ranks</button>
         <button class="cat-btn" id="tabCrates" onclick="filterProducts('crates')"><i class="fa-solid fa-box-open"></i> Crates & Keys</button>
-        <button class="cat-btn" onclick="filterProducts('gems')"><i class="fa-solid fa-coins"></i> KryloCoins / Gems</button>
         <button class="cat-btn" onclick="filterProducts('combat')"><i class="fa-solid fa-shield-halved"></i> Combat Kits</button>
         <button class="cat-btn" onclick="filterProducts('skyblock')"><i class="fa-solid fa-cloud"></i> SkyBlock Boosters</button>
       </div>
 
       <!-- Products Grid -->
       <div class="products-grid-fresh" id="productsGrid">
-        <!-- Products Injected Dynamically -->
+        <!-- Products Injected Dynamically in KC -->
+      </div>
+    </section>
+
+    <!-- TOP SUPPORTERS & COMMUNITY SUPPORT -->
+    <section class="donators-section">
+      <div class="section-title-wrap">
+        <span class="sub-badge"><i class="fa-solid fa-trophy"></i> HALL OF FAME</span>
+        <h2>Top KC Tycoons This Month</h2>
+        <p>Recognizing the top players driving the KryloSMP economy and community:</p>
+      </div>
+
+      <div class="top-donators-grid">
+        <div class="donator-card rank-1">
+          <div class="donator-trophy">🥇</div>
+          <img src="https://mc-heads.net/avatar/Krylo_MC/64" alt="" class="donator-avatar">
+          <div class="donator-name">Krylo_MC</div>
+          <div class="donator-rank-badge">👑 EXECUTIVE</div>
+          <div class="donator-amount">250,000 KC</div>
+        </div>
+
+        <div class="donator-card rank-2">
+          <div class="donator-trophy">🥈</div>
+          <img src="https://mc-heads.net/avatar/Notch/64" alt="" class="donator-avatar">
+          <div class="donator-name">Notch</div>
+          <div class="donator-rank-badge">🔥 MVP+</div>
+          <div class="donator-amount">150,000 KC</div>
+        </div>
+
+        <div class="donator-card rank-3">
+          <div class="donator-trophy">🥉</div>
+          <img src="https://mc-heads.net/avatar/Technoblade/64" alt="" class="donator-avatar">
+          <div class="donator-name">Technoblade</div>
+          <div class="donator-rank-badge">💎 MVP</div>
+          <div class="donator-amount">80,000 KC</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST & REAL MONEY MANUAL PROTOCOL -->
+    <section class="trust-guarantee-section">
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon"><i class="fa-solid fa-bolt"></i></div>
+          <h3>Instant KC Auto-Delivery</h3>
+          <p>When purchasing with KryloCoins (KC), orders are processed and delivered directly into your Minecraft inventory in 1 to 60 seconds automatically.</p>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon"><i class="fa-solid fa-ticket"></i></div>
+          <h3>Real Money Manual Orders</h3>
+          <p>Real money orders (PayPal, UPI, Card, Crypto) are handled manually by staff via Discord Tickets. Fulfillment takes <strong>1 to 30 minutes</strong>.</p>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon"><i class="fa-solid fa-headset"></i></div>
+          <h3>24/7 Staff Support</h3>
+          <p>Need help with your balance, rank sync, or manual ticket order? Our staff team is available 24/7 in our official Discord server.</p>
+        </div>
       </div>
     </section>
 
@@ -212,74 +282,6 @@
       </div>
     </section>
 
-    <!-- TOP DONATORS & COMMUNITY SUPPORT (Fresh & Redish SMP Style) -->
-    <section class="donators-section">
-      <div class="section-title-wrap">
-        <span class="sub-badge"><i class="fa-solid fa-trophy"></i> HALL OF FAME</span>
-        <h2>Top Supporters This Month</h2>
-        <p>A huge thank you to the players supporting the KryloSMP infrastructure and server host:</p>
-      </div>
-
-      <div class="top-donators-grid">
-        <div class="donator-card rank-1">
-          <div class="donator-trophy">🥇</div>
-          <img src="https://mc-heads.net/avatar/Krylo_MC/64" alt="" class="donator-avatar">
-          <div class="donator-name">Krylo_MC</div>
-          <div class="donator-rank-badge">👑 EXECUTIVE</div>
-          <div class="donator-amount">$125.00</div>
-        </div>
-
-        <div class="donator-card rank-2">
-          <div class="donator-trophy">🥈</div>
-          <img src="https://mc-heads.net/avatar/Notch/64" alt="" class="donator-avatar">
-          <div class="donator-name">Notch</div>
-          <div class="donator-rank-badge">🔥 MVP+</div>
-          <div class="donator-amount">$75.00</div>
-        </div>
-
-        <div class="donator-card rank-3">
-          <div class="donator-trophy">🥉</div>
-          <img src="https://mc-heads.net/avatar/Technoblade/64" alt="" class="donator-avatar">
-          <div class="donator-name">Technoblade</div>
-          <div class="donator-rank-badge">💎 MVP</div>
-          <div class="donator-amount">$45.00</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SAFE PAYMENTS & INSTANT DELIVERY GUARANTEE (FreshSMP Style) -->
-    <section class="trust-guarantee-section">
-      <div class="trust-grid">
-        <div class="trust-card">
-          <div class="trust-icon"><i class="fa-solid fa-bolt"></i></div>
-          <h3>Instant Delivery</h3>
-          <p>All ranks, keys, and KryloCoins are delivered directly to your in-game account in 1 to 60 seconds automatically.</p>
-        </div>
-
-        <div class="trust-card">
-          <div class="trust-icon"><i class="fa-solid fa-lock"></i></div>
-          <h3>Secure Checkout</h3>
-          <p>256-bit encrypted SSL checkout processed safely through industry-standard gateways (PayPal, Stripe, Cards, UPI, Crypto).</p>
-        </div>
-
-        <div class="trust-card">
-          <div class="trust-icon"><i class="fa-solid fa-headset"></i></div>
-          <h3>24/7 Priority Support</h3>
-          <p>Have an issue with an order? Open a ticket on our Discord or contact staff directly anytime for immediate assistance.</p>
-        </div>
-      </div>
-
-      <!-- Payment Provider Logos -->
-      <div class="payment-methods-strip">
-        <span><i class="fa-brands fa-paypal"></i> PayPal</span>
-        <span><i class="fa-brands fa-stripe"></i> Stripe</span>
-        <span><i class="fa-brands fa-cc-visa"></i> Visa</span>
-        <span><i class="fa-brands fa-cc-mastercard"></i> Mastercard</span>
-        <span><i class="fa-brands fa-bitcoin"></i> Crypto</span>
-        <span><i class="fa-solid fa-coins"></i> KryloCoins</span>
-      </div>
-    </section>
-
     <!-- TEST LAB SECTION (#test) -->
     <section class="test-section" id="test">
       <div class="section-title-wrap">
@@ -310,14 +312,14 @@
     </section>
   </main>
 
-  <!-- Product Modal -->
+  <!-- Product Modal (KC Purchase or Real Money Ticket Option) -->
   <div class="modal-overlay" id="productModal">
     <div class="modal-card">
       <button class="modal-close" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header">
         <div class="product-modal-icon" id="modalProductIcon"><i class="fa-solid fa-crown"></i></div>
         <h3 id="modalProductTitle">Package Details</h3>
-        <span class="modal-price" id="modalProductPrice">5,000 KryloCoins</span>
+        <span class="modal-price" id="modalProductPrice">5,000 KC</span>
       </div>
       <div class="modal-body">
         <p id="modalProductDesc">Includes perks, commands, and rank cosmetic multipliers.</p>
@@ -331,7 +333,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-confirm-purchase" onclick="confirmPurchase()"><i class="fa-solid fa-check"></i> Complete Order</button>
+        <button class="btn-confirm-purchase" onclick="confirmPurchase()"><i class="fa-solid fa-coins"></i> Pay with KryloCoins (Instant)</button>
+        <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="btn-realmoney-ticket"><i class="fa-solid fa-ticket"></i> Pay with Real Money (Open Ticket • 1-30m)</a>
       </div>
     </div>
   </div>
@@ -341,9 +344,9 @@
     <div class="modal-card">
       <button class="modal-close" onclick="closeLoginModal()"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header">
-        <i class="fa-solid fa-shield-halved modal-icon"></i>
+        <i class="fa-solid fa-coins modal-icon" style="color: #ffd700;"></i>
         <h3>Link Minecraft Account</h3>
-        <p>Enter your In-Game Name to unlock wallet syncing and package delivery.</p>
+        <p>Enter your In-Game Name to access your KryloCoins wallet.</p>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -360,7 +363,7 @@
   <!-- Toast Notification -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- Footer (FreshSMP Style) -->
+  <!-- Footer -->
   <footer>
     <div class="footer-inner">
       <div class="footer-left">
@@ -368,10 +371,11 @@
           <img src="server-icon.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px;">
           <span>KryloSMP Store</span>
         </div>
-        <p>The premier Minecraft SMP network. Fully crossplay on Java and Bedrock Edition.</p>
+        <p>100% KryloCoins (KC) Minecraft server economy. Crossplay Java & Bedrock.</p>
       </div>
       <div class="footer-links">
         <a href="#store">Store</a>
+        <a href="#realmoney">Real Money Info</a>
         <a href="#locator">#Locator</a>
         <a href="apply.html#moderator">#Apply</a>
         <a href="https://discord.gg/6vrEDTu3bx" target="_blank">Discord</a>
@@ -382,6 +386,6 @@
     </div>
   </footer>
 
-  <script src="index.js?v=8.0"></script>
+  <script src="index.js?v=9.0"></script>
 </body>
 </html>

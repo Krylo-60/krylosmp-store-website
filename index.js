@@ -224,14 +224,7 @@ function changeCurrency(curr) {
 }
 
 function getFormattedPrice(prod) {
-  if (currentCurrency === 'KC') {
-    return `${prod.priceKc.toLocaleString()} KC`;
-  }
-  const rateMap = { USD: 1.0, EUR: 0.92, GBP: 0.79, INR: 83.5 };
-  const symMap = { USD: '$', EUR: '€', GBP: '£', INR: '₹' };
-  const rate = rateMap[currentCurrency] || 1.0;
-  const sym = symMap[currentCurrency] || '$';
-  return `${sym}${(prod.priceUsd * rate).toFixed(2)}`;
+  return `${prod.priceKc.toLocaleString()} KC`;
 }
 
 // Render Products Grid
