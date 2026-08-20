@@ -80,98 +80,174 @@ header {
   border-bottom: 1px solid var(--border-color);
 }
 .nav-container {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 14px 24px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
 }
-.logo {
+.brand-logo-wrap {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
+  flex-shrink: 0;
+  margin-right: 15px;
+}
+.brand-logo-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+.brand-title-box {
+  display: flex;
+  flex-direction: column;
+}
+.brand-name {
   font-family: var(--font-heading);
-  font-size: 1.4rem;
-  font-weight: 800;
+  font-size: 1.35rem;
+  font-weight: 900;
   color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.3px;
 }
-.logo-icon {
-  color: var(--accent-gold);
+.brand-highlight {
+  color: #00e5ff;
 }
-.logo span span {
-  color: var(--accent-cyan);
+.brand-sub {
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  color: #ffd700;
+  font-weight: 800;
 }
+
+/* Nav Pills */
 .desktop-nav {
   display: flex;
-  gap: 24px;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
-.desktop-nav a {
-  color: var(--text-muted);
+.nav-pill {
+  color: #94a3b8;
   text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: all 0.2s;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  white-space: nowrap;
 }
-.desktop-nav a:hover, .desktop-nav a.active {
-  color: var(--accent-cyan);
+.nav-pill:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
 }
+.nav-pill.active {
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.35);
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+.nav-pill-discord:hover {
+  color: #5865F2;
+  border-color: rgba(88, 101, 242, 0.4);
+}
+
+/* Header Right Area */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-shrink: 0;
 }
-.server-status {
+.server-status-pill {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-color);
-  padding: 6px 14px;
+  background: rgba(16, 22, 34, 0.9);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  padding: 7px 14px;
   border-radius: 30px;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
 }
-.server-status:hover {
-  background: rgba(0, 229, 255, 0.1);
-  border-color: var(--accent-cyan);
+.server-status-pill:hover {
+  border-color: #00e5ff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
 }
-.status-indicator {
+.pulse-dot-green {
   width: 8px;
   height: 8px;
-  background: var(--accent-green);
+  background: #00ff88;
   border-radius: 50%;
-  box-shadow: 0 0 8px var(--accent-green);
+  box-shadow: 0 0 8px #00ff88;
+  display: inline-block;
 }
-.player-count {
-  color: var(--accent-green);
+.ip-address-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: #e2e8f0;
   font-weight: 600;
 }
-.btn-login-header, .user-pill {
+.badge-online {
+  background: rgba(0, 255, 136, 0.15);
+  color: #00ff88;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+/* User Profile Badge */
+.user-profile-badge {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(168, 85, 247, 0.15));
-  border: 1px solid var(--border-color);
-  color: #fff;
-  padding: 8px 16px;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 215, 0, 0.08));
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  padding: 5px 12px 5px 6px;
   border-radius: 30px;
-  font-weight: 600;
-  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-login-header:hover, .user-pill:hover {
-  border-color: var(--accent-cyan);
+.user-profile-badge:hover {
+  border-color: #00e5ff;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.25);
   transform: translateY(-1px);
 }
-.user-pill img {
-  border-radius: 4px;
+.header-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #00e5ff;
+}
+.header-user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.header-ign {
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #fff;
+}
+.header-wallet-kc {
+  font-size: 0.7rem;
+  color: #00ff88;
+  font-weight: 700;
 }
 
 /* Main Content */

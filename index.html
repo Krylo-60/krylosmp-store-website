@@ -35,40 +35,37 @@
   <!-- Header Navigation -->
   <header>
     <div class="nav-container">
-      <a href="#home" class="logo">
+      <a href="#home" class="brand-logo-wrap">
         <img src="server-icon.png" alt="KryloSMP Logo" class="brand-logo-img">
-        <div class="logo-text">
-          <span>Krylo<span>SMP</span></span>
-          <small>OFFICIAL STORE</small>
+        <div class="brand-title-box">
+          <span class="brand-name">Krylo<span class="brand-highlight">SMP</span></span>
+          <span class="brand-sub">OFFICIAL STORE</span>
         </div>
       </a>
       
       <nav class="desktop-nav">
-        <a href="#store" class="nav-link active"><i class="fa-solid fa-store"></i> Store</a>
-        <a href="#ranks" class="nav-link"><i class="fa-solid fa-crown"></i> Ranks</a>
-        <a href="#crates" class="nav-link"><i class="fa-solid fa-box-open"></i> Crates</a>
-        <a href="#locator" class="nav-link" id="navLocator"><i class="fa-solid fa-compass"></i> #Locator</a>
-        <a href="apply.html#moderator" class="nav-link"><i class="fa-solid fa-file-pen"></i> #Apply</a>
-        <a href="https://krylosmp.web.app" target="_blank" class="nav-link"><i class="fa-solid fa-users"></i> Database</a>
-        <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="nav-link"><i class="fa-brands fa-discord"></i> Discord</a>
+        <a href="#store" class="nav-pill active"><i class="fa-solid fa-store"></i> Store</a>
+        <a href="#ranks" class="nav-pill"><i class="fa-solid fa-crown"></i> Ranks</a>
+        <a href="#crates" class="nav-pill"><i class="fa-solid fa-box-open"></i> Crates</a>
+        <a href="#locator" class="nav-pill" id="navLocator"><i class="fa-solid fa-compass"></i> #Locator</a>
+        <a href="apply.html#moderator" class="nav-pill"><i class="fa-solid fa-file-pen"></i> #Apply</a>
+        <a href="https://krylosmp.web.app" target="_blank" class="nav-pill"><i class="fa-solid fa-database"></i> Database</a>
+        <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="nav-pill nav-pill-discord"><i class="fa-brands fa-discord"></i> Discord</a>
       </nav>
 
       <div class="header-right">
-        <div class="server-status-pill" onclick="copyServerIp()" title="Click to copy IP">
-          <div class="status-indicator"></div>
-          <span class="ip-label">krylosmp.play.hosting</span>
+        <div class="server-status-pill" onclick="copyServerIp()" title="Click to copy Server IP">
+          <span class="pulse-dot-green"></span>
+          <span class="ip-address-text">krylosmp.play.hosting</span>
           <span class="badge-online">ONLINE</span>
         </div>
         
-        <div class="user-profile-header" id="userProfileHeader">
-          <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()">
-            <i class="fa-solid fa-user-check"></i> <span id="headerUserLabel">Link Account</span>
-          </button>
-        </div>
-
-        <div class="cart-btn-header" onclick="openCartDrawer()">
-          <i class="fa-solid fa-cart-shopping"></i>
-          <span class="cart-count" id="cartCountBadge">0</span>
+        <div class="user-profile-badge" id="userProfileHeader" onclick="openLoginModal()" title="Manage linked account">
+          <img src="https://mc-heads.net/avatar/Krylo_MC/32" id="headerUserAvatar" class="header-avatar" alt="Avatar">
+          <div class="header-user-info">
+            <span class="header-ign" id="headerUserLabel">Krylo_MC</span>
+            <small class="header-wallet-kc" id="headerWalletLabel">50,000 KC</small>
+          </div>
         </div>
       </div>
     </div>
