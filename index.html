@@ -44,9 +44,8 @@
         <a href="#store" class="nav-pill active"><i class="fa-solid fa-store"></i> Store</a>
         <a href="#ranks" class="nav-pill"><i class="fa-solid fa-crown"></i> Ranks</a>
         <a href="#crates" class="nav-pill"><i class="fa-solid fa-box-open"></i> Crates</a>
-        <a href="#realmoney" class="nav-pill" style="color: #ffd700; border-color: rgba(255,215,0,0.3);"><i class="fa-solid fa-credit-card"></i> Real Money Info</a>
-        <a href="#locator" class="nav-pill" id="navLocator"><i class="fa-solid fa-compass"></i> #Locator</a>
         <a href="apply.html#moderator" class="nav-pill"><i class="fa-solid fa-file-pen"></i> #Apply</a>
+        <a href="https://krylosmp.web.app" target="_blank" class="nav-pill"><i class="fa-solid fa-database"></i> Database</a>
         <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="nav-pill nav-pill-discord"><i class="fa-brands fa-discord"></i> Discord</a>
       </nav>
 
@@ -152,153 +151,6 @@
         <!-- Products Injected Dynamically in KC -->
       </div>
     </section>
-
-    <!-- TOP SUPPORTERS & COMMUNITY SUPPORT -->
-    <section class="donators-section">
-      <div class="section-title-wrap">
-        <span class="sub-badge"><i class="fa-solid fa-trophy"></i> HALL OF FAME</span>
-        <h2>Top KC Tycoons This Month</h2>
-        <p>Recognizing the top players driving the KryloSMP economy and community:</p>
-      </div>
-
-      <div class="top-donators-grid">
-        <div class="donator-card rank-1">
-          <div class="donator-trophy">🥇</div>
-          <img src="https://mc-heads.net/avatar/Krylo_MC/64" alt="" class="donator-avatar">
-          <div class="donator-name">Krylo_MC</div>
-          <div class="donator-rank-badge">👑 EXECUTIVE</div>
-          <div class="donator-amount">250,000 KC</div>
-        </div>
-
-        <div class="donator-card rank-2">
-          <div class="donator-trophy">🥈</div>
-          <img src="https://mc-heads.net/avatar/Notch/64" alt="" class="donator-avatar">
-          <div class="donator-name">Notch</div>
-          <div class="donator-rank-badge">🔥 MVP+</div>
-          <div class="donator-amount">150,000 KC</div>
-        </div>
-
-        <div class="donator-card rank-3">
-          <div class="donator-trophy">🥉</div>
-          <img src="https://mc-heads.net/avatar/Technoblade/64" alt="" class="donator-avatar">
-          <div class="donator-name">Technoblade</div>
-          <div class="donator-rank-badge">💎 MVP</div>
-          <div class="donator-amount">80,000 KC</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TRUST & REAL MONEY MANUAL PROTOCOL -->
-    <section class="trust-guarantee-section">
-      <div class="trust-grid">
-        <div class="trust-card">
-          <div class="trust-icon"><i class="fa-solid fa-bolt"></i></div>
-          <h3>Instant KC Auto-Delivery</h3>
-          <p>When purchasing with KryloCoins (KC), orders are processed and delivered directly into your Minecraft inventory in 1 to 60 seconds automatically.</p>
-        </div>
-
-        <div class="trust-card">
-          <div class="trust-icon"><i class="fa-solid fa-ticket"></i></div>
-          <h3>Real Money Manual Orders</h3>
-          <p>Real money orders (PayPal, UPI, Card, Crypto) are handled manually by staff via Discord Tickets. Fulfillment takes <strong>1 to 30 minutes</strong>.</p>
-        </div>
-
-        <div class="trust-card">
-          <div class="trust-icon"><i class="fa-solid fa-headset"></i></div>
-          <h3>24/7 Staff Support</h3>
-          <p>Need help with your balance, rank sync, or manual ticket order? Our staff team is available 24/7 in our official Discord server.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- LOCATOR RADAR SECTION (#locator & #locater) -->
-    <section class="locator-section" id="locator">
-      <div class="section-title-wrap">
-        <span class="sub-badge"><i class="fa-solid fa-compass"></i> RADAR PROTOCOL</span>
-        <h2>🧭 Minecraft Locator Bar Neighbor Finder</h2>
-        <p>Find your in-game 90% normalized radar color and locator band frequency:</p>
-      </div>
-
-      <div class="locator-tool-card">
-        <div class="tool-search-row">
-          <div class="tool-input-wrap">
-            <i class="fa-solid fa-user"></i>
-            <input type="text" id="inlineLocatorInput" placeholder="Enter Username or UUID (e.g. Krylo_MC)..." value="Krylo_MC">
-          </div>
-          <button class="btn-tool-scan" onclick="calcInlineLocator()"><i class="fa-solid fa-radar"></i> Scan Radar</button>
-        </div>
-
-        <div class="tool-result-grid">
-          <div class="tool-player-box">
-            <img id="inlineHead" src="https://mc-heads.net/avatar/Krylo_MC/128" alt="Avatar">
-            <div style="font-weight: 800; font-size: 1.2rem;" id="inlineDispName">Krylo_MC</div>
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #8a99ad; word-break: break-all;" id="inlineDispUuid">Scanning UUID...</div>
-          </div>
-
-          <div>
-            <div class="tool-metrics-grid">
-              <div class="tool-metric-item">
-                <div class="tool-metric-label">In-Game Hex (90% Brightness)</div>
-                <div class="tool-metric-val">
-                  <span class="color-pill" id="inlinePillNorm" style="background: #b945e6;"></span>
-                  <span id="inlineHexNorm">#B945E6</span>
-                </div>
-              </div>
-              <div class="tool-metric-item">
-                <div class="tool-metric-label">Raw Hash Hex</div>
-                <div class="tool-metric-val">
-                  <span class="color-pill" id="inlinePillRaw" style="background: #ad79c1;"></span>
-                  <span id="inlineHexRaw">#AD79C1</span>
-                </div>
-              </div>
-              <div class="tool-metric-item">
-                <div class="tool-metric-label">Hue / Brightness</div>
-                <div class="tool-metric-val" id="inlineHue">283° / 90%</div>
-              </div>
-            </div>
-
-            <div class="bossbar-wrap">
-              <div style="font-size: 0.8rem; color: #8a99ad; margin-bottom: 6px;">Simulated Minecraft BossBar Radar</div>
-              <div class="bossbar-outer">
-                <div class="bossbar-inner" id="inlineBarFill" style="background: #b945e6;"></div>
-                <div class="bossbar-head-icon">
-                  <img id="inlineBarIcon" src="https://mc-heads.net/avatar/Krylo_MC/64" alt="Icon">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TEST LAB SECTION (#test) -->
-    <section class="test-section" id="test">
-      <div class="section-title-wrap">
-        <span class="sub-badge"><i class="fa-solid fa-flask"></i> SYSTEM STATUS</span>
-        <h2>🧪 KryloSMP Live Node Status</h2>
-        <p>Real-time infrastructure health and server cluster status:</p>
-      </div>
-
-      <div class="locator-tool-card">
-        <div class="test-cards-grid">
-          <div class="test-card-box">
-            <h3><i class="fa-solid fa-server"></i> Paper 1.21 Node</h3>
-            <p>Node IP: <code>62.141.62.24:25754</code></p>
-            <span class="test-badge">ONLINE • 20.0 TPS</span>
-          </div>
-          <div class="test-card-box">
-            <h3><i class="fa-brands fa-discord"></i> Discord Bot Suite</h3>
-            <p>Vesper Bot (MEE6 + Dyno + Radar)</p>
-            <span class="test-badge">ACTIVE • 5 GUILDS</span>
-          </div>
-          <div class="test-card-box">
-            <h3><i class="fa-solid fa-shield-halved"></i> 2-Way Chat Bridge</h3>
-            <p>Mineflayer Character: KryloGuard</p>
-            <span class="test-badge">SYNCED • 100% REALTIME</span>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- Product Modal (KC Purchase or Real Money Ticket Option) -->
@@ -364,8 +216,8 @@
       </div>
       <div class="footer-links">
         <a href="#store">Store</a>
-        <a href="#realmoney">Real Money Info</a>
-        <a href="#locator">#Locator</a>
+        <a href="#ranks">Ranks</a>
+        <a href="#crates">Crates</a>
         <a href="apply.html#moderator">#Apply</a>
         <a href="https://discord.gg/6vrEDTu3bx" target="_blank">Discord</a>
       </div>
