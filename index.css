@@ -1183,9 +1183,134 @@ footer {
   padding-top: 20px;
 }
 
+/* Donators Hall of Fame (FreshSMP Style) */
+.donators-section {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 24px;
+}
+.top-donators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+.donator-card {
+  background: rgba(16, 22, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.donator-card:hover {
+  transform: translateY(-4px);
+  border-color: #00e5ff;
+  box-shadow: 0 15px 35px rgba(0, 229, 255, 0.15);
+}
+.donator-trophy {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+.donator-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+.donator-name {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.donator-rank-badge {
+  display: inline-block;
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: #ffd700;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+.donator-amount {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #00ff88;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Trust & Guarantee Section (FreshSMP Style) */
+.trust-guarantee-section {
+  max-width: 1200px;
+  margin: 60px auto 40px;
+  padding: 0 24px;
+}
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+.trust-card {
+  background: rgba(13, 17, 26, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 28px;
+}
+.trust-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  color: #00e5ff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+}
+.trust-card h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.trust-card p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.payment-methods-strip {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 20px;
+  background: rgba(16, 22, 34, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  color: #8a99ad;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.payment-methods-strip span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.payment-methods-strip span:hover {
+  color: #fff;
+}
+
 @media (max-width: 768px) {
   .hero-overlay-content { padding: 24px; }
   .hero-store-title { font-size: 1.8rem; }
   .desktop-nav { display: none; }
 }
+
 
