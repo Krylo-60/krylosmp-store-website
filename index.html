@@ -3,299 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>KryloSMP — Official Server Store, Locator Radar & Test Lab</title>
-  <meta name="description" content="Official store, Minecraft locator bar finder, and diagnostics hub for KryloSMP. Crossplay Java & Bedrock.">
+  <title>KryloSMP — Official Server Store & Web Hub</title>
+  <meta name="description" content="Official Minecraft store for KryloSMP (Fresh & Redish SMP style). Buy ranks, crates, gems, kits, and SkyBlock boosters. Crossplay Java & Bedrock.">
+  <link rel="icon" type="image/png" href="server-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="index.css?v=6.0">
-  <style>
-    /* Dedicated Styles for #locator and #test */
-    .locator-section, .test-section {
-      padding: 60px 0;
-      scroll-margin-top: 80px;
-    }
-    .tool-card {
-      background: rgba(16, 22, 34, 0.85);
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      border-radius: 20px;
-      padding: 35px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      margin-top: 25px;
-    }
-    .tool-search-row {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 25px;
-    }
-    .tool-input-wrap {
-      flex: 1;
-      position: relative;
-    }
-    .tool-input-wrap i {
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #8a99ad;
-    }
-    .tool-input-wrap input {
-      width: 100%;
-      padding: 16px 16px 16px 50px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
-      transition: 0.2s;
-    }
-    .tool-input-wrap input:focus {
-      border-color: #00e5ff;
-      box-shadow: 0 0 15px rgba(0,229,255,0.25);
-    }
-    .btn-tool-scan {
-      padding: 16px 32px;
-      background: linear-gradient(135deg, #00e5ff, #0088ff);
-      color: #000;
-      border: none;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: 0.2s;
-    }
-    .btn-tool-scan:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,229,255,0.4);
-    }
-    .tool-result-grid {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 24px;
-    }
-    @media (max-width: 768px) {
-      .tool-result-grid { grid-template-columns: 1fr; }
-      .tool-search-row { flex-direction: column; }
-    }
-    .tool-player-box {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 24px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
-    .tool-player-box img {
-      width: 96px;
-      height: 96px;
-      border-radius: 14px;
-      border: 2px solid rgba(0,229,255,0.3);
-    }
-    .tool-metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 600px) {
-      .tool-metrics-grid { grid-template-columns: 1fr; }
-    }
-    .tool-metric-item {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      padding: 12px 16px;
-    }
-    .tool-metric-label {
-      font-size: 0.75rem;
-      color: #8a99ad;
-      margin-bottom: 4px;
-    }
-    .tool-metric-val {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .color-pill {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-    .bossbar-wrap {
-      background: #000;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-    }
-    .bossbar-outer {
-      height: 14px;
-      border-radius: 4px;
-      background: #1e1e1e;
-      position: relative;
-      margin: 12px 0;
-    }
-    .bossbar-inner {
-      height: 100%;
-      width: 100%;
-      border-radius: 4px;
-      transition: 0.3s;
-    }
-    .bossbar-head-icon {
-      position: absolute;
-      top: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: #fff;
-      border: 2px solid #000;
-      overflow: hidden;
-    }
-    .bossbar-head-icon img { width: 100%; height: 100%; }
-
-    /* Test Lab Styles */
-    .test-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .test-card-box {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 20px;
-    }
-    .test-card-box h3 {
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #00e5ff;
-    }
-    .test-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      background: rgba(0,255,136,0.15);
-      color: #00ff88;
-      border: 1px solid rgba(0,255,136,0.3);
-    }
-  </style>
+  <link rel="stylesheet" href="index.css?v=8.0">
 </head>
 <body>
 
-  <!-- Background Glow Effects -->
-  <div class="glow-blob blob-1"></div>
-  <div class="glow-blob blob-2"></div>
+  <!-- Top Announcement Bar (FreshSMP Style) -->
+  <div class="top-announcement-bar">
+    <div class="top-bar-inner">
+      <span class="pulse-fire">🔥</span>
+      <span><strong>SEASON 1 RE-RELEASE:</strong> Use code <strong style="color: #FFD700;">KRYLO20</strong> for 20% off all Ranks & Crates!</span>
+      <div class="currency-picker">
+        <label><i class="fa-solid fa-globe"></i> Currency:</label>
+        <select id="currencySelect" onchange="changeCurrency(this.value)">
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="KC" selected>KryloCoins (KC)</option>
+        </select>
+      </div>
+    </div>
+  </div>
 
-  <!-- Header -->
+  <!-- Header Navigation -->
   <header>
     <div class="nav-container">
       <a href="#home" class="logo">
-        <i class="fa-solid fa-crown logo-icon"></i>
-        <span>Krylo<span>SMP</span></span>
+        <img src="server-icon.png" alt="KryloSMP Logo" class="brand-logo-img">
+        <div class="logo-text">
+          <span>Krylo<span>SMP</span></span>
+          <small>OFFICIAL STORE</small>
+        </div>
       </a>
       
       <nav class="desktop-nav">
-        <a href="#home"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="#store"><i class="fa-solid fa-store"></i> Store</a>
-        <a href="#locator" id="navLocator"><i class="fa-solid fa-crosshairs"></i> #Locator</a>
-        <a href="#test" id="navTest"><i class="fa-solid fa-flask"></i> #Test</a>
-        <a href="https://krylosmp.web.app" target="_blank"><i class="fa-solid fa-users"></i> Database</a>
-        <a href="https://discord.gg/6vrEDTu3bx" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a>
+        <a href="#store" class="nav-link active"><i class="fa-solid fa-store"></i> Store</a>
+        <a href="#ranks" class="nav-link"><i class="fa-solid fa-crown"></i> Ranks</a>
+        <a href="#crates" class="nav-link"><i class="fa-solid fa-box-open"></i> Crates</a>
+        <a href="#locator" class="nav-link" id="navLocator"><i class="fa-solid fa-compass"></i> #Locator</a>
+        <a href="apply.html#moderator" class="nav-link"><i class="fa-solid fa-file-pen"></i> #Apply</a>
+        <a href="https://krylosmp.web.app" target="_blank" class="nav-link"><i class="fa-solid fa-users"></i> Database</a>
+        <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="nav-link"><i class="fa-brands fa-discord"></i> Discord</a>
       </nav>
 
       <div class="header-right">
-        <div class="server-status" onclick="copyServerIp()" title="Click to copy IP">
+        <div class="server-status-pill" onclick="copyServerIp()" title="Click to copy IP">
           <div class="status-indicator"></div>
-          <span class="status-text">62.141.62.24:25754</span>
-          <span class="player-count">Online</span>
+          <span class="ip-label">krylosmp.play.hosting</span>
+          <span class="badge-online">ONLINE</span>
         </div>
         
         <div class="user-profile-header" id="userProfileHeader">
           <button class="btn-login-header" id="btnLoginHeader" onclick="openLoginModal()">
-            <i class="fa-solid fa-user-lock"></i> <span>Link Account</span>
+            <i class="fa-solid fa-user-check"></i> <span id="headerUserLabel">Link Account</span>
           </button>
+        </div>
+
+        <div class="cart-btn-header" onclick="openCartDrawer()">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-count" id="cartCountBadge">0</span>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
+  <!-- Live Recent Purchases Ticker (Fresh & Redish SMP Style) -->
+  <div class="live-ticker-wrap">
+    <div class="ticker-label"><i class="fa-solid fa-bolt"></i> RECENT ORDERS</div>
+    <div class="ticker-marquee">
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Krylo_MC/32" alt=""> <strong>Krylo_MC</strong> bought <span>👑 KRYLO EXECUTIVE Rank</span> <small>2m ago</small></div>
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Notch/32" alt=""> <strong>Notch</strong> bought <span>5x Mythic Crates</span> <small>9m ago</small></div>
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Technoblade/32" alt=""> <strong>Technoblade</strong> bought <span>Netherite Titan Kit</span> <small>18m ago</small></div>
+      <div class="ticker-item"><img src="https://mc-heads.net/avatar/Alex/32" alt=""> <strong>Alex</strong> bought <span>50,000 KryloCoins Pack</span> <small>25m ago</small></div>
+    </div>
+  </div>
+
+  <!-- Main Store Hero Banner -->
   <main>
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-      <div class="hero-content">
-        <span class="badge"><i class="fa-solid fa-bolt"></i> Official Season 1 Store & Hub</span>
-        <h1>KryloSMP <br><span class="gradient-text">Official Store</span></h1>
-        <p>Enhance your gameplay with exclusive server ranks, combat kits, SkyBlock boosters, and KryloCoins. Automatic instant delivery on Java & Bedrock!</p>
-        
-        <!-- Quick Link Minecraft Username -->
-        <div class="username-box" id="usernameInputBox">
-          <i class="fa-solid fa-gamepad user-input-icon"></i>
-          <input type="text" id="mcUsernameInput" placeholder="Enter Minecraft Username (e.g. Krylo_MC)..." autocomplete="off">
-          <button id="btnStartShopping" onclick="bindUsername()">
-            <i class="fa-solid fa-link"></i> Link Profile
-          </button>
+    <section class="hero-freshsmp" id="home">
+      <div class="hero-banner-card">
+        <img src="official_banner.jpg" alt="KryloSMP Official Banner" class="hero-bg-banner">
+        <div class="hero-overlay-content">
+          <span class="hero-tag"><i class="fa-solid fa-shield-halved"></i> OFFICIAL JAVA & BEDROCK STORE</span>
+          <h1 class="hero-store-title">KryloSMP Store & Hub</h1>
+          <p class="hero-store-desc">Join thousands of players on the premier crossplay SMP network. Automatic instant delivery in seconds.</p>
+
+          <!-- Platform Selector (Java vs Bedrock) -->
+          <div class="platform-selector">
+            <button class="plat-btn active" id="platJava" onclick="setPlatform('java')">
+              <i class="fa-brands fa-java"></i> Java Edition (1.21.x)
+            </button>
+            <button class="plat-btn" id="platBedrock" onclick="setPlatform('bedrock')">
+              <i class="fa-solid fa-cube"></i> Bedrock Edition (Port 43089)
+            </button>
+          </div>
+
+          <!-- Quick Username Bind -->
+          <div class="username-bind-container">
+            <div class="input-with-icon">
+              <i class="fa-solid fa-gamepad"></i>
+              <input type="text" id="mcUsernameInput" placeholder="Enter Minecraft IGN (e.g. Krylo_MC)..." autocomplete="off">
+            </div>
+            <button class="btn-bind-action" onclick="bindUsername()">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Continue to Shop
+            </button>
+          </div>
+
+          <!-- Monthly Community Goal Bar (FreshSMP Style) -->
+          <div class="community-goal-wrap">
+            <div class="goal-header">
+              <span><i class="fa-solid fa-trophy"></i> Monthly Server Goal: <strong>$285.00 / $500.00</strong></span>
+              <span class="goal-percent">57%</span>
+            </div>
+            <div class="goal-bar-bg">
+              <div class="goal-bar-fill" style="width: 57%;"></div>
+            </div>
+            <small class="goal-note">🎁 Reaching 100% unlocks a Global 2x XP & KC Multiplier for everyone!</small>
+          </div>
         </div>
-        <span class="input-tip"><i class="fa-solid fa-circle-info"></i> Instant wallet sync • Buy in-game with /shop or online below</span>
       </div>
     </section>
 
-    <!-- STORE SECTION: Products Grid -->
-    <section class="store-section" id="store">
-      <div class="section-header">
-        <span class="section-tag"><i class="fa-solid fa-gem"></i> Season 1 Catalog</span>
-        <h2>Featured Store Packages</h2>
-        <p>Select a category to explore ranks, combat gear, and island upgrades:</p>
+    <!-- STORE SECTION (FreshSMP & RedishSMP Style) -->
+    <section class="store-catalog" id="store">
+      <div class="section-title-wrap">
+        <span class="sub-badge"><i class="fa-solid fa-gem"></i> SEASON 1 CATALOG</span>
+        <h2>Explore Store Packages</h2>
+        <p>Select your category below for instant in-game delivery:</p>
       </div>
 
       <!-- Category Filter Tabs -->
-      <div class="category-tabs">
-        <button class="cat-tab active" onclick="filterProducts('all')"><i class="fa-solid fa-layer-group"></i> All Items</button>
-        <button class="cat-tab" onclick="filterProducts('ranks')"><i class="fa-solid fa-crown"></i> Server Ranks</button>
-        <button class="cat-tab" onclick="filterProducts('combat')"><i class="fa-solid fa-shield-halved"></i> Combat & FFA</button>
-        <button class="cat-tab" onclick="filterProducts('skyblock')"><i class="fa-solid fa-cloud"></i> SkyBlock Boosters</button>
-        <button class="cat-tab" onclick="filterProducts('cosmetics')"><i class="fa-solid fa-wand-magic-sparkles"></i> Cosmetics & Auras</button>
+      <div class="category-tabs-fresh">
+        <button class="cat-btn active" onclick="filterProducts('all')"><i class="fa-solid fa-layer-group"></i> All Packages</button>
+        <button class="cat-btn" id="tabRanks" onclick="filterProducts('ranks')"><i class="fa-solid fa-crown"></i> Ranks</button>
+        <button class="cat-btn" id="tabCrates" onclick="filterProducts('crates')"><i class="fa-solid fa-box-open"></i> Crates & Keys</button>
+        <button class="cat-btn" onclick="filterProducts('gems')"><i class="fa-solid fa-coins"></i> KryloCoins / Gems</button>
+        <button class="cat-btn" onclick="filterProducts('combat')"><i class="fa-solid fa-shield-halved"></i> Combat Kits</button>
+        <button class="cat-btn" onclick="filterProducts('skyblock')"><i class="fa-solid fa-cloud"></i> SkyBlock Boosters</button>
       </div>
 
-      <!-- Product Cards Grid -->
-      <div class="products-grid" id="productsGrid">
-        <!-- Products injected dynamically via JS -->
+      <!-- Products Grid -->
+      <div class="products-grid-fresh" id="productsGrid">
+        <!-- Products Injected Dynamically -->
       </div>
     </section>
 
-    <!-- LOCATOR SECTION: #locator & #locater -->
+    <!-- LOCATOR RADAR SECTION (#locator & #locater) -->
     <section class="locator-section" id="locator">
-      <div class="section-header">
-        <span class="section-tag"><i class="fa-solid fa-compass"></i> Minecraft Radar Engine</span>
-        <h2>🧭 Locator Bar Neighbor Finder</h2>
-        <p>Calculate your in-game 90% normalized bossbar radar color from your UUID or username:</p>
+      <div class="section-title-wrap">
+        <span class="sub-badge"><i class="fa-solid fa-compass"></i> RADAR PROTOCOL</span>
+        <h2>🧭 Minecraft Locator Bar Neighbor Finder</h2>
+        <p>Find your in-game 90% normalized radar color and locator band frequency:</p>
       </div>
 
-      <div class="tool-card">
+      <div class="locator-tool-card">
         <div class="tool-search-row">
           <div class="tool-input-wrap">
             <i class="fa-solid fa-user"></i>
-            <input type="text" id="inlineLocatorInput" placeholder="Enter Username or UUID (e.g. Krylo_MC, Notch, Technoblade)..." value="Krylo_MC">
+            <input type="text" id="inlineLocatorInput" placeholder="Enter Username or UUID (e.g. Krylo_MC)..." value="Krylo_MC">
           </div>
           <button class="btn-tool-scan" onclick="calcInlineLocator()"><i class="fa-solid fa-radar"></i> Scan Radar</button>
         </div>
@@ -343,105 +215,37 @@
       </div>
     </section>
 
-    <!-- TEST LAB SECTION: #test -->
+    <!-- TEST LAB SECTION (#test) -->
     <section class="test-section" id="test">
-      <div class="section-header">
-        <span class="section-tag"><i class="fa-solid fa-flask"></i> Diagnostics & Status</span>
-        <h2>🧪 KryloSMP Live Test Lab</h2>
-        <p>Real-time node diagnostics, API bridges, and ecosystem ping tests:</p>
+      <div class="section-title-wrap">
+        <span class="sub-badge"><i class="fa-solid fa-flask"></i> SYSTEM STATUS</span>
+        <h2>🧪 KryloSMP Live Node Status</h2>
+        <p>Real-time infrastructure health and server cluster status:</p>
       </div>
 
-      <div class="tool-card">
-        <div class="test-grid">
+      <div class="locator-tool-card">
+        <div class="test-cards-grid">
           <div class="test-card-box">
-            <h3><i class="fa-solid fa-server"></i> Paper 1.21 Server</h3>
-            <p style="color: #8a99ad; font-size: 0.9rem; margin-bottom: 12px;">Node: <code>62.141.62.24:25754</code></p>
+            <h3><i class="fa-solid fa-server"></i> Paper 1.21 Node</h3>
+            <p>Node IP: <code>62.141.62.24:25754</code></p>
             <span class="test-badge">ONLINE • 20.0 TPS</span>
           </div>
           <div class="test-card-box">
             <h3><i class="fa-brands fa-discord"></i> Discord Bot Suite</h3>
-            <p style="color: #8a99ad; font-size: 0.9rem; margin-bottom: 12px;">Krims Code AI (MEE6 + Dyno)</p>
+            <p>Vesper Bot (MEE6 + Dyno + Radar)</p>
             <span class="test-badge">ACTIVE • 5 GUILDS</span>
           </div>
           <div class="test-card-box">
-            <h3><i class="fa-solid fa-database"></i> Firebase Cloud Sync</h3>
-            <p style="color: #8a99ad; font-size: 0.9rem; margin-bottom: 12px;">Wallet & Ranks Firestore</p>
+            <h3><i class="fa-solid fa-shield-halved"></i> 2-Way Chat Bridge</h3>
+            <p>Mineflayer Character: KryloGuard</p>
             <span class="test-badge">SYNCED • 100% REALTIME</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Server Connection & Info Cards -->
-    <section class="info-section">
-      <div class="info-grid">
-        <!-- Card 1: Server Connection Details -->
-        <div class="info-card connection-card">
-          <div class="card-icon"><i class="fa-solid fa-server"></i></div>
-          <h3>Server Address</h3>
-          <p>Join the server today on Java Edition or Bedrock Edition.</p>
-          
-          <div class="ip-display" onclick="copyServerIp()" title="Click to copy">
-            <span class="ip-text" id="ipText">krylosmp.play.hosting</span>
-            <button class="btn-copy" id="btnCopyIp"><i class="fa-regular fa-copy"></i></button>
-          </div>
-
-          <div class="port-specs">
-            <div class="port-spec-item">
-              <span class="port-label">Java Port:</span>
-              <span class="port-val">25754 (or default)</span>
-            </div>
-            <div class="port-spec-item">
-              <span class="port-label">Bedrock UDP:</span>
-              <span class="port-val">43089</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 2: 100% KryloCoins Economy -->
-        <div class="info-card currency-card">
-          <div class="card-icon"><i class="fa-solid fa-coins"></i></div>
-          <h3>100% KryloCoins (KC)</h3>
-          <p>Every rank and item is earnable entirely through gameplay.</p>
-          <ul class="kc-perks">
-            <li><i class="fa-solid fa-circle-check"></i> +100 KC per kill in FFA Arena</li>
-            <li><i class="fa-solid fa-circle-check"></i> +250 KC daily reward with <code>/daily</code></li>
-            <li><i class="fa-solid fa-circle-check"></i> Earn KC from trading, mining & quests</li>
-          </ul>
-        </div>
-
-        <!-- Card 3: In-Game Commands -->
-        <div class="info-card commands-card">
-          <div class="card-icon"><i class="fa-solid fa-terminal"></i></div>
-          <h3>Quick Commands</h3>
-          <div class="commands-list">
-            <div class="cmd-item"><code>/shop</code> <span>Open in-game KC Store GUI</span></div>
-            <div class="cmd-item"><code>/daily</code> <span>Claim +250 KC daily gift</span></div>
-            <div class="cmd-item"><code>/ffa join</code> <span>Enter FFA Combat Arena (+100 KC/kill)</span></div>
-            <div class="cmd-item"><code>/is</code> <span>Open SkyBlock Island control panel</span></div>
-          </div>
-        </div>
-
-        <!-- Card 4: Community & Support -->
-        <div class="info-card community-card">
-          <div class="card-icon"><i class="fa-brands fa-discord"></i></div>
-          <h3>Community & Support</h3>
-          <p>Claim booster perks, join tournaments, and talk with staff.</p>
-          
-          <div class="community-buttons">
-            <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="btn-discord-join">
-              <i class="fa-brands fa-discord"></i> Join Discord Server
-            </a>
-            <a href="https://krylosmp.web.app" target="_blank" class="btn-portal-secondary">
-              <i class="fa-solid fa-database"></i> Explore Full Database
-            </a>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Product Purchase Modal -->
+  <!-- Product Modal -->
   <div class="modal-overlay" id="productModal">
     <div class="modal-card">
       <button class="modal-close" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
@@ -467,14 +271,14 @@
     </div>
   </div>
 
-  <!-- Verification Modal -->
+  <!-- Player Login / Link Modal -->
   <div class="modal-overlay" id="loginModal">
     <div class="modal-card">
       <button class="modal-close" onclick="closeLoginModal()"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header">
         <i class="fa-solid fa-shield-halved modal-icon"></i>
-        <h3>Instant Player Link</h3>
-        <p>Sync your in-game wallet, balance, and perks instantly.</p>
+        <h3>Link Minecraft Account</h3>
+        <p>Enter your In-Game Name to unlock wallet syncing and package delivery.</p>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -491,115 +295,28 @@
   <!-- Toast Notification -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- Footer -->
+  <!-- Footer (FreshSMP Style) -->
   <footer>
+    <div class="footer-inner">
+      <div class="footer-left">
+        <div class="footer-logo">
+          <img src="server-icon.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px;">
+          <span>KryloSMP Store</span>
+        </div>
+        <p>The premier Minecraft SMP network. Fully crossplay on Java and Bedrock Edition.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#store">Store</a>
+        <a href="#locator">#Locator</a>
+        <a href="apply.html#moderator">#Apply</a>
+        <a href="https://discord.gg/6vrEDTu3bx" target="_blank">Discord</a>
+      </div>
+    </div>
     <div class="footer-bottom">
       <p>© 2026 KryloSMP Network. Not an official Minecraft product. Not approved by or associated with Mojang or Microsoft.</p>
     </div>
   </footer>
 
-  <script>
-    // Inline Locator Engine & Hash Router Support
-    function rgbToHsv(r, g, b) {
-      r /= 255; g /= 255; b /= 255;
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      let h, s, v = max;
-      const d = max - min;
-      s = max === 0 ? 0 : d / max;
-      if (max === min) { h = 0; } 
-      else {
-        switch (max) {
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
-        }
-        h /= 6;
-      }
-      return { h, s, v };
-    }
-
-    function hsvToRgb(h, s, v) {
-      let r, g, b;
-      const i = Math.floor(h * 6);
-      const f = h * 6 - i;
-      const p = v * (1 - s);
-      const q = v * (1 - f * s);
-      const t = v * (1 - (1 - f) * s);
-      switch (i % 6) {
-        case 0: r = v; g = t; b = p; break;
-        case 1: r = q; g = v; b = p; break;
-        case 2: r = p; g = v; b = t; break;
-        case 3: r = p; g = q; b = v; break;
-        case 4: r = t; g = p; b = v; break;
-        case 5: r = v; g = p; b = q; break;
-      }
-      const toHex = x => Math.round(x * 255).toString(16).padStart(2, '0');
-      return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-    }
-
-    async function calcInlineLocator() {
-      const input = document.getElementById('inlineLocatorInput').value.trim() || 'Krylo_MC';
-      document.getElementById('inlineDispName').innerText = input;
-      document.getElementById('inlineHead').src = `https://mc-heads.net/avatar/${encodeURIComponent(input)}/128`;
-      document.getElementById('inlineBarIcon').src = `https://mc-heads.net/avatar/${encodeURIComponent(input)}/64`;
-
-      let uuid = '';
-      try {
-        const res = await fetch(`https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(input)}`);
-        if (res.ok) {
-          const data = await res.json();
-          uuid = data.id;
-          document.getElementById('inlineDispName').innerText = data.name;
-        }
-      } catch (e) {}
-
-      if (!uuid) {
-        uuid = Array.from(input).reduce((acc, c) => acc + c.charCodeAt(0).toString(16), '').padEnd(32, '0').slice(0, 32);
-      }
-
-      document.getElementById('inlineDispUuid').innerText = `${uuid.slice(0,8)}-${uuid.slice(8,12)}-${uuid.slice(12,16)}-${uuid.slice(16,20)}-${uuid.slice(20)}`;
-
-      const part1 = parseInt(uuid.slice(0, 8), 16) || 0;
-      const part2 = parseInt(uuid.slice(8, 16), 16) || 0;
-      const part3 = parseInt(uuid.slice(16, 24), 16) || 0;
-      const part4 = parseInt(uuid.slice(24, 32), 16) || 0;
-      const combined = (part1 ^ part2 ^ part3 ^ part4) & 0xFFFFFF;
-
-      const rawR = (combined >> 16) & 0xFF;
-      const rawG = (combined >> 8) & 0xFF;
-      const rawB = combined & 0xFF;
-      const rawHex = `#${rawR.toString(16).padStart(2, '0')}${rawG.toString(16).padStart(2, '0')}${rawB.toString(16).padStart(2, '0')}`.toUpperCase();
-
-      const hsv = rgbToHsv(rawR, rawG, rawB);
-      const normHex = hsvToRgb(hsv.h, Math.max(hsv.s, 0.70), 0.90).toUpperCase();
-
-      document.getElementById('inlineHexNorm').innerText = normHex;
-      document.getElementById('inlinePillNorm').style.background = normHex;
-      document.getElementById('inlineHexRaw').innerText = rawHex;
-      document.getElementById('inlinePillRaw').style.background = rawHex;
-      document.getElementById('inlineHue').innerText = `${Math.round(hsv.h * 360)}° / 90%`;
-      document.getElementById('inlineBarFill').style.background = normHex;
-    }
-
-    // Handle hash routing for #locator, #locater, #test
-    function handleHashRouting() {
-      const hash = window.location.hash.toLowerCase();
-      if (hash === '#locator' || hash === '#locater') {
-        const el = document.getElementById('locator');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      } else if (hash === '#test') {
-        const el = document.getElementById('test');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    window.addEventListener('hashchange', handleHashRouting);
-    window.addEventListener('DOMContentLoaded', () => {
-      calcInlineLocator();
-      setTimeout(handleHashRouting, 300);
-    });
-  </script>
-
-  <script src="index.js?v=6.0"></script>
+  <script src="index.js?v=8.0"></script>
 </body>
 </html>
