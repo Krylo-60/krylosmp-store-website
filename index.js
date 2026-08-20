@@ -364,8 +364,8 @@ function claimDailyCoins() {
 }
 
 function copyServerIp() {
-  navigator.clipboard.writeText('krylosmp.play.hosting:25754');
-  showToast('📋 Server IP copied: krylosmp.play.hosting:25754');
+  navigator.clipboard.writeText('KryloMCSMP.minehut.gg');
+  showToast('📋 Server IP copied: KryloMCSMP.minehut.gg');
 }
 
 function showToast(msg) {
