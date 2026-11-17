@@ -1040,22 +1040,22 @@
         
         <div class="hero-cta-group">
           <button class="btn-primary" onclick="copyIp()">
-            <i class="fa-solid fa-play"></i> Copy Server IP
+            <i class="fa-solid fa-lock"></i> Server IP: Hidden
           </button>
           <a href="#store" class="btn-gold">
             <i class="fa-solid fa-cart-shopping"></i> Browse Web Store
           </a>
         </div>
 
-        <div class="ip-card-box" onclick="copyIp()" title="Click to copy server IP">
+        <div class="ip-card-box" onclick="copyIp()" title="Server IP will be revealed at launch!">
           <div class="ip-left">
-            <div class="dot-online"></div>
+            <div class="dot-online" style="background: #f59e0b; box-shadow: 0 0 10px #f59e0b;"></div>
             <div>
-              <div class="ip-title">Server IP (Java & Bedrock)</div>
-              <div class="ip-val" id="serverIpDisplay">krylosmp.falix.gg:29273</div>
+              <div class="ip-title">Server IP (Grand Launch Soon)</div>
+              <div class="ip-val" id="serverIpDisplay">Revealing at Launch! 🔒</div>
             </div>
           </div>
-          <div class="ip-copy-btn"><i class="fa-regular fa-copy"></i> Click to Copy</div>
+          <div class="ip-copy-btn"><i class="fa-solid fa-lock"></i> Stay Tuned</div>
         </div>
       </div>
 
@@ -1744,8 +1744,8 @@
     }
 
     function copyIp() {
-      navigator.clipboard.writeText('krylosmp.falix.gg:29273');
-      showToast('📋 Copied krylosmp.falix.gg:29273 to clipboard!');
+      navigator.clipboard.writeText('play.krylosmp.net');
+      showToast('🔒 Server IP is confidential and will be revealed at Grand Launch! Keep an eye on announcements.');
     }
 
     function toggleMobileNav() {

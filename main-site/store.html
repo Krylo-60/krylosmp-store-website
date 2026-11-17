@@ -542,7 +542,7 @@
         <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           <div class="server-ip-pill" onclick="copyIp()">
             <i class="fa-solid fa-server" style="color: var(--cyan);"></i>
-            <span class="server-ip-text">krylosmp.falix.gg:29273</span>
+            <span class="server-ip-text">Revealing at Launch! 🔒</span>
             <span class="btn-copy-tag" id="copyLabel">CLICK TO COPY</span>
           </div>
           <span style="font-size: 0.78rem; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--cyan); padding: 6px 14px; border-radius: 20px; font-weight: 800; text-transform: uppercase;">
@@ -746,11 +746,11 @@
     }
 
     function copyIp() {
-      navigator.clipboard.writeText('krylosmp.falix.gg:29273');
+      navigator.clipboard.writeText('Revealing at Launch! 🔒');
       const lbl = document.getElementById('copyLabel');
       lbl.innerText = 'COPIED!';
       setTimeout(() => { lbl.innerText = 'CLICK TO COPY'; }, 2500);
-      showToast('📋 Copied krylosmp.falix.gg:29273 to clipboard!');
+      showToast('📋 Copied Revealing at Launch! 🔒 to clipboard!');
     }
 
     function showToast(msg) {
