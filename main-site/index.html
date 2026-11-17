@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KryloSMP Network | Official Minecraft Portal & Store</title>
+  <link rel="icon" href="server-icon.png">
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-base: #040711;
+      --bg-surface: #0a0f1d;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      
+      --cyan: #00d8f6;
+      --cyan-light: #38bdf8;
+      --cyan-soft: rgba(0, 216, 246, 0.12);
+      --cyan-border: rgba(0, 216, 246, 0.28);
+      --cyan-glow: rgba(0, 216, 246, 0.35);
+
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --gold-soft: rgba(245, 158, 11, 0.12);
+      --gold-glow: rgba(245, 158, 11, 0.35);
+
+      --purple: #a855f7;
+      --purple-soft: rgba(168, 85, 247, 0.12);
+      --purple-glow: rgba(168, 85, 247, 0.35);
+
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.3);
+      --red: #ef4444;
+
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 216, 246, 0.4);
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --max-w: 1280px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.55;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 216, 246, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 10% 30%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 45%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    }
+
+    /* TOP TICKER BAR */
+    .top-announcement {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.18) 0%, rgba(0, 216, 246, 0.18) 50%, rgba(168, 85, 247, 0.18) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 9px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.3px;
+    }
+    .top-announcement span { color: var(--gold-light); font-weight: 800; }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(10, 15, 29, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      height: 72px;
+      display: flex;
+      align-items: center;
+    }
+    .nav-container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid var(--cyan-border);
+      box-shadow: 0 0 15px var(--cyan-glow);
+      object-fit: cover;
+    }
+    .brand-text {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .brand-text span { color: var(--cyan); }
+
+    .desktop-menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: #fff;
+      background: var(--cyan-soft);
+      color: var(--cyan);
+    }
+    .nav-link.store-btn {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--gold-light);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      font-weight: 700;
+    }
+    .nav-link.store-btn:hover {
+      background: var(--gold);
+      color: #04060a;
+      box-shadow: 0 0 18px var(--gold-glow);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-pill {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .user-pill:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--cyan);
+      object-fit: cover;
+    }
+    .user-ign {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .user-kc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    .btn-discord-nav {
+      background: #5865F2;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .btn-discord-nav:hover {
+      background: #4752C4;
+      box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+    }
+
+    .btn-mobile-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 0;
+      width: 100%;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
+    }
+    .mobile-drawer.active { display: flex; }
+    .mobile-drawer .nav-link { font-size: 1rem; padding: 12px 16px; }
+
+    /* MAIN */
+    main {
+      max-width: var(--max-w);
+      width: 100%;
+      margin: 0 auto;
+      padding: 36px 24px 80px;
+      flex: 1;
+    }
+
+    /* =================================================== */
+    /* HERO BANNER SECTION (OFFICIAL BANNER INTEGRATION) */
+    /* =================================================== */
+    .hero-banner-card {
+      background: linear-gradient(135deg, rgba(10, 15, 29, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 38px;
+      margin-bottom: 50px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 36px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+    .hero-banner-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--cyan), var(--purple));
+    }
+
+    .hero-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--cyan-soft);
+      border: 1px solid var(--cyan-border);
+      color: var(--cyan);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.85rem;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #f59e0b 0%, #00d8f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.65;
+      margin-bottom: 26px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .btn-primary {
+      background: var(--cyan);
+      color: #04060a;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 13px 26px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: #00c0dc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--cyan-glow);
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), #d97706);
+      color: #04060a;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 13px 26px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--gold-glow);
+    }
+
+    .ip-card-box {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .ip-card-box:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-soft);
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+    .ip-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dot-online {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+    }
+    .ip-title {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .ip-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .ip-copy-btn {
+      color: var(--cyan);
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-banner-image-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .hero-official-banner {
+      width: 100%;
+      max-width: 440px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 216, 246, 0.2);
+      transition: transform 0.3s ease;
+      object-fit: cover;
+    }
+    .hero-official-banner:hover {
+      transform: scale(1.02);
+    }
+
+    /* SECTION HEADERS */
+    .section-head {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--cyan);
+      background: var(--cyan-soft);
+      border: 1px solid var(--cyan-border);
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* =================================================== */
+    /* WORLDS & GAMEMODES */
+    /* =================================================== */
+    .worlds-section {
+      margin-bottom: 70px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 22px;
+    }
+    .card-mode {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+    }
+    .card-mode:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-5px);
+      background: var(--bg-card-hover);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px var(--cyan-glow);
+    }
+    .mode-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+    .mode-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .mode-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+    .mode-tags {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    .mode-tags li {
+      font-size: 0.84rem;
+      color: #cbd5e1;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mode-tags li i {
+      color: var(--cyan);
+      font-size: 0.75rem;
+    }
+    .btn-card-action {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-card-action:hover {
+      background: var(--cyan);
+      color: #04060a;
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    /* =================================================== */
+    /* STORE CATALOG (PRO ORGANIZED) */
+    /* =================================================== */
+    .store-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 36px;
+      margin-bottom: 70px;
+      position: relative;
+    }
+    .store-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--cyan));
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .cat-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 11px 22px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .cat-btn.active, .cat-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 216, 246, 0.22) 0%, rgba(245, 158, 11, 0.12) 100%);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 16px var(--cyan-glow);
+    }
+
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-hover);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px var(--cyan-glow);
+      background: var(--bg-card-hover);
+    }
+
+    .p-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .p-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .p-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--gold-light);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .p-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .p-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+
+    .p-perks-list {
+      list-style: none;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .p-perks-list li {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .p-perks-list li i {
+      color: var(--cyan);
+      font-size: 0.75rem;
+    }
+
+    .p-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .p-price-kc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+    .btn-buy {
+      background: linear-gradient(135deg, #00d8f6 0%, #0284c7 100%);
+      color: #000;
+      border: none;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .btn-buy:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 15px var(--cyan-glow);
+      transform: translateY(-1px);
+    }
+
+    /* =================================================== */
+    /* RULES & POLICY SECTION */
+    /* =================================================== */
+    .rules-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 36px;
+      margin-bottom: 70px;
+    }
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .rule-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: 0.2s;
+    }
+    .rule-head {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: #fff;
+    }
+    .rule-head:hover { color: var(--cyan); }
+    .rule-body {
+      padding: 0 20px 16px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      display: none;
+    }
+    .rule-card.open .rule-body { display: block; }
+    .rule-card.open .rule-icon { transform: rotate(180deg); color: var(--cyan); }
+    .penalty-box {
+      background: rgba(239, 68, 68, 0.08);
+      border-left: 3px solid var(--red);
+      padding: 8px 14px;
+      border-radius: 4px;
+      margin-top: 10px;
+      color: #fca5a5;
+      font-size: 0.82rem;
+    }
+
+    /* =================================================== */
+    /* SPLIT GRID: SUPPORT & RECRUITMENT */
+    /* =================================================== */
+    .split-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 70px;
+    }
+    .panel-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .panel-box h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan-soft);
+    }
+
+    /* Roles Selection in Apply */
+    .role-selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .role-option-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 8px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .role-option-card:hover, .role-option-card.selected {
+      border-color: var(--purple);
+      background: var(--purple-soft);
+      transform: translateY(-2px);
+    }
+    .role-option-card.selected {
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    }
+    .role-icon { font-size: 1.3rem; margin-bottom: 4px; }
+    .role-title { font-size: 0.8rem; font-weight: 700; color: #fff; }
+    .role-sub { font-size: 0.68rem; color: var(--text-muted); }
+
+    /* CHECKOUT / SYNC MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px 30px;
+      max-width: 480px;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 216, 246, 0.25);
+      animation: modalFadeIn 0.25s ease;
+    }
+    @keyframes modalFadeIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px; right: 18px;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 1.3rem;
+      cursor: pointer;
+    }
+    .modal-close:hover { color: #fff; }
+
+    /* TOAST FEEDBACK */
+    .toast-tray {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid var(--cyan-border);
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      animation: toastIn 0.2s ease;
+    }
+    @keyframes toastIn {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 44px 20px 28px;
+      background: #020409;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    .f-links {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .f-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .f-links a:hover { color: var(--cyan); }
+
+    /* RESPONSIVE */
+    @media (max-width: 992px) {
+      .hero-banner-card { grid-template-columns: 1fr; padding: 36px 24px; text-align: center; }
+      .hero-cta-group { justify-content: center; }
+      .hero-banner-image-wrap { display: none; }
+      .split-grid-2 { grid-template-columns: 1fr; }
+      .desktop-menu { display: none; }
+      .btn-mobile-toggle { display: block; }
+    }
+    @media (max-width: 640px) {
+      .hero-title { font-size: 2.1rem; }
+      .section-title { font-size: 1.7rem; }
+      .store-section, .rules-section, .panel-box { padding: 26px 18px; }
+      .nav-actions .btn-discord-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP TICKER -->
+  <div class="top-announcement">
+    <i class="fa-solid fa-crown" style="color: var(--gold-light);"></i>
+    <span>KRYLOSMP 2026 OPEN BETA</span> • 100% Free Play-to-Earn Web Shop with Sub-50ms In-Game Delivery!
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="nav-container">
+      <a href="#home" class="brand">
+        <img src="server-icon.png" alt="KryloSMP Logo" class="brand-logo">
+        <div class="brand-text">KRYLO<span>SMP</span></div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <ul class="desktop-menu">
+        <li><a href="#home" class="nav-link active"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="#worlds" class="nav-link"><i class="fa-solid fa-gamepad"></i> Worlds</a></li>
+        <li><a href="#store" class="nav-link store-btn"><i class="fa-solid fa-cart-shopping"></i> Web Store</a></li>
+        <li><a href="#rules" class="nav-link"><i class="fa-solid fa-scale-balanced"></i> Rules</a></li>
+        <li><a href="#support" class="nav-link"><i class="fa-solid fa-headset"></i> Support & Help</a></li>
+        <li><a href="#apply" class="nav-link"><i class="fa-solid fa-file-pen"></i> Apply</a></li>
+      </ul>
+
+      <!-- Nav Actions -->
+      <div class="nav-actions">
+        <div class="user-pill" onclick="openAuthModal()" title="Click to Switch / Sync Minecraft IGN">
+          <img id="navAvatar" src="https://mc-heads.net/avatar/Krylo_MC/28" alt="Avatar" class="user-avatar">
+          <div>
+            <div class="user-ign" id="navIgn">Krylo_MC</div>
+            <div class="user-kc" id="navKc">10,000 Kr</div>
+          </div>
+        </div>
+
+        <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="btn-discord-nav">
+          <i class="fa-brands fa-discord"></i> Discord
+        </a>
+        <button class="btn-mobile-toggle" onclick="toggleMobileNav()"><i class="fa-solid fa-bars"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="#home" class="nav-link" onclick="toggleMobileNav()"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="#worlds" class="nav-link" onclick="toggleMobileNav()"><i class="fa-solid fa-gamepad"></i> Worlds</a>
+    <a href="#store" class="nav-link store-btn" onclick="toggleMobileNav()"><i class="fa-solid fa-cart-shopping"></i> Web Store</a>
+    <a href="#rules" class="nav-link" onclick="toggleMobileNav()"><i class="fa-solid fa-scale-balanced"></i> Rules</a>
+    <a href="#support" class="nav-link" onclick="toggleMobileNav()"><i class="fa-solid fa-headset"></i> Support & Help</a>
+    <a href="#apply" class="nav-link" onclick="toggleMobileNav()"><i class="fa-solid fa-file-pen"></i> Apply for Staff</a>
+    <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="btn-discord-nav" style="justify-content: center; margin-top: 10px;">
+      <i class="fa-brands fa-discord"></i> Join Official Discord
+    </a>
+  </div>
+
+  <main>
+    <!-- ========================================== -->
+    <!-- HERO SECTION (OFFICIAL BANNER INTEGRATION) -->
+    <!-- ========================================== -->
+    <section class="hero-banner-card" id="home">
+      <div>
+        <div class="hero-badge-pill">
+          <i class="fa-solid fa-shield-halved"></i> 2026 Open Beta (Season 1: 2027)
+        </div>
+        <h1 class="hero-title">Built to Inspire. <span>Built to Dominate.</span></h1>
+        <p class="hero-desc">Join KryloSMP, the next-generation competitive Minecraft network. Featuring custom Lifesteal hearts, BoxPvP tiered progression, OneBlock adventures, and a 100% Free-to-Play KryloCoins economy.</p>
+        
+        <div class="hero-cta-group">
+          <button class="btn-primary" onclick="copyIp()">
+            <i class="fa-solid fa-play"></i> Copy Server IP
+          </button>
+          <a href="#store" class="btn-gold">
+            <i class="fa-solid fa-cart-shopping"></i> Browse Web Store
+          </a>
+        </div>
+
+        <div class="ip-card-box" onclick="copyIp()" title="Click to copy server IP">
+          <div class="ip-left">
+            <div class="dot-online"></div>
+            <div>
+              <div class="ip-title">Server IP (Java & Bedrock)</div>
+              <div class="ip-val" id="serverIpDisplay">krylosmp.falix.gg:29273</div>
+            </div>
+          </div>
+          <div class="ip-copy-btn"><i class="fa-regular fa-copy"></i> Click to Copy</div>
+        </div>
+      </div>
+
+      <div class="hero-banner-image-wrap">
+        <img src="official_banner.jpg" alt="KryloSMP Official Banner" class="hero-official-banner" onerror="this.src='logo_wings.jpg'">
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- WORLDS SECTION -->
+    <!-- ========================================== -->
+    <section class="worlds-section" id="worlds">
+      <div class="section-head">
+        <span class="section-badge"><i class="fa-solid fa-gamepad"></i> Game Modes</span>
+        <h2 class="section-title">Explore Our Worlds</h2>
+        <p class="section-desc">Experience unique gameplay styles tailored for competitive survival, fast-paced PvP, and infinite progression.</p>
+      </div>
+
+      <div class="grid-4">
+        <!-- ⚔️ Lifesteal SMP -->
+        <div class="card-mode">
+          <div>
+            <div class="mode-icon">⚔️</div>
+            <h3 class="mode-title">Lifesteal SMP</h3>
+            <p class="mode-desc">High-stakes survival where eliminating players steals their hearts. Craft revives and defeat seasonal bosses.</p>
+            <ul class="mode-tags">
+              <li><i class="fa-solid fa-check"></i> Steal hearts on kills</li>
+              <li><i class="fa-solid fa-check"></i> Custom Netherite gear</li>
+              <li><i class="fa-solid fa-check"></i> Weekly Dragon fights</li>
+            </ul>
+          </div>
+          <button class="btn-card-action" onclick="copyIp()"><i class="fa-solid fa-play"></i> Play /lifesteal</button>
+        </div>
+
+        <!-- 📦 BoxPvP -->
+        <div class="card-mode">
+          <div>
+            <div class="mode-icon">📦</div>
+            <h3 class="mode-title">Redish BoxPvP</h3>
+            <p class="mode-desc">Grind progressive ore mines, trade custom crystals with NPCs, and dominate the fast-paced central PvP arena.</p>
+            <ul class="mode-tags">
+              <li><i class="fa-solid fa-check"></i> 12 Tiered Ore Mines</li>
+              <li><i class="fa-solid fa-check"></i> Instant respawn kits</li>
+              <li><i class="fa-solid fa-check"></i> Mythic crate keys</li>
+            </ul>
+          </div>
+          <button class="btn-card-action" onclick="copyIp()"><i class="fa-solid fa-play"></i> Play /boxpvp</button>
+        </div>
+
+        <!-- 🌱 OneBlock -->
+        <div class="card-mode">
+          <div>
+            <div class="mode-icon">🌱</div>
+            <h3 class="mode-title">OneBlock</h3>
+            <p class="mode-desc">Start from a single floating block that regenerates into progressive biomes. Expand your island kingdom.</p>
+            <ul class="mode-tags">
+              <li><i class="fa-solid fa-check"></i> 10+ Biome Phases</li>
+              <li><i class="fa-solid fa-check"></i> Island Upgrades & Minions</li>
+              <li><i class="fa-solid fa-check"></i> Co-op multiplayer</li>
+            </ul>
+          </div>
+          <button class="btn-card-action" onclick="copyIp()"><i class="fa-solid fa-play"></i> Play /oneblock</button>
+        </div>
+
+        <!-- 🎯 Practice Duels -->
+        <div class="card-mode">
+          <div>
+            <div class="mode-icon">🎯</div>
+            <h3 class="mode-title">Practice Duels</h3>
+            <p class="mode-desc">Refine your sword, crystal, and bow PvP skills with instant 1v1 matchmaking and Elo ranking.</p>
+            <ul class="mode-tags">
+              <li><i class="fa-solid fa-check"></i> Ranked 1v1 Queues</li>
+              <li><i class="fa-solid fa-check"></i> Crystal & Nodebuff Kits</li>
+              <li><i class="fa-solid fa-check"></i> Leaderboard rankings</li>
+            </ul>
+          </div>
+          <button class="btn-card-action" onclick="copyIp()"><i class="fa-solid fa-play"></i> Play /duels</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- STORE CATALOG SECTION (PRO ORGANIZED) -->
+    <!-- ========================================== -->
+    <section class="store-section" id="store">
+      <div class="section-head">
+        <span class="section-badge"><i class="fa-solid fa-gem"></i> 100% Free Economy</span>
+        <h2 class="section-title">KryloCoins Web Store</h2>
+        <p class="section-desc">Unlock Sovereign ranks, 3D crate keys, claim block expansions, and boosters using your in-game earned KryloCoins ($Kr)!</p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="category-tabs">
+        <button class="cat-btn active" onclick="filterCategory('all', this)"><i class="fa-solid fa-border-all"></i> All Items (20)</button>
+        <button class="cat-btn" onclick="filterCategory('ranks', this)"><i class="fa-solid fa-crown"></i> Sovereign Ranks</button>
+        <button class="cat-btn" onclick="filterCategory('keys', this)"><i class="fa-solid fa-key"></i> 3D Crate Keys</button>
+        <button class="cat-btn" onclick="filterCategory('claims', this)"><i class="fa-solid fa-shield-halved"></i> Claim Blocks</button>
+        <button class="cat-btn" onclick="filterCategory('perks', this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Cosmetics & Perks</button>
+      </div>
+
+      <!-- Store Grid -->
+      <div class="store-grid" id="productGrid">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- RULES & OFFICIAL GUIDELINES -->
+    <!-- ========================================== -->
+    <section class="rules-section" id="rules">
+      <div class="section-head">
+        <span class="section-badge"><i class="fa-solid fa-scale-balanced"></i> Server Policy</span>
+        <h2 class="section-title">Official Guidelines</h2>
+        <p class="section-desc">Live synced from Discord & Database. Please respect our guidelines to keep KryloSMP fun and competitive for everyone.</p>
+      </div>
+
+      <div class="rules-list" id="rulesContainer">
+        <!-- 1. Respect & Fair Play -->
+        <div class="rule-card open">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>1. Respect & Fair Play</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            Treat all players, staff, and creators with mutual respect. Zero tolerance for harassment, racism, homophobia, toxicity, or hate speech.
+            <div class="penalty-box">⚠️ Punishment: Warning ➔ 24h Mute ➔ Permanent Ban</div>
+          </div>
+        </div>
+
+        <!-- 2. No Spam or Self-Promotion -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>2. No Spam or Self-Promotion</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            Advertising other servers, unsolicited DMs, repetitive chat spam, and referral links are strictly prohibited.
+            <div class="penalty-box">⚠️ Punishment: 12h Mute ➔ Permanent Mute</div>
+          </div>
+        </div>
+
+        <!-- 3. Account & Security -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>3. Account & Security</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            You are fully responsible for your account. Compromised accounts, ban evasion with alt accounts, and sharing logins are not permitted.
+            <div class="penalty-box">⚠️ Punishment: Blacklist & IP Ban</div>
+          </div>
+        </div>
+
+        <!-- 4. No Hacking or Unfair Advantages -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>4. No Hacking or Unfair Advantages</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            X-Ray texture packs, Killaura, Fly, Speed, Auto-clickers (>15 CPS), Baritone bots, and unapproved mods are strictly banned.
+            <div class="penalty-box">⚠️ Punishment: Instant 30-Day Ban ➔ Permanent Blacklist</div>
+          </div>
+        </div>
+
+        <!-- 5. No Bug Abuse or Duplication -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>5. No Bug Abuse or Duplication</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            Exploiting game glitches, item duping, crash exploits, or glitching through world borders is strictly forbidden. Disclose bugs in #support for massive rewards.
+            <div class="penalty-box">⚠️ Punishment: Inventory Wipe + Permanent Ban</div>
+          </div>
+        </div>
+
+        <!-- 6. Combat & Combat-Logging -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>6. Combat & Combat-Logging</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            Disconnecting, teleporting, or quitting while in active PvP combat triggers automatic death and heart loss via our combat tag engine.
+            <div class="penalty-box">⚠️ Punishment: Automatic Combat-Death & Heart Loss</div>
+          </div>
+        </div>
+
+        <!-- 7. Trap & Spawn Etiquette -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>7. Trap & Spawn Etiquette</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            Spawn trapping portals, killing players immediately at neutral hub warps, or building lag machines is prohibited.
+            <div class="penalty-box">⚠️ Punishment: Structure Removal + 3-Day Ban</div>
+          </div>
+        </div>
+
+        <!-- 8. Real Money Trading (RMT) Policy -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>8. Real Money Trading (RMT) Policy</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            Trading in-game items, hearts, or KryloCoins (KC) for real-world currency outside official web links is strictly prohibited.
+            <div class="penalty-box">⚠️ Punishment: Permanent Account Ban</div>
+          </div>
+        </div>
+
+        <!-- 9. Fair Trading & Scamming -->
+        <div class="rule-card">
+          <div class="rule-head" onclick="toggleRule(this)">
+            <span>9. Fair Trading & Scamming</span>
+            <i class="fa-solid fa-chevron-down rule-icon"></i>
+          </div>
+          <div class="rule-body">
+            Scamming players during agreed item trades or auction transactions is punishable.
+            <div class="penalty-box">⚠️ Punishment: Trade Reversal + 7-Day Ban</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SUPPORT & RECRUITMENT SPLIT GRID -->
+    <!-- ========================================== -->
+    <div class="split-grid-2">
+      <!-- 🎧 Support Desk -->
+      <div class="panel-box" id="support">
+        <div>
+          <h3><i class="fa-solid fa-headset" style="color: var(--cyan);"></i> Help Desk & Support</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 22px;">Need assistance with your player account, skin troubleshooting, or reporting a bug?</p>
+
+          <form onsubmit="submitSupportTicket(event)">
+            <div class="form-group">
+              <label>Minecraft Username (IGN)</label>
+              <input type="text" id="ticketIgn" placeholder="e.g. Krylo_MC" required>
+            </div>
+            <div class="form-group">
+              <label>Discord Tag</label>
+              <input type="text" id="ticketDiscord" placeholder="e.g. krylo#0000 or @krylo" required>
+            </div>
+            <div class="form-group">
+              <label>Issue Category</label>
+              <select id="ticketCategory" required>
+                <option value="delivery">🪙 KryloCoins / In-Game Delivery</option>
+                <option value="account">👤 Account / Skin Loading</option>
+                <option value="bug">🐛 Bug Report / Exploit Disclosure</option>
+                <option value="general">❓ General Question</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="ticketDesc" rows="4" placeholder="Describe your question or issue in detail..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 13px;">
+              <i class="fa-solid fa-paper-plane"></i> Send Ticket Request
+            </button>
+          </form>
+        </div>
+
+        <div style="margin-top: 26px; padding: 16px; background: rgba(0, 0, 0, 0.45); border: 1px solid var(--border); border-radius: var(--radius-sm);">
+          <div style="font-weight: 700; font-size: 0.88rem; color: #fff; margin-bottom: 4px;">Direct Discord Support</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Our staff team is active 24/7 in our official Discord server. You can also open private support tickets directly in <code>#🎫・support-tickets</code>.</p>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.75rem; color: var(--green); font-weight: 700;"><i class="fa-solid fa-clock"></i> Average Response: &lt; 15 mins</span>
+            <a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="btn-discord-nav" style="padding: 6px 12px; font-size: 0.8rem;">
+              Open on Discord
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 📝 Recruitment Portal -->
+      <div class="panel-box" id="apply">
+        <div>
+          <h3><i class="fa-solid fa-file-pen" style="color: var(--purple);"></i> Staff Recruitment Portal</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px;">Select your desired position below and fill out your application. All submissions are reviewed by executive leadership.</p>
+
+          <!-- Roles Selection -->
+          <div class="role-selection-grid">
+            <div class="role-option-card selected" onclick="selectRole('Helper', this)">
+              <div class="role-icon">🛡️</div>
+              <div class="role-title">Helper / Trial</div>
+              <div class="role-sub">Chat & Support</div>
+            </div>
+            <div class="role-option-card" onclick="selectRole('Moderator', this)">
+              <div class="role-icon">⚔️</div>
+              <div class="role-title">Moderator</div>
+              <div class="role-sub">Anti-Cheat</div>
+            </div>
+            <div class="role-option-card" onclick="selectRole('Builder', this)">
+              <div class="role-icon">🏰</div>
+              <div class="role-title">Staff Builder</div>
+              <div class="role-sub">Spawns & Arenas</div>
+            </div>
+            <div class="role-option-card" onclick="selectRole('Developer', this)">
+              <div class="role-icon">💻</div>
+              <div class="role-title">Plugin Dev</div>
+              <div class="role-sub">Skripts & Code</div>
+            </div>
+            <div class="role-option-card" onclick="selectRole('Creator', this)">
+              <div class="role-icon">🎥</div>
+              <div class="role-title">Media / Creator</div>
+              <div class="role-sub">YT & Twitch</div>
+            </div>
+          </div>
+
+          <form onsubmit="submitStaffApplication(event)">
+            <input type="hidden" id="applyRole" value="Helper">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label>Minecraft Username (IGN)</label>
+                <input type="text" id="applyIgn" placeholder="e.g. Krylo_MC" required>
+              </div>
+              <div class="form-group">
+                <label>Discord Tag</label>
+                <input type="text" id="applyDiscord" placeholder="e.g. @krylo" required>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group">
+                <label>Age & Timezone</label>
+                <input type="text" id="applyAgeTz" placeholder="e.g. 17 (EST / UTC-5)" required>
+              </div>
+              <div class="form-group">
+                <label>Weekly Active Hours</label>
+                <select id="applyHours" required>
+                  <option value="5-10">5 - 10 Hours / week</option>
+                  <option value="10-20" selected>10 - 20 Hours / week</option>
+                  <option value="20-35">20 - 35 Hours / week</option>
+                  <option value="35+">35+ Hours / week (Dedicated)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Past Experience & Previous Servers</label>
+              <textarea id="applyExperience" rows="2" placeholder="List any previous staff roles, builder portfolios, or communities..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Scenario: What would you do if a player is reported for hacking / glitching?</label>
+              <textarea id="applyScenario" rows="2" placeholder="Explain your investigation steps and protocol..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Portfolio / Channel Links (Optional)</label>
+              <input type="text" id="applyLinks" placeholder="YouTube, TikTok, GitHub, or screenshot links">
+            </div>
+
+            <button type="submit" class="btn-gold" style="width: 100%; justify-content: center; padding: 13px;">
+              <i class="fa-solid fa-crown"></i> Submit Official Application
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- CHECKOUT MODAL -->
+  <!-- ========================================== -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeCheckout()"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div id="mIcon" style="font-size: 2.6rem; margin-bottom: 8px;">👑</div>
+        <h2 id="mTitle" style="font-family: 'Cinzel', serif; font-size: 1.6rem; color: #fff;">Sovereign Rank</h2>
+        <div id="mPrice" style="font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 800; color: var(--gold-light); margin-top: 4px;">50,000 Kr</div>
+      </div>
+
+      <div style="display: flex; gap: 16px; align-items: center; background: rgba(0,0,0,0.55); border: 1px solid var(--border); padding: 14px; border-radius: var(--radius-sm); margin-bottom: 20px;">
+        <img id="mSkin" src="https://mc-heads.net/body/Krylo_MC/right" alt="Skin" style="height: 84px; object-fit: contain;">
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Receiving Player:</div>
+          <div id="mTargetIgn" style="font-size: 1.15rem; font-weight: 800; color: #fff;">Krylo_MC</div>
+          <div style="font-size: 0.75rem; color: var(--green); margin-top: 4px; font-weight: 600;"><i class="fa-solid fa-bolt"></i> Auto-dispatched with sub-50ms sync</div>
+        </div>
+      </div>
+
+      <form onsubmit="executeCheckout(event)">
+        <div style="margin-bottom: 18px;">
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block;">Confirm Minecraft In-Game Name (IGN):</label>
+          <input type="text" id="mIgnInput" required style="width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.95rem;" oninput="updateModalSkin(this.value)">
+        </div>
+
+        <button type="submit" class="btn-buy" style="width: 100%; padding: 14px; justify-content: center; font-size: 1rem;">
+          <i class="fa-solid fa-bolt"></i> Confirm & Unlock In-Game
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- AUTH / SWITCH IGN MODAL -->
+  <!-- ========================================== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div style="font-size: 2.2rem; margin-bottom: 8px;">🎮</div>
+        <h2 style="font-family: 'Cinzel', serif; font-size: 1.5rem; color: #fff;">Set Active Player Account</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Enter your Minecraft In-Game Name to link your session and sync delivery.</p>
+      </div>
+
+      <form onsubmit="saveAuthIgn(event)">
+        <div style="margin-bottom: 18px;">
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block;">Minecraft Username (IGN):</label>
+          <input type="text" id="authIgnInput" required placeholder="e.g. Krylo_MC or .BedrockUser" style="width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.95rem;">
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 13px;">
+          <i class="fa-solid fa-check"></i> Save & Sync Player
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST FEEDBACK -->
+  <div class="toast-tray" id="toastTray"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="f-links">
+      <a href="#home">Home</a>
+      <a href="#worlds">Worlds</a>
+      <a href="#store">Store</a>
+      <a href="#rules">Rules</a>
+      <a href="#support">Support</a>
+      <a href="#apply">Apply</a>
+      <a href="https://discord.gg/6vrEDTu3bx" target="_blank">Discord</a>
+    </div>
+    <p>© 2026 KryloSMP Network. 100% Free-to-Play Community Economy. Not affiliated with Mojang Studios.</p>
+  </footer>
+
+  <script>
+    // 20 OFFICIAL STORE PRODUCTS
+    const PRODUCTS = [
+      // --- 👑 RANKS ---
+      { id: 'rank-sovereign', cat: 'ranks', name: '👑 Sovereign Rank', priceKc: 50000, tag: 'TOP TIER', icon: '👑', desc: 'Highest obtainable prestige rank with infinite commands and godly prefixes.', perks: ['All Kit God Access', '/fly in All Worlds', '8x Home Teleports', 'Chat Prefix: &6[SOVEREIGN]', '+50,000 Instant Kr Bonus'] },
+      { id: 'rank-overlord', cat: 'ranks', name: '⚡ Overlord Rank', priceKc: 40000, tag: 'EXECUTIVE', icon: '⚡', desc: 'Supreme commanding rank with elite PvP boosts and custom war horns.', perks: ['Kit Overlord Access', '/feed & /heal Instant', '6x Home Teleports', 'Chat Prefix: &e[OVERLORD]', '+30,000 Instant Kr Bonus'] },
+      { id: 'rank-warlord', cat: 'ranks', name: '⚔️ Warlord Rank', priceKc: 30000, tag: 'COMBAT', icon: '⚔️', desc: 'Elite combat rank engineered for BoxPvP and clan dominance.', perks: ['Kit Warlord Access', '/repair All Items', '4x Home Teleports', 'Chat Prefix: &c[WARLORD]', '+20,000 Instant Kr Bonus'] },
+      { id: 'rank-champion', cat: 'ranks', name: '💎 Champion Rank', priceKc: 20000, tag: 'POPULAR', icon: '💎', desc: 'High-tier survival rank with portable crafting and enderchest.', perks: ['Kit Champion Access', '/craft & /enderchest anywhere', '3x Home Teleports', 'Chat Prefix: &b[CHAMPION]'] },
+      { id: 'rank-knight', cat: 'ranks', name: '🛡️ Knight Rank', priceKc: 15000, tag: 'STARTER', icon: '🛡️', desc: 'Essential prestige rank unlocking enhanced survival utilities.', perks: ['Kit Knight Access', '/near command radar', '2x Home Teleports', 'Chat Prefix: &9[KNIGHT]'] },
+      { id: 'rank-scout', cat: 'ranks', name: '🏹 Scout Rank', priceKc: 8000, tag: 'PIONEER', icon: '🏹', desc: 'Fast exploration rank with speed boosts and starter crates.', perks: ['Kit Scout Access', 'Permanent Speed I Trail', '1x Extra Home', 'Chat Prefix: &a[SCOUT]'] },
+
+      // --- 🗝️ 3D CRATE KEYS ---
+      { id: 'crates-godly', cat: 'keys', name: '🗝️ 10x Godly Crate Keys', priceKc: 12000, tag: 'BEST VALUE', icon: '👑', desc: 'Unlock rare Godly tier enchantments, netherite armour, and relics.', perks: ['10x 3D Physical Keys', 'Guaranteed Tier 4 Godly Loot', '1-Click Server Drop', 'Zero Expiration'] },
+      { id: 'crates-mythic', cat: 'keys', name: '🔮 10x Mythic Crate Keys', priceKc: 7500, tag: 'CRATE DROP', icon: '🔮', desc: 'Premium loot keys with high drop rates for diamonds and tools.', perks: ['10x 3D Physical Keys', 'Guaranteed Tier 3 Mythic Loot', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-legendary', cat: 'keys', name: '⚔️ 10x Legendary Keys', priceKc: 5000, tag: 'HOT', icon: '⚔️', desc: 'Combat crate keys for god apples, totems, and sharpness VI weapons.', perks: ['10x 3D Physical Keys', 'Tier 2 Legendary Loot', 'Instant In-Game Drop', 'Zero Expiration'] },
+      { id: 'crates-epic', cat: 'keys', name: '💎 10x Epic Crate Keys', priceKc: 3500, tag: 'VALUE', icon: '💎', desc: 'Great mid-tier crate keys packed with diamond gear and XP bottles.', perks: ['10x 3D Physical Keys', 'Full Diamond Armor Chance', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-rare', cat: 'keys', name: '🛡️ 10x Rare Crate Keys', priceKc: 2000, tag: 'STARTER', icon: '🛡️', desc: 'Starter crate keys with iron blocks, books, and gold.', perks: ['10x 3D Physical Keys', 'Enchanted Books & Ingots', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-common', cat: 'keys', name: '📦 15x Common Keys', priceKc: 1000, tag: 'BUDGET', icon: '📦', desc: 'A bundle of starter keys to jumpstart your survival adventure.', perks: ['15x 3D Physical Keys', 'Food, Coal & Basic Tools', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-megabundle', cat: 'keys', name: '🌟 Sovereign Mega Crate Bundle', priceKc: 18000, tag: '30% OFF', icon: '🌟', desc: 'Includes 3x of EVERY crate key on the entire server!', perks: ['3x Godly, 3x Mythic, 3x Legendary', '3x Epic, 3x Rare, 3x Common', 'Total 18x 3D Keys', 'Massive Savings!'] },
+
+      // --- 🏰 CLAIM BLOCKS & TERRITORY ---
+      { id: 'claims-mega', cat: 'claims', name: '🏰 +10,000 Mega Territory Blocks', priceKc: 25000, tag: 'MEGA EMPIRE', icon: '🏰', desc: 'Claim a massive civilization territory with full anti-grief protection.', perks: ['+10,000 Claim Blocks', 'GriefPrevention Protection', 'Permanent Land Expansion', 'Share with Clan Members'] },
+      { id: 'claims-empire', cat: 'claims', name: '🏰 +5,000 Empire Claim Blocks', priceKc: 18000, tag: 'EXPANSION', icon: '🏰', desc: 'Protect your mega base and farms from raids and griefing.', perks: ['+5,000 Claim Blocks', 'Permanent Land Expansion', 'Sub-division Trust Access', 'Anti-Steal Protection'] },
+      { id: 'claims-kingdom', cat: 'claims', name: '🏰 +2,500 Kingdom Blocks', priceKc: 10000, tag: 'POPULAR', icon: '🏰', desc: 'Expand your sovereign territory and protect your builds.', perks: ['+2,500 Claim Blocks', 'Permanent Expansion', 'Zero Expiration', 'Share with Friends'] },
+      { id: 'claims-starter', cat: 'claims', name: '⛺ +1,000 Starter Claim Blocks', priceKc: 4500, tag: 'STARTER', icon: '⛺', desc: 'Essential protection for your starter home and chests.', perks: ['+1,000 Claim Blocks', 'Chest & Entity Protection', 'Permanent Addition', 'Anti-Grief'] },
+
+      // --- ✨ COSMETICS & PERKS ---
+      { id: 'perk-fly', cat: 'perks', name: '🕊️ Lifetime /fly Flight License', priceKc: 25000, tag: 'TOP PERK', icon: '🕊️', desc: 'Fly anywhere in the survival world to build and explore freely!', perks: ['Permanent /fly Access', 'Toggle On/Off Anytime', 'Works in All Survival Worlds', 'No Fall Damage'] },
+      { id: 'perk-tag', cat: 'perks', name: '🏷️ Custom Chat Tag License', priceKc: 15000, tag: 'EXCLUSIVE', icon: '🏷️', desc: 'Create your own colored prefix tag in public server chat.', perks: ['Custom Name Tag', 'All Minecraft Color Codes', 'Instant Update', 'Permanent Feature'] },
+      { id: 'perk-vaults', cat: 'perks', name: '🎒 +3 Virtual Player Vaults (/pv)', priceKc: 10000, tag: 'UTILITY', icon: '🎒', desc: 'Access 3 additional 54-slot virtual vaults from anywhere.', perks: ['+3 Extra Vaults (/pv 1-3)', 'Safe from Death Drops', '54 Slots per Vault', 'Instant Global Access'] },
+      { id: 'perk-booster', cat: 'perks', name: '⚡ 2x Economy & XP Booster (24h)', priceKc: 8000, tag: 'BOOSTER', icon: '⚡', desc: 'Double all earned KryloCoins and XP from mobs and mining for 24 hours.', perks: ['2x Kr from all sources', '2x Mob & Mining XP', 'Server-wide announcement', '24h Active Duration'] }
+    ];
+
+    let selectedProduct = null;
+    let activeIgn = localStorage.getItem('krylo_active_ign') || 'Krylo_MC';
+
+    function init() {
+      updateUserPill();
+      renderProducts('all');
+    }
+
+    function updateUserPill() {
+      const clean = activeIgn.replace(/^\./, '').trim().replace(/\s+/g, '_');
+      document.getElementById('navIgn').innerText = activeIgn;
+      document.getElementById('navAvatar').src = `https://mc-heads.net/avatar/${encodeURIComponent(clean)}/28`;
+      
+      const isOwner = localStorage.getItem('krylo_owner_verified') === 'true';
+      document.getElementById('navKc').innerText = isOwner ? '∞ INF Kr' : '10,000 Kr';
+    }
+
+    function renderProducts(cat) {
+      const grid = document.getElementById('productGrid');
+      const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === cat);
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <div>
+            <div class="p-header">
+              <div class="p-icon">${p.icon}</div>
+              <span class="p-tag">${p.tag}</span>
+            </div>
+            <h3 class="p-title">${p.name}</h3>
+            <p class="p-desc">${p.desc}</p>
+            <ul class="p-perks-list">
+              ${p.perks.map(perk => `<li><i class="fa-solid fa-check"></i> ${perk}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="p-price-row">
+            <div class="p-price-kc">${p.priceKc.toLocaleString()} Kr</div>
+            <button class="btn-buy" onclick="openCheckout('${p.id}')"><i class="fa-solid fa-bolt"></i> Unlock</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat, btn) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderProducts(cat);
+    }
+
+    function openCheckout(id) {
+      selectedProduct = PRODUCTS.find(p => p.id === id);
+      if (!selectedProduct) return;
+
+      document.getElementById('mIcon').innerText = selectedProduct.icon;
+      document.getElementById('mTitle').innerText = selectedProduct.name;
+      document.getElementById('mPrice').innerText = `${selectedProduct.priceKc.toLocaleString()} Kr`;
+      document.getElementById('mIgnInput').value = activeIgn;
+      updateModalSkin(activeIgn);
+
+      document.getElementById('checkoutModal').classList.add('active');
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkoutModal').classList.remove('active');
+    }
+
+    function updateModalSkin(ign) {
+      const clean = (ign || 'Steve').replace(/^\./, '').trim().replace(/\s+/g, '_');
+      document.getElementById('mTargetIgn').innerText = ign || 'Player';
+      document.getElementById('mSkin').src = `https://mc-heads.net/body/${encodeURIComponent(clean)}/right`;
+    }
+
+    async function executeCheckout(e) {
+      e.preventDefault();
+      const ign = document.getElementById('mIgnInput').value.trim();
+      if (!ign) return;
+      
+      activeIgn = ign;
+      localStorage.setItem('krylo_active_ign', ign);
+      updateUserPill();
+      closeCheckout();
+
+      const orderId = 'KRYLO-ORD-' + Math.floor(1000 + Math.random() * 9000);
+
+      // Async sync to SheetDB
+      try {
+        fetch('https://sheetdb.io/api/v1/wqiphi0bug49j', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            data: [{
+              date: new Date().toISOString().replace('T', ' ').slice(0, 19),
+              username: ign,
+              discord_id: 'WebPortal-Live',
+              items: `${selectedProduct.name} (${orderId})`,
+              final_total: `${selectedProduct.priceKc.toLocaleString()} Kr`,
+              promo_code: 'FREE-EARNED',
+              tax_amount: '0',
+              client_ip: 'WebStore-Player'
+            }]
+          })
+        }).catch(() => {});
+      } catch (_) {}
+
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 140, spread: 80, origin: { y: 0.6 } });
+      }
+
+      showToast(`🎉 Dispatched ${selectedProduct.name} to ${ign}! Order: ${orderId}`);
+    }
+
+    function openAuthModal() {
+      document.getElementById('authIgnInput').value = activeIgn;
+      document.getElementById('authModal').classList.add('active');
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+    }
+
+    function saveAuthIgn(e) {
+      e.preventDefault();
+      const ign = document.getElementById('authIgnInput').value.trim();
+      if (!ign) return;
+      activeIgn = ign;
+      localStorage.setItem('krylo_active_ign', ign);
+      updateUserPill();
+      closeAuthModal();
+      showToast(`✅ Synced active player as ${ign}!`);
+    }
+
+    function toggleRule(header) {
+      const card = header.closest('.rule-card');
+      card.classList.toggle('open');
+    }
+
+    function selectRole(role, card) {
+      document.querySelectorAll('.role-option-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      document.getElementById('applyRole').value = role;
+    }
+
+    async function submitSupportTicket(e) {
+      e.preventDefault();
+      const ign = document.getElementById('ticketIgn').value.trim();
+      const discord = document.getElementById('ticketDiscord').value.trim();
+      const category = document.getElementById('ticketCategory').value;
+      const desc = document.getElementById('ticketDesc').value.trim();
+
+      const ticketId = 'TICKET-' + Math.floor(1000 + Math.random() * 9000);
+
+      // Async sync to SheetDB
+      try {
+        fetch('https://sheetdb.io/api/v1/wqiphi0bug49j', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            data: [{
+              date: new Date().toISOString().replace('T', ' ').slice(0, 19),
+              username: ign,
+              discord_id: discord,
+              items: `[Support Ticket #${ticketId}] [${category}] ${desc}`,
+              final_total: '0 Kr',
+              promo_code: 'TICKET-SUBMIT',
+              tax_amount: '0',
+              client_ip: 'WebHelpDesk'
+            }]
+          })
+        }).catch(() => {});
+      } catch (_) {}
+
+      e.target.reset();
+      showToast(`🎫 Ticket #${ticketId} submitted! Staff will reach out on Discord.`);
+    }
+
+    async function submitStaffApplication(e) {
+      e.preventDefault();
+      const role = document.getElementById('applyRole').value;
+      const ign = document.getElementById('applyIgn').value.trim();
+      const discord = document.getElementById('applyDiscord').value.trim();
+      const ageTz = document.getElementById('applyAgeTz').value.trim();
+      const hours = document.getElementById('applyHours').value;
+      const exp = document.getElementById('applyExperience').value.trim();
+      const scenario = document.getElementById('applyScenario').value.trim();
+      const links = document.getElementById('applyLinks').value.trim();
+
+      const appId = 'APP-' + Math.floor(1000 + Math.random() * 9000);
+
+      // Async sync to SheetDB
+      try {
+        fetch('https://sheetdb.io/api/v1/wqiphi0bug49j', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            data: [{
+              date: new Date().toISOString().replace('T', ' ').slice(0, 19),
+              username: ign,
+              discord_id: discord,
+              items: `[Staff App #${appId}] [Role: ${role}] [Age/TZ: ${ageTz}] [Hours: ${hours}] [Exp: ${exp}] [Scenario: ${scenario}] [Links: ${links}]`,
+              final_total: '0 Kr',
+              promo_code: 'STAFF-APPLICATION',
+              tax_amount: '0',
+              client_ip: 'WebRecruitment'
+            }]
+          })
+        }).catch(() => {});
+      } catch (_) {}
+
+      e.target.reset();
+      showToast(`👑 Application #${appId} for ${role} submitted! Leadership will review it.`);
+    }
+
+    function copyIp() {
+      navigator.clipboard.writeText('krylosmp.falix.gg:29273');
+      showToast('📋 Copied krylosmp.falix.gg:29273 to clipboard!');
+    }
+
+    function toggleMobileNav() {
+      document.getElementById('mobileDrawer').classList.toggle('active');
+    }
+
+    function showToast(msg) {
+      const tray = document.getElementById('toastTray');
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--cyan);"></i> ${msg}`;
+      tray.appendChild(t);
+      setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(10px)';
+        t.style.transition = '0.3s';
+        setTimeout(() => t.remove(), 300);
+      }, 3500);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

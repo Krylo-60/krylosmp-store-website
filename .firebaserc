@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "krylosmp"
-  }
+  },
+  "targets": {
+    "krylosmp": {
+      "hosting": {
+        "krylosmp": [
+          "krylosmp"
+        ],
+        "krylosmp-store": [
+          "krylosmp-store"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

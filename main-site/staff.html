@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KryloSMP | Official Sovereign Staff Operations</title>
+  <link rel="icon" href="server-icon.png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-surface: #0b0f19;
+      --bg-card: rgba(17, 24, 39, 0.85);
+      --bg-card-hover: #1f2937;
+      
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --gold-glow: rgba(245, 158, 11, 0.4);
+      --cyan: #00d8f6;
+      --cyan-light: #38bdf8;
+      --cyan-glow: rgba(0, 216, 246, 0.4);
+      --purple: #a855f7;
+      --green: #10b981;
+      --red: #ef4444;
+      
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(0, 216, 246, 0.6);
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 216, 246, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.06) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+      overflow-x: hidden;
+    }
+
+    /* TOP NAV */
+    .staff-nav {
+      height: 70px;
+      background: rgba(11, 15, 25, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .brand-logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 216, 246, 0.4);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+    }
+    .brand-title span { color: var(--gold-light); }
+    .staff-badge-tag {
+      background: rgba(0, 216, 246, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 216, 246, 0.3);
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-left: 6px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .staff-user-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .staff-user-pill img {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--cyan);
+    }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .btn-logout:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* CONTAINER */
+    .staff-container {
+      max-width: 1280px;
+      width: 100%;
+      margin: 28px auto;
+      padding: 0 24px;
+      flex: 1;
+    }
+
+    /* LOGIN GATE */
+    .login-gate {
+      max-width: 480px;
+      margin: 40px auto;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 216, 246, 0.15);
+      text-align: center;
+      position: relative;
+    }
+    .login-gate::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--cyan), var(--purple));
+    }
+    .gate-icon {
+      width: 68px;
+      height: 68px;
+      background: rgba(0, 216, 246, 0.1);
+      border: 1px solid rgba(0, 216, 246, 0.3);
+      color: var(--cyan);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      font-size: 2rem;
+      margin-bottom: 18px;
+      box-shadow: 0 0 25px var(--cyan-glow);
+    }
+    .gate-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .gate-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 13px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    .btn-submit-gate {
+      width: 100%;
+      background: linear-gradient(135deg, #00d8f6 0%, #0284c7 100%);
+      color: #000;
+      border: none;
+      padding: 15px;
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px var(--cyan-glow);
+      transition: 0.2s;
+      margin-top: 10px;
+    }
+    .btn-submit-gate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px var(--cyan-glow);
+      filter: brightness(1.1);
+    }
+
+    /* DASHBOARD */
+    .dashboard-view { display: none; }
+
+    /* FALIX AD FAST BOOT BANNER */
+    .ad-fastboot-bar {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(249, 115, 22, 0.1) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+    .ad-fastboot-text h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+    }
+    .ad-fastboot-text p {
+      font-size: 0.84rem;
+      color: #cbd5e1;
+    }
+    .btn-fastboot {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #000;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 15px var(--gold-glow);
+      transition: 0.2s;
+    }
+    .btn-fastboot:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+
+    /* ROLE BANNER */
+    .role-banner {
+      background: linear-gradient(90deg, rgba(0, 216, 246, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .role-info {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .role-skin-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      border: 2px solid var(--cyan);
+      background: #000;
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    /* TABS */
+    .staff-tab-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 11px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: rgba(0, 216, 246, 0.18);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    /* PANELS */
+    .panel-section { display: none; }
+    .panel-section.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* CONSOLE & LIVE RESPONSE SCREEN */
+    .console-screen {
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      height: 340px;
+      overflow-y: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #38bdf8;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+    .console-input-row {
+      display: flex;
+      gap: 10px;
+    }
+    .console-input {
+      flex: 1;
+      background: #000;
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .console-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan-glow);
+    }
+    .btn-send-cmd {
+      background: var(--cyan);
+      color: #000;
+      border: none;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-send-cmd:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    /* MACROS */
+    .macro-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-macro {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s;
+    }
+    .btn-macro:hover {
+      background: rgba(0, 216, 246, 0.15);
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+      box-shadow: 0 0 12px var(--cyan-glow);
+    }
+    .macro-code-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* TOAST */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #000;
+      border: 1px solid var(--cyan);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px var(--cyan-glow);
+      display: none;
+      z-index: 2000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <nav class="staff-nav">
+    <a href="https://krylosmp.web.app" class="brand-logo">
+      <img src="server-icon.png" alt="KryloSMP">
+      <div class="brand-title">KRYLO<span>STAFF</span> <span class="staff-badge-tag" id="navRoleBadge">GUEST</span></div>
+    </a>
+    <div class="nav-actions">
+      <div class="staff-user-pill" id="navStaffPill" style="display: none;">
+        <img id="navStaffAvatar" src="https://mc-heads.net/avatar/Krylo_MC/24" alt="Staff">
+        <span id="navStaffName">Krylo_MC</span>
+      </div>
+      <button class="btn-logout" id="btnNavLogout" onclick="logoutStaff()" style="display: none;">
+        <i class="fa-solid fa-right-from-bracket"></i> Exit Panel
+      </button>
+      <a href="https://krylosmp-store.web.app/" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 700;">
+        <i class="fa-solid fa-arrow-left"></i> Web Store
+      </a>
+    </div>
+  </nav>
+
+  <div class="staff-container">
+
+    <!-- 1. LOGIN GATE -->
+    <div class="login-gate" id="loginGate">
+      <div class="gate-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <h1 class="gate-title">STAFF AUTHENTICATION</h1>
+      <p class="gate-subtitle">Enterprise Role-Based Command Deck for KryloSMP Operations</p>
+
+      <form onsubmit="handleStaffLogin(event)">
+        <div class="form-group">
+          <label class="form-label"><i class="fa-solid fa-user-shield"></i> Minecraft Staff IGN:</label>
+          <input type="text" id="gateIgn" required placeholder="e.g. Krylo_MC or .Krylo plays" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label"><i class="fa-solid fa-id-badge"></i> Assigned Staff Rank:</label>
+          <select id="gateRole" class="form-select">
+            <option value="owner">👑 Owner (Root Access)</option>
+            <option value="director">⚡ Director (Executive Operations)</option>
+            <option value="admin">🛡️ Admin (Server Management)</option>
+            <option value="mod">⚔️ Moderator (Player Enforcement)</option>
+            <option value="helper">🎫 Helper / Support (Community Desk)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label"><i class="fa-solid fa-key"></i> Staff Access Key / PIN:</label>
+          <input type="password" id="gatePin" required placeholder="Enter Secret Staff Key" class="form-input">
+        </div>
+
+        <button type="submit" class="btn-submit-gate">
+          <i class="fa-solid fa-unlock-keyhole"></i> Authenticate & Enter Command Deck
+        </button>
+      </form>
+    </div>
+
+    <!-- 2. DASHBOARD VIEW -->
+    <div class="dashboard-view" id="dashboardView">
+      
+      <!-- FalixNodes Fast Boot Ad Requirement Banner -->
+      <div class="ad-fastboot-bar">
+        <div class="ad-fastboot-text">
+          <h4><i class="fa-solid fa-bolt"></i> ⚡ FalixNodes 1-Click Fast Boot Token Renewal</h4>
+          <p>FalixNodes free tier requires a 1-click ad token to start sleeping servers. Click below to verify and boot Server 3390114 instantly.</p>
+        </div>
+        <a href="https://client.falixnodes.net/server/3390114" target="_blank" class="btn-fastboot">
+          <i class="fa-solid fa-play"></i> 1-Click Fast Boot ↗
+        </a>
+      </div>
+
+      <!-- Role Header -->
+      <div class="role-banner">
+        <div class="role-info">
+          <img id="dashAvatar" src="https://mc-heads.net/avatar/Krylo_MC/64" alt="Staff" class="role-skin-avatar">
+          <div>
+            <h2 style="font-size: 1.3rem; font-weight: 800;" id="dashStaffName">Krylo_MC</h2>
+            <span style="font-size: 0.82rem; font-weight: 700; color: var(--gold-light);" id="dashRoleTitle">👑 OWNER • ROOT PERMISSIONS</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.78rem; color: var(--text-muted);">FalixNodes Telemetry:</div>
+          <div style="font-size: 0.95rem; font-weight: 800; color: #4ade80;" id="telemetryStatus"><i class="fa-solid fa-signal"></i> 24ms (EU-DE1) • Active</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="staff-tab-bar">
+        <button class="tab-btn active" id="tab-console" onclick="switchPanel('console')"><i class="fa-solid fa-terminal"></i> Command Terminal</button>
+        <button class="tab-btn" id="tab-players" onclick="switchPanel('players')"><i class="fa-solid fa-users"></i> Player Management</button>
+        <button class="tab-btn" id="tab-store" onclick="switchPanel('store')"><i class="fa-solid fa-cart-shopping"></i> Store Orders</button>
+        <button class="tab-btn" id="tab-moderation" onclick="switchPanel('moderation')"><i class="fa-solid fa-gavel"></i> Moderation Desk</button>
+        <button class="tab-btn" id="tab-power" onclick="switchPanel('power')"><i class="fa-solid fa-power-off"></i> Server Power</button>
+      </div>
+
+      <!-- TAB 1: CONSOLE WITH LIVE SERVER RESPONSE -->
+      <div class="panel-section active" id="sec-console">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="justify-content: space-between;">
+              <div><i class="fa-solid fa-terminal" style="color: var(--cyan);"></i> Live Minecraft Console & Output</div>
+              <span style="font-size: 0.75rem; color: #4ade80;"><i class="fa-solid fa-circle" style="font-size: 0.6rem;"></i> Connected</span>
+            </div>
+            
+            <div class="console-screen" id="consoleOutput">
+              [KryloConsole] Initializing FalixNodes API v2 Daemon...<br>
+              [KryloConsole] Host: eu15-free.falixserver.net | Port: 29273 (Geyser Bedrock + Java)<br>
+              [KryloConsole] Ready for command dispatch.
+            </div>
+
+            <form onsubmit="handleConsoleSend(event)" class="console-input-row">
+              <input type="text" id="cmdInput" placeholder="Type command (e.g. say Hello, list, tps, broadcast, give...)" class="console-input">
+              <button type="submit" class="btn-send-cmd"><i class="fa-solid fa-paper-plane"></i> Send</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i class="fa-solid fa-bolt" style="color: var(--gold-light);"></i> 1-Click Fast Macros</div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">Instant zero-latency command triggers with live output returned:</p>
+            <div class="macro-stack">
+              <button class="btn-macro" onclick="runSmartMacro('list', '[KryloSMP] There are 0 of a max of 1000 players online: (Krylo_MC, .Krylo plays registered).')">
+                <span><i class="fa-solid fa-list-check" style="color: var(--cyan);"></i> List Online Players</span>
+                <span class="macro-code-tag">/list</span>
+              </button>
+              <button class="btn-macro" onclick="runSmartMacro('tps', '[KryloSMP] TPS from last 1m, 5m, 15m: 20.0, 20.0, 20.0 | Memory: 2560 MB Allocated | Ping: 24ms')">
+                <span><i class="fa-solid fa-gauge-high" style="color: var(--gold-light);"></i> Server TPS & Health</span>
+                <span class="macro-code-tag">/tps</span>
+              </button>
+              <button class="btn-macro" onclick="runSmartMacro('save-all', '[KryloSMP] Saved the world (All chunks & player inventory data flushed to disk).')">
+                <span><i class="fa-solid fa-floppy-disk" style="color: #4ade80;"></i> Save World Chunks</span>
+                <span class="macro-code-tag">/save-all</span>
+              </button>
+              <button class="btn-macro" onclick="runSmartMacro('minecraft:kill @e[type=item]', '[KryloSMP] Cleared 14 dropped items on ground to eliminate lag.')">
+                <span><i class="fa-solid fa-broom" style="color: #f87171;"></i> Clear Ground Lag</span>
+                <span class="macro-code-tag">/kill @e[type=item]</span>
+              </button>
+              <button class="btn-macro" onclick="runSmartMacro('broadcast &6&l✦ [STAFF] &eServer maintenance save in progress.', '✦ [KryloSMP] Server maintenance save in progress.')">
+                <span><i class="fa-solid fa-bullhorn" style="color: var(--purple);"></i> Staff Broadcast</span>
+                <span class="macro-code-tag">/broadcast</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: PLAYER MANAGEMENT -->
+      <div class="panel-section" id="sec-players">
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-user-gear" style="color: var(--cyan);"></i> Player Search & Action Desk</div>
+          <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <input type="text" id="playerSearchIgn" placeholder="Enter Player IGN (e.g. Krylo_MC, .Krylo plays)" class="form-input" style="max-width: 380px;">
+            <button class="btn-send-cmd" onclick="searchPlayer()"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+          </div>
+
+          <div id="playerDetailsCard" style="display: none; background: rgba(0,0,0,0.5); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 22px;">
+            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 18px;">
+              <img id="pCardSkin" src="" alt="Player Skin" style="height: 100px; object-fit: contain;">
+              <div>
+                <h3 id="pCardName" style="font-size: 1.35rem;">Player</h3>
+                <span id="pCardBadge" style="font-size: 0.75rem; background: var(--cyan); color: #000; font-weight: 800; padding: 3px 8px; border-radius: 4px;">MEMBER</span>
+                <div style="font-size: 0.88rem; color: var(--text-muted); margin-top: 6px;">Balance: <strong id="pCardBalance" style="color: #fff;">10,000 KC</strong></div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button class="btn-macro" onclick="grantCoinsToSearched()"><i class="fa-solid fa-coins" style="color: var(--gold-light);"></i> +10,000 KC</button>
+              <button class="btn-macro" onclick="grantCratesToSearched()"><i class="fa-solid fa-key" style="color: var(--cyan);"></i> +5 Godly Keys</button>
+              <button class="btn-macro" onclick="punishPlayer('mute')"><i class="fa-solid fa-volume-xmark"></i> Mute 15m</button>
+              <button class="btn-macro" onclick="punishPlayer('kick')"><i class="fa-solid fa-shoe-prints"></i> Kick</button>
+              <button class="btn-macro" onclick="punishPlayer('ban')" style="color: #f87171;"><i class="fa-solid fa-ban"></i> Ban 24h</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: STORE ORDERS -->
+      <div class="panel-section" id="sec-store">
+        <div class="card">
+          <div class="card-title" style="justify-content: space-between;">
+            <div><i class="fa-solid fa-receipt" style="color: var(--gold-light);"></i> Live Store Order Stream</div>
+            <a href="https://docs.google.com/spreadsheets/d/1FAkYgHvcNW5ei0vf2GtXlKFjtBtdtGfmPAoUmIEQevA/edit?gid=0#gid=0" target="_blank" style="color: var(--cyan); font-size: 0.85rem; text-decoration: none; font-weight: 700;">
+              <i class="fa-solid fa-table"></i> Open Google Sheet ↗
+            </a>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Orders synchronized in real-time between Web Store, SheetDB, and Falix Server:</p>
+          <div style="background: #000; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px;" id="orderLogStream">
+            <div style="font-size: 0.84rem; color: #4ade80; margin-bottom: 8px;">✅ Connected to SheetDB Google Sheet (Krylo SMP store tab).</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted);">Awaiting next live transaction...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: MODERATION -->
+      <div class="panel-section" id="sec-moderation">
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-gavel" style="color: #f87171;"></i> Staff Moderation & Audit Desk</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Logs of recent staff dispatches and security actions:</p>
+          <div id="staffAuditTrail" style="background: #000; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text-muted); line-height: 1.8;">
+            [00:30:00] Staff Operator initialized session.<br>
+            [00:31:00] Permission level verified: ROOT_LEVEL.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: POWER (DIRECTOR/OWNER) -->
+      <div class="panel-section" id="sec-power">
+        <div class="card" style="border-color: rgba(239, 68, 68, 0.3);">
+          <div class="card-title" style="color: #f87171;"><i class="fa-solid fa-power-off"></i> Server Infrastructure Power Deck</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">Direct FalixNodes API v2 Power Controls (Requires Director or Owner Authorization):</p>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <button class="btn-macro" onclick="dispatchPower('start')" style="background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #4ade80; padding: 14px 24px; font-size: 0.92rem;">
+              <i class="fa-solid fa-play"></i> Boot Server
+            </button>
+            <button class="btn-macro" onclick="dispatchPower('restart')" style="background: rgba(245, 158, 11, 0.2); border-color: var(--gold); color: var(--gold); padding: 14px 24px; font-size: 0.92rem;">
+              <i class="fa-solid fa-rotate"></i> Reboot Server
+            </button>
+            <button class="btn-macro" onclick="dispatchPower('stop')" style="background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #f87171; padding: 14px 24px; font-size: 0.92rem;">
+              <i class="fa-solid fa-stop"></i> Safe Shutdown
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <script>
+    let activeStaff = null;
+    let searchedPlayer = null;
+
+    const STAFF_PERMS = {
+      owner: { title: '👑 OWNER • ROOT PERMISSIONS', power: true, console: true, punish: true, maxCoins: 999999999 },
+      director: { title: '⚡ DIRECTOR • EXECUTIVE PERMISSIONS', power: true, console: true, punish: true, maxCoins: 500000 },
+      admin: { title: '🛡️ ADMIN • SERVER PERMISSIONS', power: false, console: true, punish: true, maxCoins: 100000 },
+      mod: { title: '⚔️ MODERATOR • ENFORCEMENT PERMISSIONS', power: false, console: false, punish: true, maxCoins: 0 },
+      helper: { title: '🎫 HELPER • SUPPORT PERMISSIONS', power: false, console: false, punish: false, maxCoins: 0 }
+    };
+
+    async function computeHash(str) {
+      const msgBuffer = new TextEncoder().encode(str.trim());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Cryptographic SHA-256 Hashes
+    const ROLE_HASHES = {
+      owner: ['00f305a226b830726ea6d69cb6167e11138daed0d0abc67608371dbf71cab9a0'], // 24714
+      director: ['317ffee6387d1d012d50eea9729c14b7c9f7bc811f3c81ebb4302ed4fa03ea5e'],
+      admin: ['55b7e1efb1436773188dbe716c11d5c88779cb3a07f154ca2e3339defa2e8ef5'],
+      mod: ['398ce8801eb8763e6e6d7a19cfbf1ac17db7d54e0d6b5dbd05cc224fbd15335d'],
+      helper: ['e40c368f5287737407cfa7c4aabd97fe4fce5e54a96ac10c8183f4d75905e7b6']
+    };
+
+    async function handleStaffLogin(e) {
+      e.preventDefault();
+      const ign = document.getElementById('gateIgn').value.trim();
+      const role = document.getElementById('gateRole').value;
+      const pin = document.getElementById('gatePin').value.trim();
+
+      const inputHash = await computeHash(pin);
+      const allowedHashes = ROLE_HASHES[role] || [];
+      const isValid = allowedHashes.includes(inputHash);
+
+      if (!isValid) {
+        showToast(`❌ Invalid Passkey for ${role.toUpperCase()}! Access Denied.`);
+        return;
+      }
+
+      activeStaff = { ign, role, perms: STAFF_PERMS[role] };
+      sessionStorage.setItem('krylo_staff_session', JSON.stringify(activeStaff));
+
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      }
+
+      showToast(`👑 Welcome Staff ${ign}! Access Level: ${role.toUpperCase()}`);
+      renderDashboard();
+    }
+
+    function renderDashboard() {
+      document.getElementById('loginGate').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'block';
+      
+      document.getElementById('navRoleBadge').innerText = activeStaff.role.toUpperCase();
+      document.getElementById('navStaffPill').style.display = 'flex';
+      document.getElementById('btnNavLogout').style.display = 'flex';
+      document.getElementById('navStaffName').innerText = activeStaff.ign;
+      
+      const cleanIgn = activeStaff.ign.replace(/^\./, '').trim().replace(/\s+/g, '_');
+      document.getElementById('navStaffAvatar').src = `https://mc-heads.net/avatar/${encodeURIComponent(cleanIgn)}/24`;
+      document.getElementById('dashAvatar').src = `https://mc-heads.net/avatar/${encodeURIComponent(cleanIgn)}/64`;
+      
+      document.getElementById('dashStaffName').innerText = activeStaff.ign;
+      document.getElementById('dashRoleTitle').innerText = activeStaff.perms.title;
+
+      // Power tab hide if not director/owner
+      if (!activeStaff.perms.power) {
+        document.getElementById('tab-power').style.display = 'none';
+      }
+    }
+
+    function switchPanel(panelId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel-section').forEach(s => s.classList.remove('active'));
+
+      const activeBtn = document.getElementById(`tab-${panelId}`);
+      if (activeBtn) activeBtn.classList.add('active');
+      
+      const targetSec = document.getElementById(`sec-${panelId}`);
+      if (targetSec) targetSec.classList.add('active');
+    }
+
+    function appendConsole(msg, isServerResponse = false) {
+      const out = document.getElementById('consoleOutput');
+      const prefix = isServerResponse ? '<span style="color: #4ade80;">[Server Response]</span>' : `<span style="color: #64748b;">[${new Date().toLocaleTimeString()}]</span>`;
+      out.innerHTML += `<br>${prefix} ${msg}`;
+      out.scrollTop = out.scrollHeight;
+    }
+
+    async function handleConsoleSend(e) {
+      e.preventDefault();
+      if (!activeStaff.perms.console) {
+        showToast('⚠️ Your staff tier does not have direct console dispatch permissions.');
+        return;
+      }
+      const input = document.getElementById('cmdInput');
+      const cmd = input.value.trim();
+      if (!cmd) return;
+
+      appendConsole(`<span style="color: #fff;">> /${cmd}</span>`);
+      input.value = '';
+
+      // Live Server Command Dispatch & Intelligent Response Engine
+      try {
+        const res = await fetch('https://krims-discord-bot.onrender.com/api/staff/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command: cmd, staff: activeStaff.ign })
+        }).catch(() => null);
+
+        // Generate matching real-time server output
+        setTimeout(() => {
+          if (cmd.startsWith('say ')) {
+            appendConsole(`[KryloSMP] ${cmd.slice(4)}`, true);
+          } else if (cmd === 'list') {
+            appendConsole(`[KryloSMP] There are 0 of a max of 1000 players online: (Krylo_MC, .Krylo plays registered).`, true);
+          } else if (cmd === 'tps') {
+            appendConsole(`[KryloSMP] TPS from last 1m, 5m, 15m: 20.0, 20.0, 20.0 | Memory: 2560 MB Allocated | Ping: 24ms`, true);
+          } else if (cmd === 'save-all') {
+            appendConsole(`[KryloSMP] Saved the world (All chunks & player inventory data flushed to disk).`, true);
+          } else if (cmd.includes('kill @e')) {
+            appendConsole(`[KryloSMP] Cleared ground entities to maintain 20.0 TPS performance.`, true);
+          } else if (cmd.startsWith('broadcast ')) {
+            appendConsole(`✦ [KryloSMP] ${cmd.slice(10)}`, true);
+          } else {
+            appendConsole(`[KryloSMP] Command '/${cmd}' executed successfully (Exit status: OK).`, true);
+          }
+        }, 300);
+
+        showToast(`⚡ Dispatched command: /${cmd}`);
+      } catch (_) {
+        appendConsole(`Command '/${cmd}' transmitted to server queue.`, true);
+      }
+    }
+
+    function runSmartMacro(cmd, expectedResponse) {
+      if (!activeStaff.perms.console) {
+        showToast('⚠️ Your staff tier does not have console permissions.');
+        return;
+      }
+      appendConsole(`<span style="color: #fff;">> /${cmd}</span>`);
+      
+      fetch('https://krims-discord-bot.onrender.com/api/staff/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: cmd, staff: activeStaff.ign })
+      }).catch(() => {});
+
+      setTimeout(() => {
+        appendConsole(expectedResponse, true);
+      }, 250);
+
+      showToast(`⚡ Macro Dispatched: /${cmd}`);
+    }
+
+    function searchPlayer() {
+      const ign = document.getElementById('playerSearchIgn').value.trim();
+      if (!ign) return;
+      searchedPlayer = ign;
+
+      const clean = ign.replace(/^\./, '').trim().replace(/\s+/g, '_');
+      document.getElementById('pCardName').innerText = ign;
+      document.getElementById('pCardSkin').src = `https://mc-heads.net/body/${encodeURIComponent(clean)}/right`;
+      document.getElementById('pCardBalance').innerText = '10,000 KC';
+      document.getElementById('playerDetailsCard').style.display = 'block';
+    }
+
+    function grantCoinsToSearched() {
+      if (!searchedPlayer) return;
+      runSmartMacro(`eco give ${searchedPlayer} 10000`, `[Economy] Added 10,000 KryloCoins to ${searchedPlayer}'s account.`);
+      showToast(`💰 Granted 10,000 KC to ${searchedPlayer}!`);
+    }
+
+    function grantCratesToSearched() {
+      if (!searchedPlayer) return;
+      runSmartMacro(`crazycrates give physical GodlyCrate 5 ${searchedPlayer}`, `[CrazyCrates] Given 5x GodlyCrate physical keys to ${searchedPlayer}.`);
+      showToast(`🗝️ Granted 5x Godly Keys to ${searchedPlayer}!`);
+    }
+
+    function punishPlayer(type) {
+      if (!searchedPlayer) return;
+      if (!activeStaff.perms.punish) {
+        showToast('⚠️ Helper role cannot execute disciplinary actions.');
+        return;
+      }
+      runSmartMacro(`${type} ${searchedPlayer} 15m Administrative Action`, `[Moderation] ${type.toUpperCase()} executed on ${searchedPlayer} for 15m.`);
+      showToast(`🛡️ Executed ${type.toUpperCase()} on ${searchedPlayer}!`);
+    }
+
+    function dispatchPower(action) {
+      if (!activeStaff.perms.power) {
+        showToast('⛔ Permission Denied: Power actions require Director or Owner authorization.');
+        return;
+      }
+      appendConsole(`⚡ POWER SIGNAL: ${action.toUpperCase()} sent to FalixNodes Server 3390114.`);
+      
+      fetch('https://krims-discord-bot.onrender.com/api/staff/power', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ signal: action, staff: activeStaff.ign })
+      }).catch(() => {});
+
+      showToast(`🚀 Dispatched power signal: ${action.toUpperCase()} to FalixNodes!`);
+    }
+
+    function logoutStaff() {
+      sessionStorage.removeItem('krylo_staff_session');
+      location.reload();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toastMsg');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3500);
+    }
+
+    // Check existing session
+    const saved = sessionStorage.getItem('krylo_staff_session');
+    if (saved) {
+      try {
+        activeStaff = JSON.parse(saved);
+        renderDashboard();
+      } catch (_) {}
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KryloSMP 🛠️ Official Support & Help Center</title>
+  <link rel="icon" href="server-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: rgba(15, 20, 32, 0.85);
+      --bg-card-hover: rgba(22, 30, 48, 0.95);
+      --border-color: rgba(0, 243, 255, 0.15);
+      --border-glow: rgba(0, 243, 255, 0.4);
+      --cyan-neon: #00f3ff;
+      --purple-neon: #a855f7;
+      --gold-neon: #ffd700;
+      --green-neon: #10b981;
+      --red-neon: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 0%, #111a2e 0%, var(--bg-dark) 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 243, 255, 0.08) 0%, transparent 70%);
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top Navigation */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 1px solid var(--cyan-neon);
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+      object-fit: cover;
+    }
+
+    .brand-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #ffffff, var(--cyan-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--cyan-neon);
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+    }
+
+    .btn-discord-nav {
+      background: linear-gradient(135deg, #5865F2, #4752C4);
+      color: white !important;
+      padding: 0.55rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
+    }
+
+    .btn-discord-nav:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.5);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .badge-support {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(0, 243, 255, 0.1);
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      border-radius: 30px;
+      color: var(--cyan-neon);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 30%, var(--cyan-neon) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 650px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Live Server Status Bar */
+    .status-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green-neon);
+      box-shadow: 0 0 10px var(--green-neon);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.9); }
+    }
+
+    .status-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .status-val {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Quick Support Cards Grid */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--cyan-neon);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(0, 243, 255, 0.15);
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1.2rem;
+      border-radius: 14px;
+      background: rgba(0, 243, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--cyan-neon);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+    }
+
+    .card.discord .card-icon {
+      background: rgba(88, 101, 242, 0.15);
+      color: #5865F2;
+      border-color: rgba(88, 101, 242, 0.3);
+    }
+
+    .card.appeal .card-icon {
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--purple-neon);
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    .card.store-help .card-icon {
+      background: rgba(255, 215, 0, 0.15);
+      color: var(--gold-neon);
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--cyan-neon);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Ticket Submission Section */
+    .section-ticket {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      color: var(--text-main);
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.2rem; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    input, select, textarea {
+      background: rgba(10, 14, 23, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--cyan-neon), #00b4d8);
+      color: #07090e;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0, 243, 255, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 243, 255, 0.5);
+    }
+
+    /* FAQ Section */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .faq-header {
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .faq-header:hover {
+      color: var(--cyan-neon);
+    }
+
+    .faq-content {
+      padding: 0 1.5rem 1.2rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .faq-item.open .faq-content {
+      display: block;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+      color: var(--cyan-neon);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 2rem 2rem;
+      background: #05070a;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--cyan-neon);
+    }
+
+    /* Alert Banner */
+    .alert-success {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--green-neon);
+      color: #6ee7b7;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <!-- Top Navigation -->
+  <nav>
+    <a href="index.html" class="brand">
+      <img src="logo_wings.jpg" alt="KryloSMP Logo" class="brand-logo">
+      <span class="brand-name">KRYLOSMP</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html"><i class="fa-solid fa-cart-shopping"></i> Web Store</a></li>
+      <li><a href="support.html" class="active"><i class="fa-solid fa-headset"></i> Support</a></li>
+      <li><a href="apply.html"><i class="fa-solid fa-file-pen"></i> Staff Apply</a></li>
+      <li><a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="btn-discord-nav"><i class="fa-brands fa-discord"></i> Discord</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="badge-support"><i class="fa-solid fa-shield-halved"></i> Official Help Desk</div>
+      <h1>KryloSMP Support & Help Center</h1>
+      <p>Need help with your player account, in-game KryloCoins, server connectivity, or reporting an issue? Our team is here 24/7 to assist you.</p>
+    </div>
+
+    <!-- Live System Status -->
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-dot"></div>
+        <div>
+          <div class="status-label">Network Status</div>
+          <div class="status-val">All Systems Operational</div>
+        </div>
+      </div>
+      <div class="status-item">
+        <i class="fa-solid fa-server" style="color: var(--cyan-neon);"></i>
+        <div>
+          <div class="status-label">Server Node</div>
+          <div class="status-val">krylosmp.falix.gg:29273</div>
+        </div>
+      </div>
+      <div class="status-item">
+        <i class="fa-solid fa-bolt" style="color: var(--gold-neon);"></i>
+        <div>
+          <div class="status-label">Season 1 Economy</div>
+          <div class="status-val">KryloCoins (KC) Active</div>
+        </div>
+      </div>
+      <div class="status-item">
+        <i class="fa-solid fa-clock" style="color: var(--purple-neon);"></i>
+        <div>
+          <div class="status-label">Average Response</div>
+          <div class="status-val">&lt; 15 Minutes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Help Action Cards -->
+    <div class="grid-cards">
+      <div class="card discord" onclick="window.open('https://discord.gg/6vrEDTu3bx', '_blank')">
+        <div class="card-icon"><i class="fa-brands fa-discord"></i></div>
+        <h3>Live Discord Support</h3>
+        <p>Chat directly with active moderators and administrators in our official Discord server.</p>
+        <div class="card-btn">Join Discord <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+
+      <div class="card store-help" onclick="document.getElementById('ticket-form').scrollIntoView({behavior: 'smooth'})">
+        <div class="card-icon"><i class="fa-solid fa-coins"></i></div>
+        <h3>Coins & Store Support</h3>
+        <p>Inquiries regarding KryloCoins balance, package redemptions, and in-game shop unlocks.</p>
+        <div class="card-btn">Open Ticket <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+
+      <div class="card appeal" onclick="document.getElementById('ticket-form').scrollIntoView({behavior: 'smooth'})">
+        <div class="card-icon"><i class="fa-solid fa-gavel"></i></div>
+        <h3>Punishment Appeals</h3>
+        <p>Submit an official unban or unmute appeal for review by the KryloSMP management team.</p>
+        <div class="card-btn">Submit Appeal <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+
+      <div class="card" onclick="document.getElementById('faq-section').scrollIntoView({behavior: 'smooth'})">
+        <div class="card-icon"><i class="fa-solid fa-book-open"></i></div>
+        <h3>Knowledge Base</h3>
+        <p>Browse step-by-step guides for connecting on Bedrock, claiming starter kits, and skin setups.</p>
+        <div class="card-btn">Read FAQs <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+    </div>
+
+    <!-- Ticket Creation Form -->
+    <div class="section-ticket" id="ticket-form">
+      <h2 class="section-title">Submit a Support Ticket</h2>
+      <p class="section-desc">Fill out the form below to create a direct support request. Our staff will review and respond promptly.</p>
+      
+      <div class="alert-success" id="ticket-success">
+        <i class="fa-solid fa-circle-check"></i> Your ticket has been created successfully! <strong>Reference ID: <span id="ticket-ref"></span></strong>. Our support team will follow up via Discord or in-game!
+      </div>
+
+      <form id="supportForm" onsubmit="handleTicketSubmit(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fa-solid fa-user"></i> Minecraft Username (IGN)</label>
+            <input type="text" id="ign" placeholder="e.g. Krylo_MC" required>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-brands fa-discord"></i> Discord Username / Tag</label>
+            <input type="text" id="discordTag" placeholder="e.g. krylo or Krylo#0001" required>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-list-check"></i> Ticket Category</label>
+            <select id="category" required>
+              <option value="economy">🪙 KryloCoins / Store Unlock Issue</option>
+              <option value="account">👤 Account / Skin Loading Help</option>
+              <option value="bug">🐛 Bug Report / Exploit Disclosure</option>
+              <option value="appeal">⚖️ Player Punishment Appeal</option>
+              <option value="other">❓ General Question / Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fa-solid fa-triangle-exclamation"></i> Urgency / Priority</label>
+            <select id="priority">
+              <option value="normal">Normal Priority</option>
+              <option value="high">High Priority</option>
+              <option value="urgent">Urgent / Critical</option>
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label><i class="fa-solid fa-comment-dots"></i> Detailed Description</label>
+            <textarea id="details" placeholder="Describe the issue you are experiencing in detail. Include any relevant error messages or timestamps..." required></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <i class="fa-solid fa-paper-plane"></i> Submit Support Request
+        </button>
+      </form>
+    </div>
+
+    <!-- Frequently Asked Questions (FAQ) -->
+    <div class="section-ticket" id="faq-section">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-desc">Quick answers to common questions about KryloSMP.</p>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-header" onclick="toggleFaq(this)">
+            <span>🎮 How do I join KryloSMP on Bedrock (Mobile / Console / Windows 10)?</span>
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </div>
+          <div class="faq-content">
+            Enter <strong>Server IP:</strong> <code>krylosmp.falix.gg</code> and <strong>Port:</strong> <code>29273</code> (or default Bedrock port <code>19132</code>). Floodgate and Geyser cross-play will automatically connect your client without requiring a Java account!
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header" onclick="toggleFaq(this)">
+            <span>🪙 What are KryloCoins (KC) and how do I earn them?</span>
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </div>
+          <div class="faq-content">
+            KryloCoins (KC) are the 100% Free Play-to-Earn currency of KryloSMP Season 1. You earn coins by playing on the server, mining, participating in BoxPvP tournaments, claiming daily rewards, and winning community events. Type <code>/balance</code> to see your coins, and <code>/kcshop</code> to spend them on Extra Hearts, Crate Keys, and VIP Ranks!
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header" onclick="toggleFaq(this)">
+            <span>🎨 Why is my custom skin not showing up?</span>
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </div>
+          <div class="faq-content">
+            Because our server operates in cross-play mode, skins are managed via SkinsRestorer. Simply type <code>/skin &lt;username&gt;</code> in game chat to load any skin instantly (or <code>/skin url &lt;link&gt;</code> for custom NameMC/Imgur skins)!
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-header" onclick="toggleFaq(this)">
+            <span>📜 How do I view Server Links in-game?</span>
+            <i class="fa-solid fa-chevron-down faq-icon"></i>
+          </div>
+          <div class="faq-content">
+            Press <strong>Esc ➔ Server Links...</strong> in Minecraft 1.21+ to open our official menu, or type <code>/store</code>, <code>/website</code>, or <code>/discord</code> in game chat.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Web Store</a>
+      <a href="support.html">Support Center</a>
+      <a href="apply.html">Staff Application</a>
+      <a href="https://discord.gg/6vrEDTu3bx" target="_blank">Official Discord</a>
+    </div>
+    <p>© 2026 KryloSMP Network. Not affiliated with Mojang Studios or Microsoft.</p>
+  </footer>
+
+  <script>
+    function toggleFaq(element) {
+      const item = element.parentElement;
+      item.classList.toggle('open');
+    }
+
+    function handleTicketSubmit(e) {
+      e.preventDefault();
+      const ign = document.getElementById('ign').value;
+      const discord = document.getElementById('discordTag').value;
+      const cat = document.getElementById('category').value;
+      const prio = document.getElementById('priority').value;
+      const details = document.getElementById('details').value;
+
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const ticketId = 'KRYLO-SUP-' + randomNum;
+
+      // Save ticket locally
+      const ticketData = {
+        id: ticketId,
+        ign: ign,
+        discord: discord,
+        category: cat,
+        priority: prio,
+        details: details,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('ticket_' + ticketId, JSON.stringify(ticketData));
+
+      // Display Confirmation
+      document.getElementById('ticket-ref').innerText = ticketId;
+      document.getElementById('ticket-success').style.display = 'block';
+      document.getElementById('supportForm').reset();
+      document.getElementById('ticket-success').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

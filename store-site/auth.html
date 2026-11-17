@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KryloSMP Network | Player Authentication</title>
+  <link rel="icon" href="server-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #04060a;
+      --bg-surface: #0b0f19;
+      --bg-card: rgba(18, 24, 38, 0.9);
+      --border: rgba(0, 216, 246, 0.2);
+      --cyan: #00d8f6;
+      --cyan-glow: rgba(0, 216, 246, 0.35);
+      --gold: #f59e0b;
+      --gold-glow: rgba(245, 158, 11, 0.35);
+      --green: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    
+    body {
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(0, 216, 246, 0.12), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.08), transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    }
+
+    /* Domain Gateway Bar */
+    .domain-bar {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border);
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(12px);
+    }
+    .domain-lock { color: var(--green); }
+    .domain-url { font-family: 'JetBrains Mono', monospace; color: #fff; font-weight: 700; }
+
+    /* Auth Card Container */
+    .auth-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      max-width: 480px;
+      width: 100%;
+      padding: 36px 30px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px var(--cyan-glow);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--gold), var(--cyan));
+    }
+
+    .auth-brand {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.75rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+    .brand-title span { color: var(--cyan); }
+    .brand-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Edition Switcher */
+    .edition-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 22px;
+      gap: 6px;
+    }
+    .edition-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    .edition-btn.active {
+      background: linear-gradient(135deg, rgba(0, 216, 246, 0.25), rgba(0, 216, 246, 0.1));
+      color: #fff;
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    /* Live Player Preview Card */
+    .player-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 22px;
+      position: relative;
+    }
+    .skin-preview {
+      width: 52px;
+      height: 104px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(0, 216, 246, 0.4));
+    }
+    .player-info { flex: 1; }
+    .player-label { font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
+    .player-name { font-size: 1.25rem; font-weight: 800; color: #fff; margin: 2px 0 6px; }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .badge-owner { background: rgba(245, 158, 11, 0.2); color: var(--gold); border: 1px solid var(--gold); }
+    .badge-member { background: rgba(0, 216, 246, 0.15); color: var(--cyan); border: 1px solid var(--border); }
+    .player-stat { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+    .player-stat strong { color: #fff; }
+
+    /* Form Fields */
+    .form-group { margin-bottom: 18px; }
+    .form-label { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block; }
+    .input-wrap { position: relative; }
+    .input-wrap i { position: absolute; left: 16px; top: 15px; color: var(--text-muted); font-size: 0.95rem; }
+    .form-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 13px 16px 13px 46px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      outline: none;
+      transition: 0.2s;
+    }
+    .form-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    /* Owner PIN Box */
+    .pin-box {
+      display: none;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px dashed var(--gold);
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+    }
+
+    /* Primary Submit Button */
+    .btn-auth {
+      width: 100%;
+      background: linear-gradient(135deg, #00d8f6 0%, #0284c7 100%);
+      color: #04060a;
+      border: none;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px var(--cyan-glow);
+      transition: 0.2s;
+    }
+    .btn-auth:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 25px var(--cyan-glow); }
+
+    /* Return to Store Link */
+    .auth-footer {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .auth-footer a { color: var(--cyan); text-decoration: none; font-weight: 700; }
+    .auth-footer a:hover { text-decoration: underline; }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #000;
+      border: 1px solid var(--cyan);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px var(--cyan-glow);
+      display: none;
+      z-index: 2000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Gateway Verification Header -->
+  <div class="domain-bar">
+    <i class="fa-solid fa-shield-halved domain-lock"></i>
+    <span>Encrypted Identity Gateway:</span>
+    <span class="domain-url">krylosmp-store.web.app/auth</span>
+  </div>
+
+  <div class="auth-container">
+    <div class="auth-brand">
+      <div class="brand-title">KRYLO<span>AUTH</span></div>
+      <div class="brand-desc">Universal Minecraft Java & Bedrock Player Authentication</div>
+    </div>
+
+    <!-- Edition Tabs -->
+    <div class="edition-tabs">
+      <button class="edition-btn active" id="btnJava" onclick="selectEdition('java')">
+        <i class="fa-brands fa-java"></i> Java Edition
+      </button>
+      <button class="edition-btn" id="btnBedrock" onclick="selectEdition('bedrock')">
+        <i class="fa-solid fa-mobile-screen"></i> Bedrock / PE / Xbox
+      </button>
+    </div>
+
+    <!-- Live Preview Card -->
+    <div class="player-card">
+      <img id="skinPreview" src="https://mc-heads.net/body/Krylo_MC/right" alt="Skin Preview" class="skin-preview" onerror="this.src='https://mc-heads.net/body/Steve/right'">
+      <div class="player-info">
+        <div class="player-label" id="platformLabel">JAVA ACCOUNT</div>
+        <div class="player-name" id="displayIgn">Krylo_MC</div>
+        <div>
+          <span class="badge-pill badge-owner" id="accountBadge">👑 OWNER (VERIFIED)</span>
+        </div>
+        <div class="player-stat" id="balanceStat">Balance: <strong>∞ INF KryloCoins (KC)</strong></div>
+      </div>
+    </div>
+
+    <form onsubmit="handleAuthSubmit(event)">
+      <!-- IGN Input -->
+      <div class="form-group">
+        <label class="form-label" id="ignLabel">Minecraft Username (IGN):</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="ignInput" class="form-input" required placeholder="Enter Minecraft IGN" oninput="handleIgnChange(this.value)">
+        </div>
+      </div>
+
+      <!-- Owner PIN Box -->
+      <div class="pin-box" id="pinBox">
+        <label class="form-label" style="color: var(--gold);"><i class="fa-solid fa-key"></i> Owner Security PIN:</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock" style="color: var(--gold);"></i>
+          <input type="password" id="pinInput" class="form-input" style="border-color: var(--gold);" placeholder="Enter Secret Owner PIN">
+        </div>
+        <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;" id="pinHelp">Owner PIN required to unlock administrative privileges.</div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-auth">
+        <i class="fa-solid fa-plug-circle-check"></i> Authenticate & Enter Store
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <a href="https://krylosmp-store.web.app/#store"><i class="fa-solid fa-arrow-left"></i> Return to Store Catalog</a>
+    </div>
+  </div>
+
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <script>
+    let currentEdition = 'java';
+    let currentIgn = localStorage.getItem('krylo_active_ign') || 'Krylo_MC';
+    let isOwnerVerified = localStorage.getItem('krylo_owner_verified') === 'true';
+
+    function checkIsOwnerAccount(ign) {
+      const clean = (ign || '').trim().toLowerCase();
+      return clean === 'krylo_mc' || clean === 'krylo plays' || clean === 'krylo_plays' || clean === '.krylo plays' || clean === '.krylo_plays';
+    }
+
+    async function computeHash(str) {
+      const msgBuffer = new TextEncoder().encode(str.trim());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function selectEdition(ed) {
+      currentEdition = ed;
+      document.getElementById('btnJava').classList.toggle('active', ed === 'java');
+      document.getElementById('btnBedrock').classList.toggle('active', ed === 'bedrock');
+      
+      const lbl = document.getElementById('ignLabel');
+      const pLbl = document.getElementById('platformLabel');
+      
+      if (ed === 'bedrock') {
+        lbl.innerText = 'Xbox / Bedrock Gamertag:';
+        pLbl.innerText = 'BEDROCK / XBOX ACCOUNT';
+      } else {
+        lbl.innerText = 'Java Edition Username:';
+        pLbl.innerText = 'JAVA ACCOUNT';
+      }
+      handleIgnChange(document.getElementById('ignInput').value);
+    }
+
+    function handleIgnChange(val) {
+      const clean = val.trim();
+      const display = document.getElementById('displayIgn');
+      const skin = document.getElementById('skinPreview');
+      const badge = document.getElementById('accountBadge');
+      const stat = document.getElementById('balanceStat');
+      const pinBox = document.getElementById('pinBox');
+
+      display.innerText = clean || 'Player';
+      
+      const skinTarget = clean.replace(/^\./, '').trim().replace(/\s+/g, '_') || 'Steve';
+      skin.src = `https://mc-heads.net/body/${encodeURIComponent(skinTarget)}/right`;
+
+      const isOwner = checkIsOwnerAccount(clean);
+      if (isOwner) {
+        if (!isOwnerVerified) {
+          pinBox.style.display = 'block';
+          badge.className = 'badge-pill badge-owner';
+          badge.innerText = '🔒 OWNER (PIN REQ)';
+          stat.innerHTML = 'Balance: <strong>Locked until PIN entered</strong>';
+        } else {
+          pinBox.style.display = 'none';
+          badge.className = 'badge-pill badge-owner';
+          badge.innerText = '👑 OWNER (VERIFIED)';
+          stat.innerHTML = 'Balance: <strong>∞ INF KryloCoins (KC)</strong>';
+        }
+      } else {
+        pinBox.style.display = 'none';
+        badge.className = 'badge-pill badge-member';
+        badge.innerText = currentEdition === 'bedrock' ? '📱 BEDROCK MEMBER' : '💎 MEMBER';
+        stat.innerHTML = 'Balance: <strong>10,000 KryloCoins (KC)</strong>';
+      }
+    }
+
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      let ign = document.getElementById('ignInput').value.trim();
+      if (!ign) return;
+
+      if (currentEdition === 'bedrock' && !ign.startsWith('.')) {
+        ign = '.' + ign;
+      }
+
+      const isOwner = checkIsOwnerAccount(ign);
+      if (isOwner && !isOwnerVerified) {
+        const pin = document.getElementById('pinInput').value.trim();
+        const inputHash = await computeHash(pin);
+        // SHA-256 for 24714
+        if (inputHash !== '00f305a226b830726ea6d69cb6167e11138daed0d0abc67608371dbf71cab9a0') {
+          showToast('❌ Invalid Owner PIN! Access denied.');
+          return;
+        }
+        isOwnerVerified = true;
+        localStorage.setItem('krylo_owner_verified', 'true');
+        showToast('👑 Owner Verified! Infinite KC unlocked.');
+      }
+
+      localStorage.setItem('krylo_active_ign', ign);
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#00d8f6', '#f59e0b', '#10b981', '#ffffff']
+        });
+      }
+      showToast(`✅ Profile Connected: ${ign}! Redirecting to Web Store...`);
+      setTimeout(() => {
+        window.location.href = 'https://krylosmp-store.web.app/#store';
+      }, 1200);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toastMsg');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3500);
+    }
+
+    document.getElementById('ignInput').value = currentIgn;
+    handleIgnChange(currentIgn);
+  </script>
+</body>
+</html>

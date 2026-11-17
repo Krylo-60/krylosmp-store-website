@@ -1,1 +1,9 @@
-.vercel
+# Firebase Cache & Runtime
+.firebase/
+node_modules/
+
+# OS Junk
+.DS_Store
+Thumbs.db
+
+.vercel/

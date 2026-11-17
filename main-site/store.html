@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KryloSMP Store | Official Sovereign Web Shop</title>
+  <link rel="icon" href="server-icon.png">
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --bg-base: #030712;
+      --bg-surface: #0b0f19;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(31, 41, 55, 0.85);
+      
+      --gold: #f59e0b;
+      --gold-light: #fbbf24;
+      --gold-glow: rgba(245, 158, 11, 0.35);
+      
+      --cyan: #00d8f6;
+      --cyan-light: #38bdf8;
+      --cyan-glow: rgba(0, 216, 246, 0.35);
+      
+      --purple: #a855f7;
+      --purple-glow: rgba(168, 85, 247, 0.3);
+      
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.3);
+      
+      --red: #ef4444;
+      
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 216, 246, 0.4);
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --max-w: 1280px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0, 216, 246, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 10% 30%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 45%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    }
+
+    /* TOP ANNOUNCEMENT TICKER */
+    .top-announcement {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(0, 216, 246, 0.15) 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .top-announcement span { color: var(--gold-light); }
+
+    /* HEADER NAV */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      height: 72px;
+      display: flex;
+      align-items: center;
+    }
+    .nav-container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 216, 246, 0.4);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .brand-title span { color: var(--gold-light); }
+
+    .desktop-menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-link {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-link.store-btn {
+      color: var(--gold-light);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .nav-link.store-btn:hover {
+      background: var(--gold);
+      color: #000;
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-pill {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .user-pill:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .user-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--cyan);
+    }
+    .user-ign {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .user-kc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      font-weight: 700;
+    }
+
+    /* MAIN WRAPPER */
+    main {
+      max-width: var(--max-w);
+      width: 100%;
+      margin: 0 auto;
+      padding: 30px 24px 80px;
+      flex: 1;
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(11, 15, 25, 0.95) 0%, rgba(17, 24, 39, 0.9) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 36px;
+      margin-bottom: 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--cyan), var(--purple));
+    }
+    .hero-text { max-width: 680px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 216, 246, 0.12);
+      border: 1px solid rgba(0, 216, 246, 0.3);
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.6rem;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #f59e0b 0%, #00d8f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .server-ip-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(0, 216, 246, 0.3);
+      padding: 8px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .server-ip-pill:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .server-ip-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+    .btn-copy-tag {
+      background: rgba(0, 216, 246, 0.15);
+      color: var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    /* CATEGORY TABS */
+    .category-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .cat-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .cat-btn.active, .cat-btn:hover {
+      background: linear-gradient(135deg, rgba(0, 216, 246, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    /* PRODUCT GRID */
+    .store-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(12px);
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-hover);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px var(--cyan-glow);
+      background: var(--bg-card-hover);
+    }
+
+    .p-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .p-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .p-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--gold-light);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      text-transform: uppercase;
+    }
+
+    .p-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .p-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+
+    .p-perks-list {
+      list-style: none;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .p-perks-list li {
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .p-perks-list li i { color: var(--cyan); font-size: 0.75rem; }
+
+    .p-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .p-price-kc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--gold-light);
+    }
+    .btn-buy {
+      background: linear-gradient(135deg, #00d8f6 0%, #0284c7 100%);
+      color: #000;
+      border: none;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .btn-buy:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 0 15px var(--cyan-glow);
+      transform: translateY(-1px);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--cyan);
+      border-radius: var(--radius-lg);
+      max-width: 500px;
+      width: 100%;
+      padding: 32px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px var(--cyan-glow);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px; right: 18px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+    .modal-close:hover { color: #fff; }
+
+    /* TOAST */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #000;
+      border: 1px solid var(--cyan);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px var(--cyan-glow);
+      display: none;
+      z-index: 3000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP TICKER -->
+  <div class="top-announcement">
+    <i class="fa-solid fa-crown" style="color: var(--gold-light);"></i>
+    <span>KRYLOSMP SOVEREIGN LAUNCH</span> • 100% Free Play-to-Earn Web Shop with Instant 50ms Delivery!
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="nav-container">
+      <a href="https://krylosmp.web.app" class="brand">
+        <img src="server-icon.png" alt="KryloSMP" class="brand-logo">
+        <div class="brand-title">KRYLO<span>STORE</span></div>
+      </a>
+
+      <ul class="desktop-menu">
+        <li><a href="https://krylosmp.web.app" class="nav-link"><i class="fa-solid fa-house"></i> Main Portal</a></li>
+        <li><a href="#store" class="nav-link active store-btn"><i class="fa-solid fa-gem"></i> Store Catalog</a></li>
+        <li><a href="https://krylosmp-store.web.app/auth" class="nav-link"><i class="fa-solid fa-user-shield"></i> Auth Gateway</a></li>
+        <li><a href="https://krylosmp-store.web.app/staff" class="nav-link" style="color: var(--cyan);"><i class="fa-solid fa-shield-halved"></i> Staff Deck</a></li>
+        <li><a href="https://discord.gg/6vrEDTu3bx" target="_blank" class="nav-link"><i class="fa-brands fa-discord"></i> Discord</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="user-pill" onclick="window.location.href='/auth'" title="Click to Authenticate & Manage Profile">
+          <img id="navAvatar" src="https://mc-heads.net/avatar/Krylo_MC/26" alt="Avatar" class="user-avatar">
+          <div>
+            <div class="user-ign" id="navIgn">Krylo_MC</div>
+            <div class="user-kc" id="navKc">∞ INF KC</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="store">
+    
+    <!-- HERO -->
+    <div class="hero-banner">
+      <div class="hero-text">
+        <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Instant Sub-50ms Fulfillment</div>
+        <h1 class="hero-title">Official <span>KryloSMP</span> Web Shop</h1>
+        <p class="hero-desc">Unlock Sovereign ranks, Godly crate keys, claim block expansions, and coin bundles using your in-game earned KryloCoins (KC)!</p>
+        
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <div class="server-ip-pill" onclick="copyIp()">
+            <i class="fa-solid fa-server" style="color: var(--cyan);"></i>
+            <span class="server-ip-text">krylosmp.falix.gg:29273</span>
+            <span class="btn-copy-tag" id="copyLabel">CLICK TO COPY</span>
+          </div>
+          <span style="font-size: 0.78rem; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--cyan); padding: 6px 14px; border-radius: 20px; font-weight: 800; text-transform: uppercase;">
+            <i class="fa-solid fa-code-branch"></i> v26.2 Crossplay
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORY TABS -->
+    <div class="category-tabs">
+      <button class="cat-btn active" onclick="filterCategory('all')"><i class="fa-solid fa-border-all"></i> All Items (20)</button>
+      <button class="cat-btn" onclick="filterCategory('ranks')"><i class="fa-solid fa-crown"></i> Sovereign Ranks</button>
+      <button class="cat-btn" onclick="filterCategory('keys')"><i class="fa-solid fa-key"></i> 3D Crate Keys</button>
+      <button class="cat-btn" onclick="filterCategory('claims')"><i class="fa-solid fa-shield-halved"></i> Claim Blocks</button>
+      <button class="cat-btn" onclick="filterCategory('perks')"><i class="fa-solid fa-wand-magic-sparkles"></i> Cosmetics & Perks</button>
+    </div>
+
+    <!-- PRODUCT CATALOG -->
+    <div class="store-grid" id="productGrid">
+      <!-- Injected via JS -->
+    </div>
+
+  </main>
+
+  <!-- CHECKOUT MODAL -->
+  <div class="modal-overlay" id="checkoutModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeCheckout()"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div style="text-align: center; margin-bottom: 20px;">
+        <div id="mIcon" style="font-size: 2.5rem; margin-bottom: 8px;">👑</div>
+        <h2 id="mTitle" style="font-family: 'Cinzel', serif; font-size: 1.6rem; color: #fff;">Sovereign Rank</h2>
+        <div id="mPrice" style="font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 800; color: var(--gold-light); margin-top: 4px;">50,000 KC</div>
+      </div>
+
+      <div style="display: flex; gap: 16px; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); padding: 14px; border-radius: var(--radius-sm); margin-bottom: 20px;">
+        <img id="mSkin" src="https://mc-heads.net/body/Krylo_MC/right" alt="Skin" style="height: 80px; object-fit: contain;">
+        <div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Receiving Player:</div>
+          <div id="mTargetIgn" style="font-size: 1.1rem; font-weight: 800; color: #fff;">Krylo_MC</div>
+          <div style="font-size: 0.75rem; color: var(--green); margin-top: 4px;"><i class="fa-solid fa-bolt"></i> Auto-dispatched to FalixNodes Server</div>
+        </div>
+      </div>
+
+      <form onsubmit="executeCheckout(event)">
+        <div style="margin-bottom: 18px;">
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block;">Confirm Minecraft In-Game Name (IGN):</label>
+          <input type="text" id="mIgnInput" required style="width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.95rem;" oninput="updateModalSkin(this.value)">
+        </div>
+
+        <button type="submit" class="btn-buy" style="width: 100%; padding: 14px; justify-content: center; font-size: 1rem;">
+          <i class="fa-solid fa-bolt"></i> Confirm & Unlock In-Game
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <script>
+    const PRODUCTS = [
+      // --- 👑 RANKS ---
+      { id: 'rank-sovereign', cat: 'ranks', name: '👑 Sovereign Rank', priceKc: 50000, tag: 'TOP TIER', icon: '👑', desc: 'Highest obtainable prestige rank with infinite commands and godly prefixes.', perks: ['All Kit God Access', '/fly in All Worlds', '8x Home Teleports', 'Chat Prefix: &6[SOVEREIGN]', '+50,000 Instant KC Bonus'] },
+      { id: 'rank-overlord', cat: 'ranks', name: '⚡ Overlord Rank', priceKc: 40000, tag: 'EXECUTIVE', icon: '⚡', desc: 'Supreme commanding rank with elite PvP boosts and custom war horns.', perks: ['Kit Overlord Access', '/feed & /heal Instant', '6x Home Teleports', 'Chat Prefix: &e[OVERLORD]', '+30,000 Instant KC Bonus'] },
+      { id: 'rank-warlord', cat: 'ranks', name: '⚔️ Warlord Rank', priceKc: 30000, tag: 'COMBAT', icon: '⚔️', desc: 'Elite combat rank engineered for BoxPvP and clan dominance.', perks: ['Kit Warlord Access', '/repair All Items', '4x Home Teleports', 'Chat Prefix: &c[WARLORD]', '+20,000 Instant KC Bonus'] },
+      { id: 'rank-champion', cat: 'ranks', name: '💎 Champion Rank', priceKc: 20000, tag: 'POPULAR', icon: '💎', desc: 'High-tier survival rank with portable crafting and enderchest.', perks: ['Kit Champion Access', '/craft & /enderchest anywhere', '3x Home Teleports', 'Chat Prefix: &b[CHAMPION]'] },
+      { id: 'rank-knight', cat: 'ranks', name: '🛡️ Knight Rank', priceKc: 15000, tag: 'STARTER', icon: '🛡️', desc: 'Essential prestige rank unlocking enhanced survival utilities.', perks: ['Kit Knight Access', '/near command radar', '2x Home Teleports', 'Chat Prefix: &9[KNIGHT]'] },
+      { id: 'rank-scout', cat: 'ranks', name: '🏹 Scout Rank', priceKc: 8000, tag: 'PIONEER', icon: '🏹', desc: 'Fast exploration rank with speed boosts and starter crates.', perks: ['Kit Scout Access', 'Permanent Speed I Trail', '1x Extra Home', 'Chat Prefix: &a[SCOUT]'] },
+
+      // --- 🗝️ 3D CRATE KEYS ---
+      { id: 'crates-godly', cat: 'keys', name: '🗝️ 10x Godly Crate Keys', priceKc: 12000, tag: 'BEST VALUE', icon: '👑', desc: 'Unlock rare Godly tier enchantments, netherite armour, and relics.', perks: ['10x 3D Physical Keys', 'Guaranteed Tier 4 Godly Loot', '1-Click Server Drop', 'Zero Expiration'] },
+      { id: 'crates-mythic', cat: 'keys', name: '🔮 10x Mythic Crate Keys', priceKc: 7500, tag: 'CRATE DROP', icon: '🔮', desc: 'Premium loot keys with high drop rates for diamonds and tools.', perks: ['10x 3D Physical Keys', 'Guaranteed Tier 3 Mythic Loot', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-legendary', cat: 'keys', name: '⚔️ 10x Legendary Keys', priceKc: 5000, tag: 'HOT', icon: '⚔️', desc: 'Combat crate keys for god apples, totems, and sharpness VI weapons.', perks: ['10x 3D Physical Keys', 'Tier 2 Legendary Loot', 'Instant In-Game Drop', 'Zero Expiration'] },
+      { id: 'crates-epic', cat: 'keys', name: '💎 10x Epic Crate Keys', priceKc: 3500, tag: 'VALUE', icon: '💎', desc: 'Great mid-tier crate keys packed with diamond gear and XP bottles.', perks: ['10x 3D Physical Keys', 'Full Diamond Armor Chance', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-rare', cat: 'keys', name: '🛡️ 10x Rare Crate Keys', priceKc: 2000, tag: 'STARTER', icon: '🛡️', desc: 'Starter crate keys with iron blocks, books, and gold.', perks: ['10x 3D Physical Keys', 'Enchanted Books & Ingots', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-common', cat: 'keys', name: '📦 15x Common Keys', priceKc: 1000, tag: 'BUDGET', icon: '📦', desc: 'A bundle of starter keys to jumpstart your survival adventure.', perks: ['15x 3D Physical Keys', 'Food, Coal & Basic Tools', 'Instant Delivery', 'Zero Expiration'] },
+      { id: 'crates-megabundle', cat: 'keys', name: '🌟 Sovereign Mega Crate Bundle', priceKc: 18000, tag: '30% OFF', icon: '🌟', desc: 'Includes 3x of EVERY crate key on the entire server!', perks: ['3x Godly, 3x Mythic, 3x Legendary', '3x Epic, 3x Rare, 3x Common', 'Total 18x 3D Keys', 'Massive Savings!'] },
+
+      // --- 🏰 CLAIM BLOCKS & TERRITORY ---
+      { id: 'claims-mega', cat: 'claims', name: '🏰 +10,000 Mega Territory Blocks', priceKc: 25000, tag: 'MEGA EMPIRE', icon: '🏰', desc: 'Claim a massive civilization territory with full anti-grief protection.', perks: ['+10,000 Claim Blocks', 'GriefPrevention Protection', 'Permanent Land Expansion', 'Share with Clan Members'] },
+      { id: 'claims-empire', cat: 'claims', name: '🏰 +5,000 Empire Claim Blocks', priceKc: 18000, tag: 'EXPANSION', icon: '🏰', desc: 'Protect your mega base and farms from raids and griefing.', perks: ['+5,000 Claim Blocks', 'Permanent Land Expansion', 'Sub-division Trust Access', 'Anti-Steal Protection'] },
+      { id: 'claims-kingdom', cat: 'claims', name: '🏰 +2,500 Kingdom Blocks', priceKc: 10000, tag: 'POPULAR', icon: '🏰', desc: 'Expand your sovereign territory and protect your builds.', perks: ['+2,500 Claim Blocks', 'Permanent Expansion', 'Zero Expiration', 'Share with Friends'] },
+      { id: 'claims-starter', cat: 'claims', name: '⛺ +1,000 Starter Claim Blocks', priceKc: 4500, tag: 'STARTER', icon: '⛺', desc: 'Essential protection for your starter home and chests.', perks: ['+1,000 Claim Blocks', 'Chest & Entity Protection', 'Permanent Addition', 'Anti-Grief'] },
+
+      // --- ✨ COSMETICS & PERKS ---
+      { id: 'perk-fly', cat: 'perks', name: '🕊️ Lifetime /fly Flight License', priceKc: 25000, tag: 'TOP PERK', icon: '🕊️', desc: 'Fly anywhere in the survival world to build and explore freely!', perks: ['Permanent /fly Access', 'Toggle On/Off Anytime', 'Works in All Survival Worlds', 'No Fall Damage'] },
+      { id: 'perk-tag', cat: 'perks', name: '🏷️ Custom Chat Tag License', priceKc: 15000, tag: 'EXCLUSIVE', icon: '🏷️', desc: 'Create your own colored prefix tag in public server chat.', perks: ['Custom Name Tag', 'All Minecraft Color Codes', 'Instant Update', 'Permanent Feature'] },
+      { id: 'perk-vaults', cat: 'perks', name: '🎒 +3 Virtual Player Vaults (/pv)', priceKc: 10000, tag: 'UTILITY', icon: '🎒', desc: 'Access 3 additional 54-slot virtual vaults from anywhere.', perks: ['+3 Extra Vaults (/pv 1-3)', 'Safe from Death Drops', '54 Slots per Vault', 'Instant Global Access'] },
+      { id: 'perk-booster', cat: 'perks', name: '⚡ 2x Economy & XP Booster (24h)', priceKc: 8000, tag: 'BOOSTER', icon: '⚡', desc: 'Double all earned KryloCoins and XP from mobs and mining for 24 hours.', perks: ['2x KC from all sources', '2x Mob & Mining XP', 'Server-wide announcement', '24h Active Duration'] }
+    ];
+
+    let selectedProduct = null;
+    let activeIgn = localStorage.getItem('krylo_active_ign') || 'Krylo_MC';
+
+    function initStore() {
+      updateUserPill();
+      renderProducts('all');
+    }
+
+    function updateUserPill() {
+      const clean = activeIgn.replace(/^\./, '').trim().replace(/\s+/g, '_');
+      document.getElementById('navIgn').innerText = activeIgn;
+      document.getElementById('navAvatar').src = `https://mc-heads.net/avatar/${encodeURIComponent(clean)}/26`;
+      
+      const isOwner = localStorage.getItem('krylo_owner_verified') === 'true';
+      document.getElementById('navKc').innerText = isOwner ? '∞ INF KC' : '10,000 KC';
+    }
+
+    function renderProducts(cat) {
+      const grid = document.getElementById('productGrid');
+      const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === cat);
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <div>
+            <div class="p-header">
+              <div class="p-icon">${p.icon}</div>
+              <span class="p-tag">${p.tag}</span>
+            </div>
+            <h3 class="p-title">${p.name}</h3>
+            <p class="p-desc">${p.desc}</p>
+            <ul class="p-perks-list">
+              ${p.perks.map(perk => `<li><i class="fa-solid fa-check"></i> ${perk}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="p-price-row">
+            <div class="p-price-kc">${p.priceKc.toLocaleString()} KC</div>
+            <button class="btn-buy" onclick="openCheckout('${p.id}')"><i class="fa-solid fa-bolt"></i> Unlock</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderProducts(cat);
+    }
+
+    function openCheckout(id) {
+      selectedProduct = PRODUCTS.find(p => p.id === id);
+      if (!selectedProduct) return;
+
+      document.getElementById('mIcon').innerText = selectedProduct.icon;
+      document.getElementById('mTitle').innerText = selectedProduct.name;
+      document.getElementById('mPrice').innerText = `${selectedProduct.priceKc.toLocaleString()} KC`;
+      document.getElementById('mIgnInput').value = activeIgn;
+      updateModalSkin(activeIgn);
+
+      document.getElementById('checkoutModal').classList.add('active');
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkoutModal').classList.remove('active');
+    }
+
+    function updateModalSkin(ign) {
+      const clean = (ign || 'Steve').replace(/^\./, '').trim().replace(/\s+/g, '_');
+      document.getElementById('mTargetIgn').innerText = ign || 'Player';
+      document.getElementById('mSkin').src = `https://mc-heads.net/body/${encodeURIComponent(clean)}/right`;
+    }
+
+    async function executeCheckout(e) {
+      e.preventDefault();
+      const ign = document.getElementById('mIgnInput').value.trim();
+      if (!ign) return;
+      
+      activeIgn = ign;
+      localStorage.setItem('krylo_active_ign', ign);
+      updateUserPill();
+      closeCheckout();
+
+      const orderId = 'KRYLO-ORD-' + Math.floor(1000 + Math.random() * 9000);
+
+      // Sync to SheetDB
+      try {
+        fetch('https://sheetdb.io/api/v1/wqiphi0bug49j', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            data: [{
+              date: new Date().toISOString().replace('T', ' ').slice(0, 19),
+              username: ign,
+              discord_id: 'WebStore-Live',
+              items: `${selectedProduct.name} (${orderId})`,
+              final_total: `${selectedProduct.priceKc.toLocaleString()} KC`,
+              promo_code: 'FREE-EARNED',
+              tax_amount: '0',
+              client_ip: 'WebStore-Player'
+            }]
+          })
+        }).catch(() => {});
+      } catch (_) {}
+
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      }
+
+      showToast(`🎉 Dispatched ${selectedProduct.name} to ${ign}! [Order: ${orderId}]`);
+    }
+
+    function copyIp() {
+      navigator.clipboard.writeText('krylosmp.falix.gg:29273');
+      const lbl = document.getElementById('copyLabel');
+      lbl.innerText = 'COPIED!';
+      setTimeout(() => { lbl.innerText = 'CLICK TO COPY'; }, 2500);
+      showToast('📋 Copied krylosmp.falix.gg:29273 to clipboard!');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toastMsg');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3500);
+    }
+
+    window.onload = initStore;
+  </script>
+</body>
+</html>

@@ -239,7 +239,7 @@
             <div class="nav-status">
                 <span class="pulse-dot"></span>
                 <span class="status-text">Server: <strong>ONLINE</strong></span>
-                <span class="ip-badge">KryloSmp.play.hosting</span>
+                <span class="ip-badge">krylosmp.falix.gg:29273</span>
             </div>
         </div>
     </header>
@@ -589,7 +589,7 @@
 
         async function checkLiveMinecraftServerStatus() {
             try {
-                const res = await fetch('https://api.mcsrvstat.us/3/KryloSmp.play.hosting');
+                const res = await fetch('https://api.mcsrvstat.us/3/krylosmp.falix.gg:29273');
                 if (res.ok) {
                     const data = await res.json();
                     const motdClean = (data.motd?.clean || []).join(' ').toLowerCase();

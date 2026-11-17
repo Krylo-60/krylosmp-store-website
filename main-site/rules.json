@@ -1,0 +1,83 @@
+{
+  "title": "KryloSMP Official Network Rules",
+  "updated_at": "Live Synced",
+  "categories": [
+    {
+      "id": "general",
+      "name": "General & Community",
+      "icon": "fa-users",
+      "rules": [
+        {
+          "id": 1,
+          "title": "Respect & Fair Play",
+          "desc": "Treat all players, staff, and creators with mutual respect. Zero tolerance for harassment, racism, homophobia, toxicity, or hate speech.",
+          "punishment": "Warning -> 24h Mute -> Permanent Ban"
+        },
+        {
+          "id": 2,
+          "title": "No Spam or Self-Promotion",
+          "desc": "Advertising other servers, unsolicited DMs, repetitive chat spam, and referral links are strictly prohibited.",
+          "punishment": "12h Mute -> Permanent Mute"
+        },
+        {
+          "id": 3,
+          "title": "Account & Security",
+          "desc": "You are fully responsible for your account. Compromised accounts, ban evasion with alt accounts, and sharing logins are not permitted.",
+          "punishment": "Blacklist & IP Ban"
+        }
+      ]
+    },
+    {
+      "id": "ingame",
+      "name": "In-Game PvP & Lifesteal",
+      "icon": "fa-shield-halved",
+      "rules": [
+        {
+          "id": 4,
+          "title": "No Hacking or Unfair Advantages",
+          "desc": "X-Ray texture packs, Killaura, Fly, Speed, Auto-clickers (>15 CPS), Baritone bots, and unapproved mods are banned.",
+          "punishment": "Instant 30-Day Ban -> Permanent Blacklist"
+        },
+        {
+          "id": 5,
+          "title": "No Bug Abuse or Duplication",
+          "desc": "Exploiting game glitches, item duping, crash exploits, or glitching through world borders is strictly forbidden. Disclose bugs in #support for rewards.",
+          "punishment": "Inventory Wipe + Permanent Ban"
+        },
+        {
+          "id": 6,
+          "title": "Combat & Combat-Logging",
+          "desc": "Disconnecting, teleporting, or quitting while in active PvP combat triggers automatic death and heart loss via our combat tag engine.",
+          "punishment": "Automatic Combat-Death & Heart Loss"
+        },
+        {
+          "id": 7,
+          "title": "Trap & Spawn Etiquette",
+          "desc": "Spawn trapping portals, killing players immediately at neutral hub warps, or building lag machines is prohibited.",
+          "punishment": "Structure Removal + 3-Day Ban"
+        }
+      ]
+    },
+    {
+      "id": "economy",
+      "name": "Economy & KryloCoins",
+      "icon": "fa-coins",
+      "rules": [
+        {
+          "id": 8,
+          "title": "Real Money Trading (RMT) Policy",
+          "desc": "Trading in-game items, hearts, or KryloCoins (KC) for real-world currency outside official web links is strictly prohibited.",
+          "punishment": "Permanent Account Ban"
+        },
+        {
+          "id": 9,
+          "title": "Fair Trading & Scamming",
+          "desc": "Scamming players during agreed item trades or auction transactions is punishable.",
+          "punishment": "Trade Reversal + 7-Day Ban"
+        }
+      ]
+    }
+  ],
+  "discord_synced_title": "\ud83d\udccc KRYLOSMP \u2014 OFFICIAL COMMUNITY RULES & GUIDELINES",
+  "discord_synced_desc": "Welcome to **KryloSMP**! To ensure a safe, fun, and competitive environment for all players, please review and agree to our server rules:\n\n1\ufe0f\u20e3 **Respect & Fair Play:** Treat all members and staff with respect. No harassment, hate speech, or toxicity.\n2\ufe0f\u20e3 **No Cheating / Exploits:** X-Ray, fly hacks, auto-clickers, and duping are strictly forbidden and result in permanent bans.\n3\ufe0f\u20e3 **No Spam or Self-Promotion:** Keep discussions relevant to each channel.\n4\ufe0f\u20e3 **Clan & PvP Integrity:** Follow designated combat zones and clan raid protocols.\n5\ufe0f\u20e3 **Staff Authority:** Staff decisions are final. If you have questions, open a ticket.\n\n*Click the button below to accept the rules and unlock chat access!*"
+}
