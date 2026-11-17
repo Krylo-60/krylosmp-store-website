@@ -520,9 +520,9 @@
 
       <div class="nav-actions">
         <div class="user-pill" onclick="window.location.href='/auth'" title="Click to Authenticate & Manage Profile">
-          <img id="navAvatar" src="https://mc-heads.net/avatar/Krylo_MC/26" alt="Avatar" class="user-avatar">
+          <img id="navAvatar" src="https://mc-heads.net/avatar/KryloMCYT/26" alt="Avatar" class="user-avatar">
           <div>
-            <div class="user-ign" id="navIgn">Krylo_MC</div>
+            <div class="user-ign" id="navIgn">KryloMCYT</div>
             <div class="user-kc" id="navKc">∞ INF KC</div>
           </div>
         </div>
@@ -580,10 +580,10 @@
       </div>
 
       <div style="display: flex; gap: 16px; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--border); padding: 14px; border-radius: var(--radius-sm); margin-bottom: 20px;">
-        <img id="mSkin" src="https://mc-heads.net/body/Krylo_MC/right" alt="Skin" style="height: 80px; object-fit: contain;">
+        <img id="mSkin" src="https://mc-heads.net/body/KryloMCYT/right" alt="Skin" style="height: 80px; object-fit: contain;">
         <div>
           <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Receiving Player:</div>
-          <div id="mTargetIgn" style="font-size: 1.1rem; font-weight: 800; color: #fff;">Krylo_MC</div>
+          <div id="mTargetIgn" style="font-size: 1.1rem; font-weight: 800; color: #fff;">KryloMCYT</div>
           <div style="font-size: 0.75rem; color: var(--green); margin-top: 4px;"><i class="fa-solid fa-bolt"></i> Auto-dispatched to FalixNodes Server</div>
         </div>
       </div>
@@ -636,7 +636,7 @@
     ];
 
     let selectedProduct = null;
-    let activeIgn = localStorage.getItem('krylo_active_ign') || 'Krylo_MC';
+    let activeIgn = localStorage.getItem('krylo_active_ign') || 'KryloMCYT';
 
     function initStore() {
       updateUserPill();
@@ -701,7 +701,7 @@
     }
 
     function updateModalSkin(ign) {
-      const clean = (ign || 'Steve').replace(/^\./, '').trim().replace(/\s+/g, '_');
+      const clean = (ign || 'KryloMCYT').replace(/^\./, '').trim().replace(/\s+/g, '_');
       document.getElementById('mTargetIgn').innerText = ign || 'Player';
       document.getElementById('mSkin').src = `https://mc-heads.net/body/${encodeURIComponent(clean)}/right`;
     }

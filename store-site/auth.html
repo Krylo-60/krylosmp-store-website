@@ -280,10 +280,10 @@
 
     <!-- Live Preview Card -->
     <div class="player-card">
-      <img id="skinPreview" src="https://mc-heads.net/body/Krylo_MC/right" alt="Skin Preview" class="skin-preview" onerror="this.src='https://mc-heads.net/body/Steve/right'">
+      <img id="skinPreview" src="https://mc-heads.net/body/KryloMCYT/right" alt="Skin Preview" class="skin-preview" onerror="this.src='https://mc-heads.net/body/KryloMCYT/right'">
       <div class="player-info">
         <div class="player-label" id="platformLabel">JAVA ACCOUNT</div>
-        <div class="player-name" id="displayIgn">Krylo_MC</div>
+        <div class="player-name" id="displayIgn">KryloMCYT</div>
         <div>
           <span class="badge-pill badge-owner" id="accountBadge">👑 OWNER (VERIFIED)</span>
         </div>
@@ -326,12 +326,12 @@
 
   <script>
     let currentEdition = 'java';
-    let currentIgn = localStorage.getItem('krylo_active_ign') || 'Krylo_MC';
+    let currentIgn = localStorage.getItem('krylo_active_ign') || 'KryloMCYT';
     let isOwnerVerified = localStorage.getItem('krylo_owner_verified') === 'true';
 
     function checkIsOwnerAccount(ign) {
       const clean = (ign || '').trim().toLowerCase();
-      return clean === 'krylo_mc' || clean === 'krylo plays' || clean === 'krylo_plays' || clean === '.krylo plays' || clean === '.krylo_plays';
+      return clean === 'krylomcyt' || clean === 'krylo plays' || clean === 'krylo_plays' || clean === '.krylo plays' || clean === '.krylo_plays';
     }
 
     async function computeHash(str) {
@@ -369,7 +369,7 @@
 
       display.innerText = clean || 'Player';
       
-      const skinTarget = clean.replace(/^\./, '').trim().replace(/\s+/g, '_') || 'Steve';
+      const skinTarget = clean.replace(/^\./, '').trim().replace(/\s+/g, '_') || 'KryloMCYT';
       skin.src = `https://mc-heads.net/body/${encodeURIComponent(skinTarget)}/right`;
 
       const isOwner = checkIsOwnerAccount(clean);

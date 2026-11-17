@@ -998,9 +998,9 @@
       <!-- Nav Actions -->
       <div class="nav-actions">
         <div class="user-pill" onclick="openAuthModal()" title="Click to Switch / Sync Minecraft IGN">
-          <img id="navAvatar" src="https://mc-heads.net/avatar/Krylo_MC/28" alt="Avatar" class="user-avatar">
+          <img id="navAvatar" src="https://mc-heads.net/avatar/KryloMCYT/28" alt="Avatar" class="user-avatar">
           <div>
-            <div class="user-ign" id="navIgn">Krylo_MC</div>
+            <div class="user-ign" id="navIgn">KryloMCYT</div>
             <div class="user-kc" id="navKc">10,000 Kr</div>
           </div>
         </div>
@@ -1296,7 +1296,7 @@
           <form onsubmit="submitSupportTicket(event)">
             <div class="form-group">
               <label>Minecraft Username (IGN)</label>
-              <input type="text" id="ticketIgn" placeholder="e.g. Krylo_MC" required>
+              <input type="text" id="ticketIgn" placeholder="e.g. KryloMCYT" required>
             </div>
             <div class="form-group">
               <label>Discord Tag</label>
@@ -1375,7 +1375,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
               <div class="form-group">
                 <label>Minecraft Username (IGN)</label>
-                <input type="text" id="applyIgn" placeholder="e.g. Krylo_MC" required>
+                <input type="text" id="applyIgn" placeholder="e.g. KryloMCYT" required>
               </div>
               <div class="form-group">
                 <label>Discord Tag</label>
@@ -1437,10 +1437,10 @@
       </div>
 
       <div style="display: flex; gap: 16px; align-items: center; background: rgba(0,0,0,0.55); border: 1px solid var(--border); padding: 14px; border-radius: var(--radius-sm); margin-bottom: 20px;">
-        <img id="mSkin" src="https://mc-heads.net/body/Krylo_MC/right" alt="Skin" style="height: 84px; object-fit: contain;">
+        <img id="mSkin" src="https://mc-heads.net/body/KryloMCYT/right" alt="Skin" style="height: 84px; object-fit: contain;">
         <div>
           <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Receiving Player:</div>
-          <div id="mTargetIgn" style="font-size: 1.15rem; font-weight: 800; color: #fff;">Krylo_MC</div>
+          <div id="mTargetIgn" style="font-size: 1.15rem; font-weight: 800; color: #fff;">KryloMCYT</div>
           <div style="font-size: 0.75rem; color: var(--green); margin-top: 4px; font-weight: 600;"><i class="fa-solid fa-bolt"></i> Auto-dispatched with sub-50ms sync</div>
         </div>
       </div>
@@ -1473,7 +1473,7 @@
       <form onsubmit="saveAuthIgn(event)">
         <div style="margin-bottom: 18px;">
           <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block;">Minecraft Username (IGN):</label>
-          <input type="text" id="authIgnInput" required placeholder="e.g. Krylo_MC or .BedrockUser" style="width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.95rem;">
+          <input type="text" id="authIgnInput" required placeholder="e.g. KryloMCYT or .BedrockUser" style="width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px 14px; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.95rem;">
         </div>
         <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 13px;">
           <i class="fa-solid fa-check"></i> Save & Sync Player
@@ -1533,7 +1533,7 @@
     ];
 
     let selectedProduct = null;
-    let activeIgn = localStorage.getItem('krylo_active_ign') || 'Krylo_MC';
+    let activeIgn = localStorage.getItem('krylo_active_ign') || 'KryloMCYT';
 
     function init() {
       updateUserPill();
@@ -1598,7 +1598,7 @@
     }
 
     function updateModalSkin(ign) {
-      const clean = (ign || 'Steve').replace(/^\./, '').trim().replace(/\s+/g, '_');
+      const clean = (ign || 'KryloMCYT').replace(/^\./, '').trim().replace(/\s+/g, '_');
       document.getElementById('mTargetIgn').innerText = ign || 'Player';
       document.getElementById('mSkin').src = `https://mc-heads.net/body/${encodeURIComponent(clean)}/right`;
     }
